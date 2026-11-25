@@ -10,8 +10,21 @@ use std::path::PathBuf;
 
 #[derive(clap::Args)]
 pub(crate) struct ComposerArgs {
+    #[command(flatten)]
+    globals: Globals,
     #[command(subcommand)]
     cmd: ComposerCmd,
+}
+
+/// Composer's global options that Pun takes, before or after the command's name.
+#[derive(clap::Args)]
+pub(crate) struct Globals {
+    /// Run in this directory instead of the current one.
+    #[arg(short = 'd', long, value_name = "DIR", global = true)]
+    pub(crate) working_dir: Option<PathBuf>,
+    /// Ask no questions: `run-script` without a script name is then an error.
+    #[arg(short = 'n', long, global = true)]
+    no_interaction: bool,
 }
 
 #[derive(clap::Subcommand)]
@@ -62,15 +75,13 @@ struct DumpArgs {
     /// Write no `platform_check.php`.
     #[arg(long)]
     ignore_platform_reqs: bool,
-    /// Run in this directory instead of the current one.
-    #[arg(short = 'd', long, value_name = "DIR")]
-    working_dir: Option<PathBuf>,
 }
 
 pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
+    let globals = a.globals;
     match a.cmd {
-        ComposerCmd::DumpAutoload(d) => dump(&d),
-        ComposerCmd::CheckPlatformReqs(c) => crate::platform_reqs::run(&c),
+        ComposerCmd::DumpAutoload(d) => dump(&d, &globals),
+        ComposerCmd::CheckPlatformReqs(c) => crate::platform_reqs::run(&c, &globals),
         ComposerCmd::Other(args) => bail!(
             "`pun composer {}` is not built yet; Pun does not run the Composer CLI",
             args.first().map_or("", String::as_str)
@@ -78,8 +89,8 @@ pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
     }
 }
 
-fn dump(d: &DumpArgs) -> Result<Exit> {
-    let project = project(d.working_dir.as_ref(), false)?;
+fn dump(d: &DumpArgs, globals: &Globals) -> Result<Exit> {
+    let project = project(globals.working_dir.as_ref(), false)?;
     let options = Options {
         scan: scan(d.optimize, d.classmap_authoritative),
         apcu: apcu(d.apcu, d.apcu_prefix.as_ref()),

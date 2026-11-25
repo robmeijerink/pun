@@ -112,19 +112,28 @@ class ModuleInstaller extends LibraryInstaller
 '''
 
 
-def plugin_project(module_dir):
+def plugin_project(module_dir, needs=False, name='acme/installer', **plugin_fields):
     """An installer plugin (acme/installer) that installs `acme-module` packages to modules/<name>, and such a module:
     with `module_dir` in modules/ only, else in vendor/ only, where it would be without the plugin."""
-    plugin = package('acme/installer', type='composer-plugin', require={'composer-plugin-api': '^2.0'},
-                     autoload={'psr-4': {'Acme\\Installer\\': 'src/'}}, extra={'class': 'Acme\\Installer\\Plugin'},
-                     install_path='../acme/installer')
+    fields = {'type': 'composer-plugin', 'require': {'composer-plugin-api': '^2.0'},
+              'autoload': {'psr-4': {'Acme\\Installer\\': 'src/'}}, 'extra': {'class': 'Acme\\Installer\\Plugin'},
+              'install_path': f'../{name}', **plugin_fields}
+    plugin = package(name, **fields)
     module = package('acme/module', type='acme-module', require={'php': '<8.0'}, install_path='../../modules/module')
     gone = package('acme/gone', require={'ext-nope': '*'}, install_path='../acme/gone')
-    files = {'vendor/composer/installed.json': j({'packages': [plugin, module, gone], 'dev': True, 'dev-package-names': []}),
-             'vendor/acme/installer/src/Plugin.php': PLUGIN_PHP}
+    packages = [plugin, module, gone]
+    if needs:
+        # A package that requires the plugin, for a root that requires it.
+        packages.append(package('acme/needs-installer', require={name: '*'}, install_path='../acme/needs-installer'))
+    files = {'vendor/composer/installed.json': j({'packages': packages, 'dev': True, 'dev-package-names': []}),
+             f'vendor/{name}/src/Plugin.php': PLUGIN_PHP}
     files['modules/module/.keep' if module_dir else 'vendor/acme/module/.keep'] = ''
+    if needs:
+        files['vendor/acme/needs-installer/.keep'] = ''
     return files
 
+
+NEW_LOCK = j({'content-hash': 'x', 'packages': [OLD], 'packages-dev': [], 'plugin-api-version': '2.6.0'})
 
 CASES = [
     ('vendor-success', {'composer.json': j(root()), **installed(OK, API)}, []),
@@ -195,6 +204,48 @@ CASES = [
     # A package whose directory is gone isn't installed, nor checked.
     ('package-directory-missing', {'composer.json': j(root()), **{k: v for k, v in installed(OK, OLD).items() if k != 'vendor/acme/old/.keep'}}, []),
     ('metapackage', {'composer.json': j(root()), **installed(package('acme/meta', type='metapackage', require={'ext-nope': '*'}))}, []),
+    # Composer's global options, after the command's name or before it (`before`). -vv and -vvv add Composer's
+    # debug lines (with local paths and times, and a cache collection now and then), which Pun doesn't print.
+    ('global-no-interaction', {'composer.json': j(root()), **installed(OLD)}, ['-n']),
+    ('global-quiet', {'composer.json': j(root()), **installed(OLD)}, ['-q']),
+    ('global-quiet-json', {'composer.json': j(root()), **installed(OLD)}, ['--quiet', '--format=json']),
+    ('global-verbose', {'composer.json': j(root()), **installed(OLD)}, ['-v']),
+    ('global-ansi', {'composer.json': j(root()), **installed(OK, OLD, MISSING)}, ['--ansi']),
+    ('global-ansi-provided', {'composer.json': j(root()), **installed(POLYFILL, WANTS_FAKE, WANTS_FAKE2, OLD)}, ['--ansi']),
+    ('global-ansi-no-vendor', {'composer.json': j(root()), 'composer.lock': lock([OK], [DEV])}, ['--ansi']),
+    ('global-quiet-error', {'composer.json': j(root()), 'composer.lock': '{"packages": [\n'}, ['--lock', '-q']),
+    ('global-ansi-json', {'composer.json': j(root()), **installed(OLD)}, ['--ansi', '--format=json']),
+    ('global-no-ansi', {'composer.json': j(root()), **installed(OLD)}, ['--no-ansi']),
+    ('global-no-scripts', {'composer.json': j(root()), **installed(OLD)}, ['--no-scripts']),
+    ('global-no-cache', {'composer.json': j(root()), **installed(OLD)}, ['--no-cache']),
+    ('global-before', {'sub/composer.json': j(root()), **{'sub/' + k: v for k, v in installed(OLD).items()}}, ['--no-dev'], None, ['-d', 'sub', '-n']),
+    ('global-no-plugins', {'composer.json': j(root(config={'allow-plugins': {'acme/installer': True}})), **plugin_project(module_dir=True)}, ['--no-plugins']),
+    # A plugin allow-plugins doesn't allow isn't loaded (and, without interaction, Composer says so).
+    ('plugin-not-allowed', {'composer.json': j(root()), **plugin_project(module_dir=True)}, []),
+    ('plugin-not-allowed-ansi', {'composer.json': j(root()), **plugin_project(module_dir=True)}, ['--ansi']),
+    # A plugin the root requires (through another package) loads only when allowed, and is skipped without a word.
+    ('plugin-required-not-allowed', {'composer.json': j(root(require={'php': '>=8.1', 'acme/needs-installer': '*'})), **plugin_project(module_dir=True, needs=True)}, []),
+    ('plugin-required-allowed', {'composer.json': j(root(require={'php': '>=8.1', 'acme/needs-installer': '*'}, config={'allow-plugins': {'acme/*': True}})), **plugin_project(module_dir=True, needs=True)}, []),
+    ('plugin-allow-all', {'composer.json': j(root(config={'allow-plugins': True})), **plugin_project(module_dir=True)}, []),
+    # --lock checks the lock, but Composer still reads the vendor dir and loads its plugins first.
+    ('lock-plugin-not-allowed', {'composer.json': j(root()), 'composer.lock': NEW_LOCK, **plugin_project(module_dir=True)}, ['--lock']),
+    # Without allow-plugins, Composer reads the lock for its plugin-api-version, before it checks anything.
+    ('vendor-lock-invalid-json', {'composer.json': j(root()), 'composer.lock': '{"packages": [\n', **installed(OLD)}, []),
+    ('vendor-lock-invalid-json-allow-plugins', {'composer.json': j(root(config={'allow-plugins': {'acme/x': True}})), 'composer.lock': '{"packages": [\n', **installed(OLD)}, []),
+    ('vendor-lock-invalid-json-no-plugins', {'composer.json': j(root()), 'composer.lock': '{"packages": [\n', **installed(OLD)}, ['--no-plugins']),
+    ('lock-installed-invalid-json', {'composer.json': j(root()), 'composer.lock': lock([OLD], []), 'vendor/composer/installed.json': '{"packages": [\n'}, ['--lock']),
+    # A lock from before allow-plugins (plugin-api-version below 2.2.0, or none) and no allow-plugins: Composer stops.
+    ('plugin-old-lock', {'composer.json': j(root()), 'composer.lock': lock([OLD], []), **plugin_project(module_dir=True)}, []),
+    ('plugin-new-lock', {'composer.json': j(root()), 'composer.lock': NEW_LOCK, **plugin_project(module_dir=True)}, []),
+    # What registerPackage checks of a plugin it would load.
+    ('plugin-without-api', {'composer.json': j(root(config={'allow-plugins': True})), **plugin_project(module_dir=True, require={})}, []),
+    ('plugin-exact-api', {'composer.json': j(root(config={'allow-plugins': True})), **plugin_project(module_dir=True, require={'composer-plugin-api': '2.11.0'})}, []),
+    ('plugin-other-api', {'composer.json': j(root(config={'allow-plugins': True})), **plugin_project(module_dir=True, require={'composer-plugin-api': '^1.0'})}, []),
+    # A required plugin allow-plugins doesn't name, which Composer skips without a word when it is optional.
+    ('plugin-optional', {'composer.json': j(root(require={'php': '>=8.1', 'acme/needs-installer': '*'})), **plugin_project(module_dir=True, needs=True, extra={'class': 'Acme\\Installer\\Plugin', 'plugin-optional': True})}, []),
+    ('plugin-package-versions-deprecated', {'composer.json': j(root(require={'php': '>=8.1', 'acme/needs-installer': '*'})), **plugin_project(module_dir=True, needs=True, name='composer/package-versions-deprecated')}, []),
+    ('plugin-denied', {'composer.json': j(root(config={'allow-plugins': {'acme/installer': False}})), **plugin_project(module_dir=True)}, []),
+    ('global-no-plugins-vendor', {'composer.json': j(root(config={'allow-plugins': {'acme/installer': True}})), **plugin_project(module_dir=False)}, ['--no-plugins']),
 ]
 
 
@@ -237,16 +288,18 @@ def exception_message(stderr):
     return message
 
 
-def record(name, files, args, extra_env=None):
+def record(name, files, args, extra_env=None, before=()):
     home = tempfile.mkdtemp(prefix='pun-platform-home-')
     work = tempfile.mkdtemp(prefix='pun-platform-')
     try:
         write(work, files)
-        r = composer(work, ['check-platform-reqs', *args], home, extra_env)
+        r = composer(work, [*before, 'check-platform-reqs', *args], home, extra_env)
         stderr = r.stderr.replace(os.path.realpath(work), '{dir}')
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': r.stdout, 'stderr': stderr}
         if extra_env:
             case['env'] = extra_env
+        if before:
+            case['before'] = list(before)
         message = exception_message(stderr)
         if 'Composer could not find' in stderr:
             # Composer prints this error itself, outside an exception block; it is still a run error.

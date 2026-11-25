@@ -1260,6 +1260,516 @@
    "exit": 2,
    "stdout": "ext-nope n/a   acme/meta requires ext-nope (*) acme/meta requires ext-nope (*) missing \nphp      8.5.4                                                                 success \n",
    "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-no-interaction",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "-n"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "-q"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "global-quiet-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--quiet",
+    "--format=json"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "global-verbose",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "-v"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        },\n        {\n            \"name\": \"acme/missing\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\",\n                \"lib-nope\": \"^1.0\",\n                \"php-zts\": \"*\",\n                \"php-debug\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/old/.keep": "",
+    "vendor/acme/missing/.keep": ""
+   },
+   "args": [
+    "--ansi"
+   ],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                                                                       \u001b[32msuccess\u001b[39m \next-mbstring 8.5.4                                                                                                       \u001b[32msuccess\u001b[39m \next-nope     n/a   acme/missing requires ext-nope (*)                              acme/missing requires ext-nope (*)    \u001b[37;41mmissing\u001b[39;49m \nlib-nope     n/a   acme/missing requires lib-nope ([>= 1.0.0.0-dev < 2.0.0.0-dev]) acme/missing requires lib-nope (^1.0) \u001b[37;41mmissing\u001b[39;49m \nlib-pcre     10.49                                                                                                       \u001b[32msuccess\u001b[39m \nphp          8.5.4 acme/old requires php (< 8.0.0.0-dev)                           acme/old requires php (<8.0)          \u001b[37;41mfailed\u001b[39;49m  \nphp-debug    n/a   acme/missing requires php-debug (*)                             acme/missing requires php-debug (*)   \u001b[37;41mmissing\u001b[39;49m \nphp-zts      n/a   acme/missing requires php-zts (*)                               acme/missing requires php-zts (*)     \u001b[37;41mmissing\u001b[39;49m \n",
+   "stderr": "\u001b[32mChecking platform requirements for packages in the vendor dir\u001b[39m\n"
+  },
+  {
+   "name": "global-ansi-provided",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/polyfill\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"ext-fake\": \"1.2.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake2\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^2.0\"\n            }\n        },\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/polyfill/.keep": "",
+    "vendor/acme/wants-fake/.keep": "",
+    "vendor/acme/wants-fake2/.keep": "",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--ansi"
+   ],
+   "exit": 1,
+   "stdout": "ext-fake 1.2.0 acme/wants-fake2 requires ext-fake ([>= 2.0.0.0-dev < 3.0.0.0-dev]) acme/wants-fake2 requires ext-fake (^2.0) \u001b[37;41mfailed\u001b[39;49m \u001b[33mprovided by acme/polyfill\u001b[39m \nphp      8.5.4 acme/old requires php (< 8.0.0.0-dev)                               acme/old requires php (<8.0)              \u001b[37;41mfailed\u001b[39;49m                           \n",
+   "stderr": "\u001b[32mChecking platform requirements for packages in the vendor dir\u001b[39m\n"
+  },
+  {
+   "name": "global-ansi-no-vendor",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [
+    "--ansi"
+   ],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                               \u001b[32msuccess\u001b[39m \next-mbstring 8.5.4                                                               \u001b[32msuccess\u001b[39m \next-nope     n/a   acme/dev requires ext-nope (*) acme/dev requires ext-nope (*) \u001b[37;41mmissing\u001b[39;49m \nlib-pcre     10.49                                                               \u001b[32msuccess\u001b[39m \nphp          8.5.4                                                               \u001b[32msuccess\u001b[39m \n",
+   "stderr": "\u001b[30;43mNo vendor dir present, checking platform requirements from the lock file\u001b[39;49m\n"
+  },
+  {
+   "name": "global-quiet-error",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n"
+   },
+   "args": [
+    "--lock",
+    "-q"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "global-ansi-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--ansi",
+    "--format=json"
+   ],
+   "exit": 1,
+   "stdout": "[\n    {\n        \"name\": \"php\",\n        \"version\": \"8.5.4\",\n        \"status\": \"failed\",\n        \"failed_requirement\": {\n            \"source\": \"acme/old\",\n            \"type\": \"requires\",\n            \"target\": \"php\",\n            \"constraint\": \"<8.0\"\n        },\n        \"provider\": null\n    }\n]\n",
+   "stderr": "\u001b[32mChecking platform requirements for packages in the vendor dir\u001b[39m\n"
+  },
+  {
+   "name": "global-no-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-ansi"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-no-scripts",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-scripts"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-no-cache",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-cache"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-before",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "sub/vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "sub/vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-dev"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking non-dev platform requirements for packages in the vendor dir\n",
+   "before": [
+    "-d",
+    "sub",
+    "-n"
+   ]
+  },
+  {
+   "name": "global-no-plugins",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/installer\": true\n        }\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [
+    "--no-plugins"
+   ],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-not-allowed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "The \"acme/installer\" plugin was not loaded as it is not listed in allow-plugins and is not required by the root package anymore.\nChecking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-not-allowed-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [
+    "--ansi"
+   ],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   \u001b[32msuccess\u001b[39m \nphp                 8.5.4    \u001b[32msuccess\u001b[39m \n",
+   "stderr": "\u001b[30;43mThe \"acme/installer\" plugin was not loaded as it is not listed in allow-plugins and is not required by the root package anymore.\u001b[39;49m\n\u001b[32mChecking platform requirements for packages in the vendor dir\u001b[39m\n"
+  },
+  {
+   "name": "plugin-required-not-allowed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"acme/needs-installer\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        },\n        {\n            \"name\": \"acme/needs-installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/installer\": \"*\"\n            },\n            \"install-path\": \"../acme/needs-installer\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": "",
+    "vendor/acme/needs-installer/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "acme/installer contains a Composer plugin which is blocked by your allow-plugins config. You may add it to the list if you consider it safe.",
+    "You can run \"composer config --no-plugins allow-plugins.acme/installer [true|false]\" to enable it (true) or disable it explicitly and suppress this exception (false)",
+    "See https://getcomposer.org/allow-plugins"
+   ]
+  },
+  {
+   "name": "plugin-required-allowed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"acme/needs-installer\": \"*\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/*\": true\n        }\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        },\n        {\n            \"name\": \"acme/needs-installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/installer\": \"*\"\n            },\n            \"install-path\": \"../acme/needs-installer\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": "",
+    "vendor/acme/needs-installer/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "composer-plugin-api 2.11.0                                                                          success \nphp                 8.5.4  acme/module requires php (< 8.0.0.0-dev) acme/module requires php (<8.0) failed  \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-allow-all",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": true\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "composer-plugin-api 2.11.0                                                                          success \nphp                 8.5.4  acme/module requires php (< 8.0.0.0-dev) acme/module requires php (<8.0) failed  \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "lock-plugin-not-allowed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [],\n    \"plugin-api-version\": \"2.6.0\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "The \"acme/installer\" plugin was not loaded as it is not listed in allow-plugins and is not required by the root package anymore.\nChecking platform requirements using the lock file\n"
+  },
+  {
+   "name": "vendor-lock-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "vendor-lock-invalid-json-allow-plugins",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/x\": true\n        }\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "vendor-lock-invalid-json-no-plugins",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-plugins"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "lock-installed-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": []\n}\n",
+    "vendor/composer/installed.json": "{\"packages\": [\n"
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Invalid repository data in {dir}/vendor/composer/installed.json, packages could not be loaded: [Seld\\JsonLint\\ParsingException] \"{dir}/vendor/composer/installed.json\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "plugin-old-lock",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": []\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Your composer.lock was generated before the allow-plugins security feature was introduced and your composer.json does not define allow-plugins. Run \"composer update --lock\" locally and commit the updated composer.lock, then add an explicit allow-plugins section to composer.json. See https://getcomposer.org/allow-plugins"
+   ]
+  },
+  {
+   "name": "plugin-new-lock",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [],\n    \"plugin-api-version\": \"2.6.0\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "The \"acme/installer\" plugin was not loaded as it is not listed in allow-plugins and is not required by the root package anymore.\nChecking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-without-api",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": true\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {},\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Plugin acme/installer is missing a require statement for a version of the composer-plugin-api package."
+   ]
+  },
+  {
+   "name": "plugin-exact-api",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": true\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"2.11.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "composer-plugin-api 2.11.0                                                                          success \nphp                 8.5.4  acme/module requires php (< 8.0.0.0-dev) acme/module requires php (<8.0) failed  \n",
+   "stderr": "The \"acme/installer\" plugin requires composer-plugin-api 2.11.0, this *WILL* break in the future and it should be fixed ASAP (require ^2.11.0 instead for example).\nChecking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-other-api",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": true\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^1.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "composer-plugin-api 2.11.0 acme/installer requires composer-plugin-api ([>= 1.0.0.0-dev < 2.0.0.0-dev]) acme/installer requires composer-plugin-api (^1.0) failed  \nphp                 8.5.4                                                                                                                                  success \n",
+   "stderr": "The \"acme/installer\" plugin was skipped because it requires a Plugin API version (\"^1.0\") that does not match your Composer installation (\"2.11.0\"). You may need to run composer update with the \"--no-plugins\" option.\nChecking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-optional",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"acme/needs-installer\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\",\n                \"plugin-optional\": true\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        },\n        {\n            \"name\": \"acme/needs-installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/installer\": \"*\"\n            },\n            \"install-path\": \"../acme/needs-installer\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": "",
+    "vendor/acme/needs-installer/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-package-versions-deprecated",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"acme/needs-installer\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"composer/package-versions-deprecated\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../composer/package-versions-deprecated\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        },\n        {\n            \"name\": \"acme/needs-installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"composer/package-versions-deprecated\": \"*\"\n            },\n            \"install-path\": \"../acme/needs-installer\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/composer/package-versions-deprecated/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": "",
+    "vendor/acme/needs-installer/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "plugin-denied",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/installer\": false\n        }\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "modules/module/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer-plugin-api 2.11.0   success \nphp                 8.5.4    success \n",
+   "stderr": "The \"acme/installer\" plugin was not loaded as it is not listed in allow-plugins and is not required by the root package anymore.\nChecking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-no-plugins-vendor",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/installer\": true\n        }\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/installer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"composer-plugin\",\n            \"require\": {\n                \"composer-plugin-api\": \"^2.0\"\n            },\n            \"autoload\": {\n                \"psr-4\": {\n                    \"Acme\\\\Installer\\\\\": \"src/\"\n                }\n            },\n            \"extra\": {\n                \"class\": \"Acme\\\\Installer\\\\Plugin\"\n            },\n            \"install-path\": \"../acme/installer\"\n        },\n        {\n            \"name\": \"acme/module\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"acme-module\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            },\n            \"install-path\": \"../../modules/module\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            },\n            \"install-path\": \"../acme/gone\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/installer/src/Plugin.php": "<?php\n\nnamespace Acme\\Installer;\n\nuse Composer\\Composer;\nuse Composer\\Installer\\LibraryInstaller;\nuse Composer\\IO\\IOInterface;\nuse Composer\\Package\\PackageInterface;\nuse Composer\\Plugin\\PluginInterface;\n\nclass Plugin implements PluginInterface\n{\n    public function activate(Composer $composer, IOInterface $io): void\n    {\n        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));\n    }\n\n    public function deactivate(Composer $composer, IOInterface $io): void {}\n\n    public function uninstall(Composer $composer, IOInterface $io): void {}\n}\n\nclass ModuleInstaller extends LibraryInstaller\n{\n    public function supports(string $packageType): bool\n    {\n        return $packageType === 'acme-module';\n    }\n\n    public function getInstallPath(PackageInterface $package): string\n    {\n        return 'modules/'.explode('/', $package->getName())[1];\n    }\n}\n",
+    "vendor/acme/module/.keep": ""
+   },
+   "args": [
+    "--no-plugins"
+   ],
+   "exit": 1,
+   "stdout": "composer-plugin-api 2.11.0                                                                          success \nphp                 8.5.4  acme/module requires php (< 8.0.0.0-dev) acme/module requires php (<8.0) failed  \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
   }
  ]
 }

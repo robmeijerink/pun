@@ -8,7 +8,9 @@ use crate::resolver::platform::from_probe;
 use crate::version::is_platform;
 use serde_json::{Map, Value, json};
 use std::fmt::Write as _;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+
+mod plugins;
 
 /// Where the packages came from, which the first line names.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -48,6 +50,8 @@ pub struct Row {
 
 pub struct Report {
     pub source: Source,
+    /// Composer's warnings about the plugins it didn't load, before the first line.
+    pub warnings: Vec<String>,
     pub rows: Vec<Row>,
     /// 0, else 1 for a requirement the platform doesn't meet, else 2 for one it lacks.
     pub exit: u8,
@@ -91,53 +95,76 @@ pub fn root_versioned(
 /// A requirement's links: the package each is from and its description.
 type Links = Vec<(usize, &'static str, Link)>;
 
-/// What `check-platform-reqs` finds for the root package `manifest` (with its version: `root_versioned`), its lock at `lock_file` (named `lock_display` in
-/// messages) and its vendor dir `vendor`, on the platform `probe` describes.
+/// `check-platform-reqs`'s options.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Options {
+    /// `--no-dev`.
+    pub no_dev: bool,
+    /// `--lock`.
+    pub lock: bool,
+    /// `--no-plugins`.
+    pub no_plugins: bool,
+}
+
+/// What `check-platform-reqs` finds for the root package `manifest` (with its version: `root_versioned`), its lock at
+/// `lock_file` (named `lock_display` in messages) and its vendor dir `vendor`, on the platform `probe` describes.
 pub fn check(
     lock_file: &Path,
     lock_display: &str,
     manifest: &Map<String, Value>,
     vendor: &Path,
     probe: &Value,
-    no_dev: bool,
-    lock: bool,
+    options: Options,
 ) -> Result<Report> {
     let mut arena: Vec<Package> = vec![];
-    let mut dev_names: Vec<String> = vec![];
-    let (source, installed) = if lock {
-        (
-            Source::Lock,
-            locked(lock_file, lock_display, !no_dev, &mut arena)?,
-        )
-    } else {
-        let local = local(vendor, &mut arena, &mut dev_names)?;
-        if local.is_empty() {
-            // The lock leaves its dev packages out itself; the vendor dir's dev package names don't apply.
-            dev_names.clear();
-            (
-                Source::NoVendor,
-                locked(lock_file, lock_display, !no_dev, &mut arena)?,
-            )
-        } else {
-            if !no_dev {
-                dev_names.clear();
-            }
-            (Source::Vendor, local)
-        }
-    };
-
-    // The root package: `RootPackageRepository`, after the installed or locked packages.
+    // As `Factory::createComposer` goes: the root, the plugin manager (which reads allow-plugins, and the lock with
+    // it), the installed plugins, then the local repository without the packages that aren't installed. The command
+    // then checks those, or the lock's.
     let mut root_data = manifest.clone();
     root_data.entry("name").or_insert_with(|| "__root__".into());
     let root_ids = load(root_data, Origin::Root, &mut arena)?;
+    let root = *root_ids.last().expect("the root");
+    let config = (manifest.get("config").and_then(Value::as_object))
+        .cloned()
+        .unwrap_or_default();
+    let rules = plugins::rules(&config, lock_file, lock_display)?;
+    let (entries, mut dev_names) = local(vendor, &mut arena)?;
+    let all: Vec<usize> = entries.iter().flat_map(|e| e.ids.clone()).collect();
+    let (any_plugin, warnings) = if options.no_plugins {
+        (false, vec![])
+    } else {
+        plugins::load(&arena, &all, root, &rules)?
+    };
+    let local: Vec<usize> = (entries.iter())
+        .filter(|e| e.installed(any_plugin))
+        .flat_map(|e| e.ids.clone())
+        .collect();
+    let dev = !options.no_dev;
+    let (source, installed) = if options.lock {
+        (
+            Source::Lock,
+            locked(lock_file, lock_display, dev, &mut arena)?,
+        )
+    } else if local.is_empty() {
+        // The lock leaves its dev packages out itself; the vendor dir's dev package names don't apply.
+        dev_names.clear();
+        (
+            Source::NoVendor,
+            locked(lock_file, lock_display, dev, &mut arena)?,
+        )
+    } else {
+        if dev {
+            dev_names.clear();
+        }
+        (Source::Vendor, local)
+    };
+    if options.lock {
+        dev_names.clear();
+    }
+
+    // The root package: `RootPackageRepository`, after the installed or locked packages.
     let repository: Vec<usize> = installed.iter().chain(&root_ids).copied().collect();
-    let requires = requirements(
-        &arena,
-        &repository,
-        *root_ids.last().expect("the root"),
-        &dev_names,
-        no_dev,
-    );
+    let requires = requirements(&arena, &repository, root, &dev_names, options.no_dev);
 
     // The platform, after the installed packages and the root.
     let mut candidates_from = repository;
@@ -156,7 +183,12 @@ pub fn check(
             &mut rows,
         ));
     }
-    Ok(Report { source, rows, exit })
+    Ok(Report {
+        source,
+        warnings,
+        rows,
+        exit,
+    })
 }
 
 /// Each requirement and its links, by name (`ksort`): the root's require-dev first, unless `no_dev`, then each
@@ -298,17 +330,33 @@ fn providers(arena: &[Package], from: &[usize], target: &str) -> Vec<usize> {
         .collect()
 }
 
-/// The local repository (vendor/composer/installed.json), each package and its branch alias, without those whose
-/// install path is gone (`Factory::purgePackages`; a metapackage has none to lose); `dev_names` gets its
-/// `dev-package-names`.
-fn local(
-    vendor: &Path,
-    arena: &mut Vec<Package>,
-    dev_names: &mut Vec<String>,
-) -> Result<Vec<usize>> {
+/// A package of the local repository: its id and its branch alias's, and where it is installed.
+struct Entry {
+    ids: Vec<usize>,
+    /// Where its installer put it, as installed.json records it (Composer 1's list has none).
+    install_path: Option<PathBuf>,
+    /// Where Composer's own installer puts it: vendor/<name>.
+    vendor_path: PathBuf,
+    metapackage: bool,
+}
+
+impl Entry {
+    /// `Factory::purgePackages`: whether its install path is there (a metapackage has none to lose). An installer
+    /// plugin, when `plugins` load, can have put it elsewhere, as installed.json records.
+    fn installed(&self, plugins: bool) -> bool {
+        let path = match &self.install_path {
+            Some(path) if plugins => path,
+            _ => &self.vendor_path,
+        };
+        self.metapackage || path.exists()
+    }
+}
+
+/// The local repository (vendor/composer/installed.json): each package, and its `dev-package-names`.
+fn local(vendor: &Path, arena: &mut Vec<Package>) -> Result<(Vec<Entry>, Vec<String>)> {
     let path = vendor.join("composer/installed.json");
     let Ok(text) = std::fs::read(&path) else {
-        return Ok(vec![]);
+        return Ok((vec![], vec![]));
     };
     // `FilesystemRepository::initialize`'s error, around the reason. Composer follows a JSON error with jsonlint's
     // description of it (context/PLAN.md §3).
@@ -340,35 +388,28 @@ fn local(
             invalid("[UnexpectedValueException] Could not parse package list from the repository")
         ),
     };
-    dev_names.extend(
-        (data
-            .get("dev-package-names")
-            .and_then(Value::as_array)
-            .into_iter()
-            .flatten())
-        .filter_map(Value::as_str)
-        .map(str::to_ascii_lowercase),
-    );
-    let mut ids = vec![];
+    let dev_names = (data
+        .get("dev-package-names")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten())
+    .filter_map(Value::as_str)
+    .map(str::to_ascii_lowercase)
+    .collect();
+    let mut entries = vec![];
     for package in packages.iter().filter_map(Value::as_object) {
-        // The installer's path, which installed.json records relative to vendor/composer: an installer plugin's
-        // (loaded before the purge) puts its packages outside the vendor dir. Composer 1's list has none.
-        let path = match package.get("install-path").and_then(Value::as_str) {
-            Some(relative) => vendor.join("composer").join(relative),
-            None => vendor.join(
-                package
-                    .get("name")
-                    .and_then(Value::as_str)
-                    .unwrap_or_default(),
-            ),
-        };
-        let loaded = load(package.clone(), Origin::Locked, arena)?;
-        let base = &arena[*loaded.last().expect("the package")];
-        if base.kind == "metapackage" || path.exists() {
-            ids.extend(loaded);
-        }
+        let install_path = (package.get("install-path").and_then(Value::as_str))
+            .map(|relative| vendor.join("composer").join(relative));
+        let ids = load(package.clone(), Origin::Locked, arena)?;
+        let base = &arena[*ids.last().expect("the package")];
+        entries.push(Entry {
+            vendor_path: vendor.join(&base.pretty_name),
+            metapackage: base.kind == "metapackage",
+            install_path,
+            ids,
+        });
     }
-    Ok(ids)
+    Ok((entries, dev_names))
 }
 
 /// `Locker::getLockedRepository`: the lock's packages, with `packages-dev` when `dev`, each branch alias before its
@@ -440,11 +481,37 @@ fn locked(
     Ok(ids)
 }
 
+/// Composer's output styles, as Symfony's console writes them with colour.
+#[derive(Debug, Clone, Copy)]
+pub enum Style {
+    Info,
+    Comment,
+    Warning,
+    Error,
+}
+
+impl Style {
+    /// `text` in this style, or as it is without `color`.
+    pub fn paint(self, text: &str, color: bool) -> String {
+        if !color {
+            return text.to_string();
+        }
+        let (on, off) = match self {
+            Style::Info => ("32", "39"),
+            Style::Comment => ("33", "39"),
+            Style::Warning => ("30;43", "39;49"),
+            Style::Error => ("37;41", "39;49"),
+        };
+        format!("\x1b[{on}m{text}\x1b[{off}m")
+    }
+}
+
 impl Report {
     /// The table `renderTable` prints: name, version, the failed link (as `Link::__toString` and with its constraint
-    /// as written), and the status, each cell padded to its column and followed by a space.
-    pub fn text(&self) -> String {
-        let cells: Vec<[String; 5]> = (self.rows.iter())
+    /// as written), and the status and its provider, each cell padded to its column (by the text it shows) and
+    /// followed by a space; with `color`, the status and provider in Composer's styles.
+    pub fn text(&self, color: bool) -> String {
+        let cells: Vec<[(String, String); 5]> = (self.rows.iter())
             .map(|row| {
                 let (link, written) = row.failed.as_ref().map_or_else(Default::default, |f| {
                     (
@@ -455,25 +522,39 @@ impl Report {
                         format!("{} {} {} ({})", f.source, f.description, f.target, f.pretty),
                     )
                 });
-                let status = match &row.provider {
-                    Some(p) => format!("{} {p}", row.status),
-                    None => row.status.to_string(),
+                let style = if row.status == "success" {
+                    Style::Info
+                } else {
+                    Style::Error
                 };
-                [row.name.clone(), row.version.clone(), link, written, status]
+                let mut status = (row.status.to_string(), style.paint(row.status, color));
+                if let Some(provider) = &row.provider {
+                    status.0 = format!("{} {provider}", status.0);
+                    status.1 = format!("{} {}", status.1, Style::Comment.paint(provider, color));
+                }
+                let plain = |text: &String| (text.clone(), text.clone());
+                [
+                    plain(&row.name),
+                    plain(&row.version),
+                    plain(&link),
+                    plain(&written),
+                    status,
+                ]
             })
             .collect();
         let width = |i: usize| {
             cells
                 .iter()
-                .map(|c| c[i].chars().count())
+                .map(|c| c[i].0.chars().count())
                 .max()
                 .unwrap_or(0)
         };
         let widths = [width(0), width(1), width(2), width(3), width(4)];
         let mut out = String::new();
         for row in &cells {
-            for (cell, width) in row.iter().zip(widths) {
-                let _ = write!(out, "{cell:width$} ");
+            for ((shown, cell), width) in row.iter().zip(widths) {
+                let pad = width - shown.chars().count();
+                let _ = write!(out, "{cell}{:pad$} ", "");
             }
             out.push('\n');
         }

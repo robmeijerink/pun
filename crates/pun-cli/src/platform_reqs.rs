@@ -1,13 +1,19 @@
 //! `pun composer check-platform-reqs`: Composer 2.11.2's `CheckPlatformReqsCommand`, its output and exit codes included.
 
 use crate::Exit;
+use crate::composer::Globals;
+use crate::render::{ColorChoice, Look};
 use anyhow::{Result, bail};
-use pun_packages::platform_reqs::{Source, check};
+use pun_packages::platform_reqs::{Options, Report, Source, Style, check, root_versioned};
 use pun_packages::resolver::platform::probe_cached;
 use serde_json::{Map, Value};
 use std::path::PathBuf;
 
 #[derive(clap::Args)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "one bool per command-line flag"
+)]
 pub(crate) struct PlatformReqsArgs {
     /// Leave out the requirements of require-dev and of the dev packages.
     #[arg(long)]
@@ -18,14 +24,45 @@ pub(crate) struct PlatformReqsArgs {
     /// The output: text or json (another value is text, as in Composer).
     #[arg(short = 'f', long, value_name = "FORMAT", default_value = "text")]
     format: String,
-    /// Run in this directory instead of the current one.
-    #[arg(short = 'd', long, value_name = "DIR")]
-    working_dir: Option<PathBuf>,
+    /// Print nothing; the exit code still tells.
+    #[arg(short = 'q', long)]
+    quiet: bool,
+    /// Composer's verbosity (-v, -vv, -vvv); Pun prints no debug output.
+    #[arg(short = 'v', long, action = clap::ArgAction::Count)]
+    verbose: u8,
+    /// Colour the output.
+    #[arg(long, conflicts_with = "no_ansi")]
+    ansi: bool,
+    /// Don't colour the output.
+    #[arg(long)]
+    no_ansi: bool,
+    /// Load no plugins: the packages count where Composer's own installer puts them, in the vendor dir.
+    #[arg(long)]
+    no_plugins: bool,
+    /// Composer's option to skip scripts; this command runs none.
+    #[arg(long)]
+    no_scripts: bool,
+    /// Composer's option to skip its cache; this command uses none.
+    #[arg(long)]
+    no_cache: bool,
 }
 
-pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
+impl PlatformReqsArgs {
+    /// Whether to colour what goes to stdout and to stderr: `--ansi`, `--no-ansi`, else each a terminal's.
+    fn colors(&self) -> (bool, bool) {
+        if self.ansi || self.no_ansi {
+            return (self.ansi, self.ansi);
+        }
+        (
+            Look::stdout(ColorChoice::Auto).colored(),
+            Look::stderr(ColorChoice::Auto).colored(),
+        )
+    }
+}
+
+pub(crate) fn run(a: &PlatformReqsArgs, globals: &Globals) -> Result<Exit> {
     // Composer changes to `-d` and works from `getcwd()`.
-    let base = match &a.working_dir {
+    let base = match &globals.working_dir {
         Some(d) => d.canonicalize().map_err(|_| {
             anyhow::anyhow!(
                 "Invalid working directory specified, {} does not exist.",
@@ -77,13 +114,8 @@ pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
         Some(stem) => format!("{stem}.lock"),
         None => format!("{file}.lock"),
     };
-    let (manifest, warning) =
-        pun_packages::platform_reqs::root_versioned(&manifest, &base, &|name| {
-            std::env::var(name).ok()
-        });
-    if let Some(warning) = warning {
-        eprintln!("{warning}");
-    }
+    let (manifest, root_warning) =
+        root_versioned(&manifest, &base, &|name| std::env::var(name).ok());
     let vendor = pun_packages::install::dirs(&base.to_string_lossy(), &manifest).vendor;
     // The real platform: Composer checks it with `config.platform` left out.
     let probe = probe_cached(
@@ -96,31 +128,50 @@ pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
         &manifest,
         &PathBuf::from(vendor),
         &probe,
-        a.no_dev,
-        a.lock,
+        Options {
+            no_dev: a.no_dev,
+            lock: a.lock,
+            no_plugins: a.no_plugins,
+        },
     )?;
-    let non_dev = if a.no_dev { "non-dev " } else { "" };
-    eprintln!(
-        "{}",
-        match report.source {
-            Source::Lock => format!("Checking {non_dev}platform requirements using the lock file"),
-            Source::Vendor =>
-                format!("Checking {non_dev}platform requirements for packages in the vendor dir"),
-            Source::NoVendor => {
-                format!(
-                    "No vendor dir present, checking {non_dev}platform requirements from the lock file"
-                )
-            }
-        }
-    );
-    if a.format == "json" {
-        println!("{}", report.json());
-    } else {
-        print!("{}", report.text());
+    // `-q` prints nothing, the JSON included.
+    if !a.quiet {
+        print(a, &report, root_warning.as_ref());
     }
     Ok(match report.exit {
         0 => Exit::Success,
         1 => Exit::Failure,
         _ => Exit::RunError,
     })
+}
+
+/// The warnings and the first line on stderr, then the table or the JSON on stdout.
+fn print(a: &PlatformReqsArgs, report: &Report, root_warning: Option<&String>) {
+    let (out_color, err_color) = a.colors();
+    for warning in root_warning.into_iter().chain(&report.warnings) {
+        eprintln!("{}", Style::Warning.paint(warning, err_color));
+    }
+    let non_dev = if a.no_dev { "non-dev " } else { "" };
+    let first = match report.source {
+        Source::Lock => (
+            Style::Info,
+            format!("Checking {non_dev}platform requirements using the lock file"),
+        ),
+        Source::Vendor => (
+            Style::Info,
+            format!("Checking {non_dev}platform requirements for packages in the vendor dir"),
+        ),
+        Source::NoVendor => (
+            Style::Warning,
+            format!(
+                "No vendor dir present, checking {non_dev}platform requirements from the lock file"
+            ),
+        ),
+    };
+    eprintln!("{}", first.0.paint(&first.1, err_color));
+    if a.format == "json" {
+        println!("{}", report.json());
+    } else {
+        print!("{}", report.text(out_color));
+    }
 }

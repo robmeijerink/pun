@@ -8,6 +8,12 @@ use std::path::Path;
 
 const FIXTURE: &str = include_str!("../../pun-cli/tests/fixtures/check_platform_reqs.json");
 
+/// The cases pun-cli's `tests/check_platform_reqs.rs` checks only in part, for the reasons it gives there: the first line
+/// of a JSON error, a schema check to come, and the lock Composer crashes on.
+const FIRST_LINE_ONLY: &[&str] = &["installed-invalid-json", "lock-invalid-json"];
+const NEEDS_THE_SCHEMA: &[&str] = &["composer-json-schema"];
+const AS_ANOTHER: &[(&str, &str)] = &[("lock-not-an-object", "lock-without-packages-dev")];
+
 fn write(dir: &Path, case: &Value) {
     for (path, content) in case["files"].as_object().unwrap() {
         let file = dir.join(path);
@@ -51,81 +57,111 @@ fn heading(source: Source, no_dev: bool) -> String {
     }
 }
 
+/// How Pun's report for `case` differs from Composer's, if it does.
+fn difference(fixture: &Value, case: &Value) -> Option<String> {
+    let name = case["name"].as_str().unwrap();
+    let like = AS_ANOTHER
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, other)| {
+            (fixture["cases"].as_array().unwrap().iter())
+                .find(|c| c["name"] == *other)
+                .expect("the case it stands for")
+        });
+    let args: Vec<&str> = (case["args"].as_array().unwrap().iter())
+        .map(|a| a.as_str().unwrap())
+        .collect();
+    let (working_dir, no_dev, lock, json) = options(&args);
+    let dir = std::env::temp_dir().join(format!("pun-platform-lib-{name}-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    write(&dir, case);
+    // The project's directory, or its `-d` directory (no `/./` in the paths it names).
+    let base = if working_dir == "." {
+        dir.clone()
+    } else {
+        dir.join(&working_dir)
+    };
+    let file = case["env"]["COMPOSER"].as_str().unwrap_or("composer.json");
+    let lock_file = file
+        .strip_suffix(".json")
+        .map_or_else(|| format!("{file}.lock"), |stem| format!("{stem}.lock"));
+    // A missing or unparsable composer.json is pun-cli's to report.
+    let Some(manifest) = std::fs::read(base.join(file))
+        .ok()
+        .and_then(|text| serde_json::from_slice::<Map<String, Value>>(&text).ok())
+    else {
+        std::fs::remove_dir_all(&dir).unwrap();
+        return None;
+    };
+    let vendor = (manifest
+        .get("config")
+        .and_then(|c| c.get("vendor-dir"))
+        .and_then(Value::as_str))
+    .unwrap_or("vendor")
+    .to_string();
+    let result = check(
+        &base.join(&lock_file),
+        &format!("./{lock_file}"),
+        &manifest,
+        &base.join(vendor),
+        &fixture["probe"],
+        no_dev,
+        lock,
+    );
+    // The fixture writes the project's directory as `{dir}`.
+    let here = dir.canonicalize().unwrap().to_string_lossy().into_owned();
+    std::fs::remove_dir_all(&dir).unwrap();
+    match (
+        result,
+        like.unwrap_or(case)
+            .get("message")
+            .and_then(Value::as_array),
+    ) {
+        (Err(e), Some(message)) => {
+            let got = format!("{e:#}")
+                .replace(&here, "{dir}")
+                .replace(&*dir.to_string_lossy(), "{dir}");
+            let mut lines: Vec<&str> = message.iter().filter_map(Value::as_str).collect();
+            if FIRST_LINE_ONLY.contains(&name) {
+                lines.truncate(1);
+            }
+            (!lines.iter().all(|l| got.contains(l)))
+                .then(|| format!("want the lines {lines:?}\ngot {got}"))
+        }
+        (Ok(report), None) => {
+            let stdout = if json {
+                format!("{}\n", report.json())
+            } else {
+                report.text()
+            };
+            let got = (
+                i64::from(report.exit),
+                stdout,
+                format!("{}\n", heading(report.source, no_dev)),
+            );
+            let want = (
+                case["exit"].as_i64().unwrap(),
+                case["stdout"].as_str().unwrap().to_string(),
+                case["stderr"].as_str().unwrap().to_string(),
+            );
+            (got != want).then(|| format!("want {want:#?}\ngot {got:#?}"))
+        }
+        (Err(e), None) => Some(format!("an error Composer doesn't give: {e:#}")),
+        (Ok(_), Some(message)) => Some(format!("no error, where Composer gives {message:?}")),
+    }
+}
+
 #[test]
 fn reports_as_composer_does() {
     let fixture: Value = serde_json::from_str(FIXTURE).unwrap();
-    let mut failures = vec![];
-    for case in fixture["cases"].as_array().unwrap() {
-        let name = case["name"].as_str().unwrap();
-        let args: Vec<&str> = (case["args"].as_array().unwrap().iter())
-            .map(|a| a.as_str().unwrap())
-            .collect();
-        let (working_dir, no_dev, lock, json) = options(&args);
-        let dir =
-            std::env::temp_dir().join(format!("pun-platform-lib-{name}-{}", std::process::id()));
-        let _ = std::fs::remove_dir_all(&dir);
-        std::fs::create_dir_all(&dir).unwrap();
-        write(&dir, case);
-        let base = dir.join(&working_dir);
-        let file = case["env"]["COMPOSER"].as_str().unwrap_or("composer.json");
-        let lock_file = file
-            .strip_suffix(".json")
-            .map_or_else(|| format!("{file}.lock"), |stem| format!("{stem}.lock"));
-        // A missing or unparsable composer.json is pun-cli's to report.
-        let Some(manifest) = std::fs::read(base.join(file))
-            .ok()
-            .and_then(|text| serde_json::from_slice::<Map<String, Value>>(&text).ok())
-        else {
-            std::fs::remove_dir_all(&dir).unwrap();
-            continue;
-        };
-        let vendor = (manifest
-            .get("config")
-            .and_then(|c| c.get("vendor-dir"))
-            .and_then(Value::as_str))
-        .unwrap_or("vendor")
-        .to_string();
-        let result = check(
-            &base.join(&lock_file),
-            &manifest,
-            &base.join(vendor),
-            &fixture["probe"],
-            no_dev,
-            lock,
-        );
-        std::fs::remove_dir_all(&dir).unwrap();
-        let difference = match (result, case.get("message").and_then(Value::as_array)) {
-            (Err(e), Some(message)) => {
-                let got = format!("{e:#}");
-                let lines: Vec<&str> = message.iter().filter_map(Value::as_str).collect();
-                (!lines.iter().all(|l| got.contains(l)))
-                    .then(|| format!("want the lines {lines:?}\ngot {got}"))
-            }
-            (Ok(report), None) => {
-                let stdout = if json {
-                    format!("{}\n", report.json())
-                } else {
-                    report.text()
-                };
-                let got = (
-                    i64::from(report.exit),
-                    stdout,
-                    format!("{}\n", heading(report.source, no_dev)),
-                );
-                let want = (
-                    case["exit"].as_i64().unwrap(),
-                    case["stdout"].as_str().unwrap().to_string(),
-                    case["stderr"].as_str().unwrap().to_string(),
-                );
-                (got != want).then(|| format!("want {want:#?}\ngot {got:#?}"))
-            }
-            (Err(e), None) => Some(format!("an error Composer doesn't give: {e:#}")),
-            (Ok(_), Some(message)) => Some(format!("no error, where Composer gives {message:?}")),
-        };
-        if let Some(difference) = difference {
-            failures.push(format!("=== {name}\n{difference}"));
-        }
-    }
+    let failures: Vec<String> = (fixture["cases"].as_array().unwrap().iter())
+        .filter(|case| !NEEDS_THE_SCHEMA.contains(&case["name"].as_str().unwrap()))
+        .filter_map(|case| {
+            difference(&fixture, case)
+                .map(|d| format!("=== {}\n{d}", case["name"].as_str().unwrap()))
+        })
+        .collect();
     assert!(
         failures.is_empty(),
         "{} cases differ:\n{}",

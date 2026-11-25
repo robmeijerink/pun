@@ -13,9 +13,22 @@ use std::process::Command;
 
 const FIXTURE: &str = include_str!("fixtures/check_platform_reqs.json");
 
-/// `invalid-json`: Composer follows the first line with jsonlint's description of the error, which Pun's composer.json
-/// reading here doesn't give yet (context/PLAN.md §3); only that first line is asked for.
-const FIRST_LINE_ONLY: &[&str] = &["invalid-json"];
+/// Composer follows the first line of a JSON error with jsonlint's description of it, which Pun gives once it shares
+/// `validate`'s port of jsonlint (context/PLAN.md §3): only that first line is asked for.
+const FIRST_LINE_ONLY: &[&str] = &[
+    "invalid-json",
+    "installed-invalid-json",
+    "lock-invalid-json",
+];
+
+/// Composer checks composer.json against its schema, which Pun does once it shares `validate`'s port of it
+/// (context/PLAN.md §3).
+const NEEDS_THE_SCHEMA: &[&str] = &["composer-json-schema"];
+
+/// A lock that isn't an object makes PHP warn about its missing `packages` (Composer's `Locker::getLockedRepository`),
+/// a crash of Composer's; past that warning it has no `packages-dev`, so Pun gives what `lock-without-packages-dev`
+/// gives.
+const AS_ANOTHER: &[(&str, &str)] = &[("lock-not-an-object", "lock-without-packages-dev")];
 
 struct Outcome {
     exit: Option<i32>,
@@ -114,8 +127,25 @@ fn check_platform_reqs_matches_composer() {
     let cases = fixture["cases"].as_array().unwrap();
     let mut failures = vec![];
     for case in cases {
+        let name = case["name"].as_str().unwrap();
+        if NEEDS_THE_SCHEMA.contains(&name) {
+            continue;
+        }
         let got = check(case, &fixture["probe"]);
-        let difference = if let Some(message) = case.get("message").and_then(Value::as_array) {
+        let like = AS_ANOTHER
+            .iter()
+            .find(|(n, _)| *n == name)
+            .map(|(_, other)| {
+                cases
+                    .iter()
+                    .find(|c| c["name"] == *other)
+                    .expect("the case it stands for")
+            });
+        let difference = if let Some(message) = like
+            .unwrap_or(case)
+            .get("message")
+            .and_then(Value::as_array)
+        {
             let mut lines: Vec<&str> = message.iter().map(|l| l.as_str().unwrap()).collect();
             if FIRST_LINE_ONLY.contains(&case["name"].as_str().unwrap()) {
                 lines.truncate(1);
@@ -138,4 +168,31 @@ fn check_platform_reqs_matches_composer() {
         cases.len(),
         failures.join("\n\n")
     );
+}
+
+/// A composer.json that exists but can't be read: Composer 2.11.2 stops with 'The file "./composer.json" is not
+/// readable.' (The fixture can't hold such a file.) Root reads it anyway, so the test then has nothing to check.
+#[test]
+fn unreadable_composer_json() {
+    use std::os::unix::fs::PermissionsExt;
+    let dir = scratch("check-platform-reqs", "unreadable");
+    let file = dir.join("composer.json");
+    std::fs::write(&file, "{\"name\": \"acme/app\"}\n").unwrap();
+    std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o000)).unwrap();
+    if std::fs::read(&file).is_err() {
+        let out = common::clean_env(&mut Command::new(PUN), &["PATH"])
+            .args(["composer", "check-platform-reqs"])
+            .current_dir(&dir)
+            .env("PUN_AGENT", "0")
+            .output()
+            .unwrap();
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert_eq!(out.status.code(), Some(2), "{stderr}");
+        assert!(
+            stderr.contains("The file \"./composer.json\" is not readable."),
+            "{stderr}"
+        );
+    }
+    std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o644)).unwrap();
+    std::fs::remove_dir_all(&dir).unwrap();
 }

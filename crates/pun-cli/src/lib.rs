@@ -30,6 +30,7 @@ mod run;
 mod sampler;
 mod self_update;
 mod update;
+mod validate;
 mod watch;
 mod workspace;
 mod x;
@@ -382,6 +383,8 @@ pub(crate) enum Exit {
     /// Problems found, or files changed under `--test` or `--repair`.
     Failure = 1,
     RunError = 2,
+    /// `pun composer validate`: the composer.json is missing or unreadable (Composer's exit 3).
+    Unreadable = 3,
     /// The lock doesn't meet composer.json's requirements (Composer's `Installer::ERROR_LOCK_FILE_INVALID`).
     LockInvalid = 4,
 }

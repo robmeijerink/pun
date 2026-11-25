@@ -19,6 +19,8 @@ enum ComposerCmd {
     /// Write the autoloader again from vendor/composer/installed.json, as `composer dump-autoload` does.
     #[command(visible_alias = "dumpautoload")]
     DumpAutoload(DumpArgs),
+    /// Check composer.json and composer.lock, as `composer validate` does.
+    Validate(crate::validate::ValidateArgs),
     #[command(external_subcommand)]
     Other(Vec<String>),
 }
@@ -67,6 +69,7 @@ struct DumpArgs {
 pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
     match a.cmd {
         ComposerCmd::DumpAutoload(d) => dump(&d),
+        ComposerCmd::Validate(v) => crate::validate::run(&v),
         ComposerCmd::Other(args) => bail!(
             "`pun composer {}` is not built yet; Pun does not run the Composer CLI",
             args.first().map_or("", String::as_str)

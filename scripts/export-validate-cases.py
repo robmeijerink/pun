@@ -89,6 +89,12 @@ CASES = [
     ('parse-error-bom', {'composer.json': '\ufeff' + j(BASE)}, []),
     ('parse-error-comment', {'composer.json': '{\n    // a comment\n    "name": "acme/app"\n}\n'}, []),
     # ConfigValidator.
+    # jsonlint reports the first duplicate it reduces, at the line its value ends on, and misses one whose earlier
+    # value is null (it checks with isset()).
+    ('duplicate-key-multiline-value', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"extra": {"a": 1},\n"extra": {\n"b": 2\n}\n,"type": "library"\n}\n'}, []),
+    ('duplicate-key-split', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"type": "library",\n"type"\n:\n"project"\n}\n'}, []),
+    ('duplicate-key-after-null', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"homepage": null,\n"homepage": "https://example.com"\n}\n'}, []),
+    ('duplicate-key-inner-first', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"extra": {"a": 1},\n"extra": {\n"b": 1,\n"b": 2\n}\n}\n'}, []),
     ('duplicate-key-nested', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "require": {\n        "php": "^8.3",\n        "php": "^8.4"\n    }\n}\n'}, []),
     ('duplicate-key', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "license": "MIT"\n}\n'}, []),
     ('license-proprietary', {'composer.json': j(base(license='proprietary'))}, []),
@@ -144,6 +150,8 @@ CASES = [
     ('with-dependencies', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'require': {'acme/x': '*'}})}, ['--with-dependencies']),
     # Composer validates vendor/<name>, not the package's install-path, and skips what isn't there.
     ('with-dependencies-vendor-path', {'composer.json': j(BASE), 'vendor/composer/installed.json': j({'packages': [{'name': 'acme/dep', 'version': '1.0.0', 'type': 'library', 'install-path': '../elsewhere/dep'}, {'name': 'acme/meta', 'version': '1.0.0', 'type': 'metapackage'}, {'name': 'acme/gone', 'version': '1.0.0', 'type': 'library'}], 'dev': True, 'dev-package-names': []}), 'vendor/elsewhere/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'version': '1.0.0'}), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'keywords': ['bad!']})}, ['-A']),
+    # A dependency isn't loaded as the root is, so its report gets this far with a name the schema refuses.
+    ('with-dependencies-uppercase-name', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'Acme/FooBAR-BazQux', 'description': 'd', 'license': 'MIT'})}, ['-A']),
     ('with-dependencies-strict', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'require': {'acme/x': '*'}})}, ['-A', '--strict']),
 ]
 

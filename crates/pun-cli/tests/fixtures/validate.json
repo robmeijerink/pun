@@ -469,6 +469,46 @@
   ]
  },
  {
+  "name": "duplicate-key-multiline-value",
+  "files": {
+   "composer.json": "{\n\"name\": \"acme/app\",\n\"description\": \"d\",\n\"license\": \"MIT\",\n\"extra\": {\"a\": 1},\n\"extra\": {\n\"b\": 2\n}\n,\"type\": \"library\"\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "./composer.json is valid, but with a few warnings\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# General warnings\n- Key extra is a duplicate in ./composer.json at line 8\n"
+ },
+ {
+  "name": "duplicate-key-split",
+  "files": {
+   "composer.json": "{\n\"name\": \"acme/app\",\n\"description\": \"d\",\n\"license\": \"MIT\",\n\"type\": \"library\",\n\"type\"\n:\n\"project\"\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "./composer.json is valid, but with a few warnings\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# General warnings\n- Key type is a duplicate in ./composer.json at line 8\n"
+ },
+ {
+  "name": "duplicate-key-after-null",
+  "files": {
+   "composer.json": "{\n\"name\": \"acme/app\",\n\"description\": \"d\",\n\"license\": \"MIT\",\n\"homepage\": null,\n\"homepage\": \"https://example.com\"\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "duplicate-key-inner-first",
+  "files": {
+   "composer.json": "{\n\"name\": \"acme/app\",\n\"description\": \"d\",\n\"license\": \"MIT\",\n\"extra\": {\"a\": 1},\n\"extra\": {\n\"b\": 1,\n\"b\": 2\n}\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "./composer.json is valid, but with a few warnings\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# General warnings\n- Key b is a duplicate in ./composer.json at line 8\n"
+ },
+ {
   "name": "duplicate-key-nested",
   "files": {
    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\",\n        \"php\": \"^8.4\"\n    }\n}\n"
@@ -1031,6 +1071,20 @@
   "exit": 0,
   "stdout": "./composer.json is valid\n",
   "stderr": "acme/dep is valid, but with a few warnings\n# General warnings\n- keywords.0 : invalid value (bad!), must match [\\p{N}\\p{L} ._-]+\n"
+ },
+ {
+  "name": "with-dependencies-uppercase-name",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/dep\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"install-path\": \"../acme/dep\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+   "vendor/acme/dep/composer.json": "{\n    \"name\": \"Acme/FooBAR-BazQux\",\n    \"description\": \"d\",\n    \"license\": \"MIT\"\n}\n"
+  },
+  "args": [
+   "-A"
+  ],
+  "exit": 2,
+  "stdout": "./composer.json is valid\n",
+  "stderr": "acme/dep is invalid, the following errors/warnings were found:\n# General errors\n- name : Does not match the regex pattern ^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$\n- name : Acme/FooBAR-BazQux is invalid, it should not contain uppercase characters. We suggest using acme/foo-bar-baz-qux instead.\n# Publish errors\n- Name \"Acme/FooBAR-BazQux\" does not match the best practice (e.g. lower-cased/with-dashes). We suggest using \"acme/foo-bar-baz-qux\" instead. As such you will not be able to submit it to Packagist.\n"
  },
  {
   "name": "with-dependencies-strict",

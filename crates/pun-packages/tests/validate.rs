@@ -172,10 +172,13 @@ fn load(dir: &Path, file: &str) -> Option<String> {
         Ok(manifest) => manifest,
         Err(e) => return Some(format!("{e:#}")),
     };
-    let lock = dir.join(file.replace(".json", ".lock"));
+    // `Factory::getLockFile`: `.json` becomes `.lock`; any other name gets `.lock` added.
+    let lock_display = file
+        .strip_suffix(".json")
+        .map_or_else(|| format!("{file}.lock"), |stem| format!("{stem}.lock"));
+    let lock = dir.join(&lock_display);
     let locking = manifest.get("config").and_then(|c| c.get("lock")) != Some(&Value::Bool(false));
     if locking && lock.exists() {
-        let lock_display = file.replace(".json", ".lock");
         let result = lock_errors(
             &manifest,
             &std::fs::read(&path).unwrap(),

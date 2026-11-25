@@ -2114,6 +2114,19 @@
   ]
  },
  {
+  "name": "file-without-json-extension",
+  "files": {
+   "config": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "config.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [],\n    \"packages-dev\": []\n}\n"
+  },
+  "args": [
+   "config"
+  ],
+  "exit": 2,
+  "stdout": "config is valid but your composer.lock has some errors\n",
+  "stderr": "# Lock file errors\n- The lock file is not up to date with the latest changes in composer.json, it is recommended that you run `composer update` or `composer update <package name>`.\n"
+ },
+ {
   "name": "lock-not-object",
   "files": {
    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",

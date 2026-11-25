@@ -199,3 +199,36 @@ fn validate_matches_composer() {
         failures.join("\n\n")
     );
 }
+
+/// A composer.json that exists but can't be read: Composer 2.11.2 prints "./composer.json is not readable." and exits 3.
+/// (The fixture can't hold such a file.) Root reads it anyway, so the test then has nothing to check.
+#[test]
+fn unreadable_file() {
+    use std::os::unix::fs::PermissionsExt;
+    let dir = scratch("validate", "unreadable");
+    let file = dir.join("composer.json");
+    std::fs::write(&file, "{\"name\": \"acme/app\"}\n").unwrap();
+    std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o000)).unwrap();
+    if std::fs::read(&file).is_err() {
+        let out = common::clean_env(&mut Command::new(PUN), &["PATH"])
+            .args(["composer", "validate"])
+            .current_dir(&dir)
+            .env("PUN_AGENT", "0")
+            .output()
+            .unwrap();
+        assert_eq!(
+            (
+                out.status.code(),
+                String::from_utf8_lossy(&out.stdout).into_owned(),
+                String::from_utf8_lossy(&out.stderr).into_owned()
+            ),
+            (
+                Some(3),
+                String::new(),
+                "./composer.json is not readable.\n".into()
+            )
+        );
+    }
+    std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o644)).unwrap();
+    std::fs::remove_dir_all(&dir).unwrap();
+}

@@ -225,6 +225,8 @@ CASES = [
     # Locker reads `packages` and `packages-dev` with isset(): null is absent.
     ('lock-packages-null', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'x', 'packages': None})}, []),
     ('lock-packages-dev-null', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'x', 'packages': [], 'packages-dev': None})}, []),
+    # Factory::getLockFile: a composer file not named *.json has "<file>.lock".
+    ('file-without-json-extension', {'config': j(BASE), 'config.lock': j({'content-hash': 'x', 'packages': [], 'packages-dev': []})}, ['config']),
     ('lock-not-object', {'composer.json': j(BASE), 'composer.lock': '[]\n'}, []),
     ('lock-without-packages', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'abc'})}, []),
     ('lock-invalid-json', {'composer.json': j(BASE), 'composer.lock': '{"content-hash": \n'}, []),

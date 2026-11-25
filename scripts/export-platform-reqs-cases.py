@@ -322,6 +322,19 @@ def main():
     probe['ini'] = []
     probe['inputs'] = []
     cases = [record(*case) for case in CASES]
+    # Every platform package Composer sees on this PHP, each version and each lib-* included: the root requires them
+    # all, so the table shows what Pun's probe makes of the same PHP.
+    home = tempfile.mkdtemp(prefix='pun-platform-home-')
+    work = tempfile.mkdtemp(prefix='pun-platform-')
+    try:
+        write(work, {'composer.json': j({'name': 'acme/app'})})
+        shown = json.loads(composer(work, ['show', '--platform', '--format=json'], home).stdout)
+    finally:
+        shutil.rmtree(home)
+        shutil.rmtree(work)
+    names = sorted(p['name'] for p in shown['platform'])
+    cases.append(record('every-platform-package', {'composer.json': j({'name': 'acme/app', 'require': {n: '*' for n in names}}), **installed(package('acme/plain'))}, []))
+    cases.append(record('every-platform-package-json', {'composer.json': j({'name': 'acme/app', 'require': {n: '*' for n in names}}), **installed(package('acme/plain'))}, ['--format=json']))
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w') as f:
         json.dump({'probe': probe, 'cases': cases}, f, indent=1, ensure_ascii=False)

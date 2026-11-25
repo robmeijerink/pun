@@ -273,6 +273,13 @@ fn requirement(
             };
             (link.constraint.clone(), shown)
         };
+        // `Constraint::getPrettyString`: a pretty string PHP takes for false ("" or "0", the version Composer gives an
+        // extension whose own isn't one) shows the constraint as composer/semver writes it.
+        let shown = if shown.is_empty() || shown == "0" {
+            composer_string(&constraint)
+        } else {
+            shown
+        };
         let name = if own {
             package.pretty_name.clone()
         } else {

@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own. Only `dump-autoload` exists today.
+Run Composer commands that have no `pun` command of their own: `dump-autoload` and `validate`.
 
 ## Usage
 
@@ -14,6 +14,8 @@ pun composer <command> [options]
 ```bash
 pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
+pun composer validate
+pun composer validate --strict --with-dependencies
 ```
 
 ## Options
@@ -34,7 +36,23 @@ For `dump-autoload` (alias `dumpautoload`):
 | `--ignore-platform-reqs` | Write no `platform_check.php`. |
 | `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
 
+For `validate`:
+
+| Option | Description |
+| --- | --- |
+| `[file]` | The `composer.json` to check (default: `COMPOSER`, else `./composer.json`). |
+| `--no-check-all` | Skip the warnings for unbound (`*`, `>=1.0`) and exact (`1.2.3`) constraints. |
+| `--check-lock` | Check `composer.lock` even when `config.lock` is false. |
+| `--no-check-lock` | Report a stale `composer.lock` as warnings, not errors. |
+| `--no-check-publish` | Skip what only stops the package from being published. |
+| `--no-check-version` | Skip the warning for a `version` field. |
+| `-A`, `--with-dependencies` | Also check `vendor/<name>/composer.json` of every installed package. |
+| `--strict` | Exit 1 for warnings too. |
+| `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
+
 ## What happens
+
+`dump-autoload`:
 
 - Writes the autoloader again from `vendor/composer/installed.json`.
 - The files match `composer dump-autoload` byte for byte.
@@ -42,14 +60,23 @@ For `dump-autoload` (alias `dumpautoload`):
 - Without `--dev` or `--no-dev`, follows the last install.
 - Pun never calls the Composer CLI.
 
+`validate`:
+
+- Checks `composer.json` as `composer validate` does, with the same messages: the JSON syntax (the same parse errors), Composer's JSON schema (what only the strict schema refuses is a publish error), and Composer's own checks of names, versions, constraints, licenses (SPDX), URLs, authors, autoload and the rest.
+- Checks that `composer.lock` is up to date and has every requirement.
+- A `composer.json` that Composer can't load (a parse error, a value the schema refuses, a package requiring itself) is an error, not a report.
+
 ## Limitations
 
-- Only `dump-autoload` exists. Any other command exits 2.
+- Only `dump-autoload` and `validate` exist. Any other command exits 2.
+- `validate` reads `time` in the forms Composer documents (`YYYY-MM-DD`, `YYYY-MM-DD HH:MM:SS`) and ISO 8601's, and reports no error for any other value. Composer reports a value PHP's `DateTime` can't parse.
+- Where Composer itself crashes on a value of the wrong type (a number as a constraint, a list mixing licenses and numbers), `validate` reports what Composer reports without the crash.
 
 ## Exit codes
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written. |
-| 1 | Written, but a package is missing from `vendor/`. |
-| 2 | Unknown command, or another error. |
+| 0 | Written, or valid (warnings allowed). |
+| 1 | Written, but a package is missing from `vendor/`; or `validate --strict` found warnings. |
+| 2 | Unknown command; `validate` found errors (publish and lock errors included, unless left out by an option); or another error. |
+| 3 | `validate`: the `composer.json` is missing or unreadable. |

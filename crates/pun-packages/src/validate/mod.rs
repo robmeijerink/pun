@@ -5,6 +5,7 @@ use crate::error::{Context, Result, bail};
 use crate::lock::{Lock, content_hash};
 use crate::verify::missing_requirements;
 
+mod jsonlint;
 mod loader;
 mod schema;
 mod spdx;
@@ -451,11 +452,23 @@ pub fn read(file: &Path, display: &str) -> Result<Map<String, Value>> {
 
 /// The JSON in `file` and its text.
 fn read_text(file: &Path, display: &str) -> Result<(Value, String)> {
-    let text =
-        std::fs::read_to_string(file).with_context(|| format!("\"{display}\" is not readable"))?;
-    match serde_json::from_str(&text) {
-        Ok(data) => Ok((data, text)),
-        Err(_) => bail!("\"{display}\" does not contain valid JSON"),
+    let bytes = std::fs::read(file).with_context(|| format!("\"{display}\" is not readable"))?;
+    let data = parse_json(&bytes, display)?;
+    Ok((data, String::from_utf8_lossy(&bytes).into_owned()))
+}
+
+/// `JsonFile::parseJson`: the JSON, else jsonlint's first error, else (`json_decode` refusing what jsonlint takes) the
+/// UTF-8 error, else null as `json_decode` gives it.
+fn parse_json(bytes: &[u8], display: &str) -> Result<Value> {
+    if let Ok(data) = serde_json::from_slice(bytes) {
+        return Ok(data);
+    }
+    match jsonlint::lint(bytes) {
+        Some(error) => bail!("\"{display}\" does not contain valid JSON\n{error}"),
+        None if std::str::from_utf8(bytes).is_err() => {
+            bail!("\"{display}\" is not UTF-8, could not parse as JSON")
+        }
+        None => Ok(Value::Null),
     }
 }
 
@@ -465,13 +478,13 @@ fn read_text(file: &Path, display: &str) -> Result<(Value, String)> {
 /// path as Composer names it.
 pub fn lock_errors(
     manifest: &Map<String, Value>,
-    composer_json: &str,
-    lock_text: &str,
+    composer_json: &[u8],
+    lock_text: &[u8],
     lock_display: &str,
 ) -> Result<Vec<String>> {
-    let mut lock: Map<String, Value> = match serde_json::from_str(lock_text) {
-        Ok(Value::Object(lock)) => lock,
-        _ => bail!("\"{lock_display}\" does not contain valid JSON"),
+    // `Locker::isLocked`: a lock that reads as anything but an object has no `packages`.
+    let Value::Object(mut lock) = parse_json(lock_text, lock_display)? else {
+        return Ok(vec![]);
     };
     if !lock.contains_key("packages") {
         return Ok(vec![]);
@@ -483,7 +496,7 @@ pub fn lock_errors(
     };
     let fresh = match (text("content-hash"), text("hash")) {
         (Some(hash), _) => hash == content_hash(manifest),
-        (None, Some(hash)) => hash == crate::php::md5(composer_json.as_bytes()),
+        (None, Some(hash)) => hash == crate::php::md5(composer_json),
         (None, None) => false,
     };
     let mut errors = vec![];

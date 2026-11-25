@@ -866,6 +866,425 @@
   "stderr": "./composer.json is valid, but with a few warnings\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# General warnings\n- Key b is a duplicate in ./composer.json at line 8\n"
  },
  {
+  "name": "parse-error-array",
+  "files": {
+   "composer.json": "{\"name\": \"acme/app\", \"keywords\": [\"a\", \"b\",]}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                                                                        \n  \"./composer.json\" does not contain valid JSON                                                                         \n  Parse error on line 1:                                                                                                \n  ...eywords\": [\"a\", \"b\",]}                                                                                             \n  ----------------------^                                                                                               \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[' - It appears you have an extra trailing comma  \n                                                                                                                        \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "...eywords\": [\"a\", \"b\",]}",
+   "----------------------^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[' - It appears you have an extra trailing comma"
+  ]
+ },
+ {
+  "name": "parse-error-array-missing-comma",
+  "files": {
+   "composer.json": "{\"keywords\": [\"a\" \"b\"]}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  {\"keywords\": [\"a\" \"b\"]}                        \n  -----------------^                             \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"keywords\": [\"a\" \"b\"]}",
+   "-----------------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-missing-colon",
+  "files": {
+   "composer.json": "{\"name\" \"acme/app\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  {\"name\" \"acme/app\"}                            \n  -------^                                       \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"name\" \"acme/app\"}",
+   "-------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-block-comment",
+  "files": {
+   "composer.json": "{/* x */\"name\": \"acme/app\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                      \n  \"./composer.json\" does not contain valid JSON       \n  Lexical error on line 1. Comments are not allowed.  \n  {/* x */\"name\": \"acme                               \n  ^                                                   \n                                                      \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Lexical error on line 1. Comments are not allowed.",
+   "{/* x */\"name\": \"acme",
+   "^"
+  ]
+ },
+ {
+  "name": "parse-error-close-comment",
+  "files": {
+   "composer.json": "{\"name\": \"acme/app\" */}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Lexical error on line 1. Unexpected token.     \n  {\"name\": \"acme/app\" */}                        \n  -------------------^                           \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Lexical error on line 1. Unexpected token.",
+   "{\"name\": \"acme/app\" */}",
+   "-------------------^"
+  ]
+ },
+ {
+  "name": "parse-error-literal",
+  "files": {
+   "composer.json": "{\"name\": tru}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"name\": tru}                                                           \n  --------^                                                               \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"name\": tru}",
+   "--------^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-leading-zero",
+  "files": {
+   "composer.json": "{\"a\": 01}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"a\": 01}                                                               \n  -----^                                                                  \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": 01}",
+   "-----^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-trailing-point",
+  "files": {
+   "composer.json": "{\"a\": 1.}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  {\"a\": 1.}                                      \n  ------^                                        \n  Expected one of: 'EOF', '}', ',', ']'          \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": 1.}",
+   "------^",
+   "Expected one of: 'EOF', '}', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-leading-point",
+  "files": {
+   "composer.json": "{\"a\": .5}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"a\": .5}                                                               \n  -----^                                                                  \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": .5}",
+   "-----^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-plus",
+  "files": {
+   "composer.json": "{\"a\": +1}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"a\": +1}                                                               \n  -----^                                                                  \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": +1}",
+   "-----^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-exponent",
+  "files": {
+   "composer.json": "{\"a\": 1e}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"a\": 1e}                                                               \n  -----^                                                                  \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": 1e}",
+   "-----^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-control-character",
+  "files": {
+   "composer.json": "{\"a\": \"x\ty\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                                                                          \n  \"./composer.json\" does not contain valid JSON                                                                           \n  Parse error on line 1:                                                                                                  \n  {\"a\": \"x\ty\"}                                                                                                             \n  -----^                                                                                                                  \n  Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid  \n                                                                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": \"x\ty\"}",
+   "-----^",
+   "Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid"
+  ]
+ },
+ {
+  "name": "parse-error-short-unicode",
+  "files": {
+   "composer.json": "{\"a\": \"\\u12\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                                                                          \n  \"./composer.json\" does not contain valid JSON                                                                           \n  Parse error on line 1:                                                                                                  \n  {\"a\": \"\\u12\"}                                                                                                           \n  -----^                                                                                                                  \n  Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid  \n                                                                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": \"\\u12\"}",
+   "-----^",
+   "Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid"
+  ]
+ },
+ {
+  "name": "parse-error-backslash-end",
+  "files": {
+   "composer.json": "{\"a\": \"x\\\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                                                                          \n  \"./composer.json\" does not contain valid JSON                                                                           \n  Parse error on line 1:                                                                                                  \n  {\"a\": \"x\\\"}                                                                                                             \n  -----^                                                                                                                  \n  Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid  \n                                                                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"a\": \"x\\\"}",
+   "-----^",
+   "Invalid string, it appears you forgot to terminate a string, or attempted to write a multiline string which is invalid"
+  ]
+ },
+ {
+  "name": "parse-error-at-start",
+  "files": {
+   "composer.json": "x\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  x...                                                                    \n  ^                                                                       \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "x...",
+   "^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "parse-error-second-byte",
+  "files": {
+   "composer.json": "{x}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  {x}                                            \n  ^                                              \n  Expected one of: 'STRING', '}'                 \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{x}",
+   "^",
+   "Expected one of: 'STRING', '}'"
+  ]
+ },
+ {
+  "name": "parse-error-long-line",
+  "files": {
+   "composer.json": "{\"description\": \"a very long description that goes on and on\", \"name\" \"acme/app\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  ... on and on\", \"name\" \"acme/app\"}             \n  ----------------------^                        \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "... on and on\", \"name\" \"acme/app\"}",
+   "----------------------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-crlf",
+  "files": {
+   "composer.json": "{\r\n    \"name\": \"acme/app\",\r\n    \"license\" \"MIT\"\r\n}\r\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 3:                         \n  ...pp\",\n    \"license\" \"MIT\"\n}                    \n  ---------------------^                         \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 3:",
+   "...pp\",",
+   "  \"license\" \"MIT\"",
+   "}",
+   "---------------------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-tabs",
+  "files": {
+   "composer.json": "{\n\t\"name\": \"acme/app\"\n\t\"license\": \"MIT\"\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 2:                         \n  ...\"name\": \"acme/app\"\t\"license\": \"MIT\"}         \n  ---------------------^                         \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 2:",
+   "...\"name\": \"acme/app\"\t\"license\": \"MIT\"}",
+   "---------------------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-unicode-context",
+  "files": {
+   "composer.json": "{\"description\": \"ünïcödé text before\", \"name\" \"acme/app\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  ...ext before\", \"name\" \"acme/app\"}             \n  ----------------------^                        \n  Expected one of: 'EOF', '}', ':', ',', ']'     \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "...ext before\", \"name\" \"acme/app\"}",
+   "----------------------^",
+   "Expected one of: 'EOF', '}', ':', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-nested",
+  "files": {
+   "composer.json": "{\"require\": {\"php\": \"^8.3\",}, \"name\": \"acme/app\"}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                    \n  \"./composer.json\" does not contain valid JSON                     \n  Parse error on line 1:                                            \n  ...re\": {\"php\": \"^8.3\",}, \"name\": \"acme/app                       \n  ----------------------^                                           \n  Expected: 'STRING' - It appears you have an extra trailing comma  \n                                                                    \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "...re\": {\"php\": \"^8.3\",}, \"name\": \"acme/app",
+   "----------------------^",
+   "Expected: 'STRING' - It appears you have an extra trailing comma"
+  ]
+ },
+ {
+  "name": "parse-error-second-value",
+  "files": {
+   "composer.json": "{\"name\": \"acme/app\"}\n{}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                 \n  \"./composer.json\" does not contain valid JSON  \n  Parse error on line 1:                         \n  ...\"name\": \"acme/app\"}{}                       \n  ---------------------^                         \n  Expected one of: 'EOF', '}', ',', ']'          \n                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "...\"name\": \"acme/app\"}{}",
+   "---------------------^",
+   "Expected one of: 'EOF', '}', ',', ']'"
+  ]
+ },
+ {
+  "name": "parse-error-only-whitespace",
+  "files": {
+   "composer.json": "  \n  \n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.json\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n                                                                          \n  ---^                                                                    \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "---^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
+  "name": "not-utf8",
+  "files": {
+   "composer.json": {
+    "hex": "7b226e616d65223a202261636d652fff61707022207d0a"
+   }
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 388:\n                                                           \n  \"./composer.json\" is not UTF-8, could not parse as JSON  \n                                                           \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" is not UTF-8, could not parse as JSON"
+  ]
+ },
+ {
+  "name": "parse-error-dependency",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/dep\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"install-path\": \"../acme/dep\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+   "vendor/acme/dep/composer.json": "{\"name\": \"acme/dep\",}\n"
+  },
+  "args": [
+   "-A"
+  ],
+  "exit": 2,
+  "stdout": "./composer.json is valid\n",
+  "stderr": "acme/dep is invalid, the following errors/warnings were found:\n# General errors\n- \"{dir}/vendor/acme/dep/composer.json\" does not contain valid JSON\nParse error on line 1:\n{\"name\": \"acme/dep\",}\n-------------------^\nExpected: 'STRING' - It appears you have an extra trailing comma\n"
+ },
+ {
   "name": "duplicate-key-nested",
   "files": {
    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\",\n        \"php\": \"^8.4\"\n    }\n}\n"

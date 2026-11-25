@@ -121,6 +121,32 @@ CASES = [
     ('duplicate-key-split', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"type": "library",\n"type"\n:\n"project"\n}\n'}, []),
     ('duplicate-key-after-null', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"homepage": null,\n"homepage": "https://example.com"\n}\n'}, []),
     ('duplicate-key-inner-first', {'composer.json': '{\n"name": "acme/app",\n"description": "d",\n"license": "MIT",\n"extra": {"a": 1},\n"extra": {\n"b": 1,\n"b": 2\n}\n}\n'}, []),
+    # More of jsonlint's errors.
+    ('parse-error-array', {'composer.json': '{"name": "acme/app", "keywords": ["a", "b",]}\n'}, []),
+    ('parse-error-array-missing-comma', {'composer.json': '{"keywords": ["a" "b"]}\n'}, []),
+    ('parse-error-missing-colon', {'composer.json': '{"name" "acme/app"}\n'}, []),
+    ('parse-error-block-comment', {'composer.json': '{/* x */"name": "acme/app"}\n'}, []),
+    ('parse-error-close-comment', {'composer.json': '{"name": "acme/app" */}\n'}, []),
+    ('parse-error-literal', {'composer.json': '{"name": tru}\n'}, []),
+    ('parse-error-leading-zero', {'composer.json': '{"a": 01}\n'}, []),
+    ('parse-error-trailing-point', {'composer.json': '{"a": 1.}\n'}, []),
+    ('parse-error-leading-point', {'composer.json': '{"a": .5}\n'}, []),
+    ('parse-error-plus', {'composer.json': '{"a": +1}\n'}, []),
+    ('parse-error-exponent', {'composer.json': '{"a": 1e}\n'}, []),
+    ('parse-error-control-character', {'composer.json': '{"a": "x\ty"}\n'}, []),
+    ('parse-error-short-unicode', {'composer.json': '{"a": "\\u12"}\n'}, []),
+    ('parse-error-backslash-end', {'composer.json': '{"a": "x\\"}\n'}, []),
+    ('parse-error-at-start', {'composer.json': 'x\n'}, []),
+    ('parse-error-second-byte', {'composer.json': '{x}\n'}, []),
+    ('parse-error-long-line', {'composer.json': '{"description": "a very long description that goes on and on", "name" "acme/app"}\n'}, []),
+    ('parse-error-crlf', {'composer.json': '{\r\n    "name": "acme/app",\r\n    "license" "MIT"\r\n}\r\n'}, []),
+    ('parse-error-tabs', {'composer.json': '{\n\t"name": "acme/app"\n\t"license": "MIT"\n}\n'}, []),
+    ('parse-error-unicode-context', {'composer.json': '{"description": "ünïcödé text before", "name" "acme/app"}\n'}, []),
+    ('parse-error-nested', {'composer.json': '{"require": {"php": "^8.3",}, "name": "acme/app"}\n'}, []),
+    ('parse-error-second-value', {'composer.json': '{"name": "acme/app"}\n{}\n'}, []),
+    ('parse-error-only-whitespace', {'composer.json': '  \n  \n'}, []),
+    ('not-utf8', {'composer.json': {'hex': '7b226e616d65223a202261636d652fff61707022207d0a'}}, []),
+    ('parse-error-dependency', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': '{"name": "acme/dep",}\n'}, ['-A']),
     ('duplicate-key-nested', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "require": {\n        "php": "^8.3",\n        "php": "^8.4"\n    }\n}\n'}, []),
     ('duplicate-key', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "license": "MIT"\n}\n'}, []),
     ('license-proprietary', {'composer.json': j(base(license='proprietary'))}, []),
@@ -202,8 +228,10 @@ def write(dir, files):
     for path, content in files.items():
         full = os.path.join(dir, path)
         os.makedirs(os.path.dirname(full), exist_ok=True)
-        with open(full, 'w') as f:
-            f.write(content)
+        # A file that isn't UTF-8 is given as {"hex": "..."}.
+        data = bytes.fromhex(content['hex']) if isinstance(content, dict) else content.encode()
+        with open(full, 'wb') as f:
+            f.write(data)
 
 
 def exception_message(stderr):
@@ -241,7 +269,9 @@ def record(name, files, args, options):
             files.update(options.get('after_lock', {}))
             write(work, files)
         r = composer(work, ['validate', *args], home)
-        case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': r.stdout, 'stderr': r.stderr}
+        # The project's own directory, which a dependency's path starts with, as `{dir}`.
+        here = lambda text: text.replace(os.path.realpath(work), '{dir}')
+        case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': here(r.stdout), 'stderr': here(r.stderr)}
         if 'Exception trace:' in r.stderr:
             # Composer itself crashed (a PHP TypeError and the like): tests/validate.rs says what Pun does instead.
             # Its first line, without where it was called from, and no trace: those name local paths.

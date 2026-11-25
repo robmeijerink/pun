@@ -80,8 +80,8 @@ pub(crate) fn run(a: &ValidateArgs) -> Result<Exit> {
         if locking {
             lock = lock_errors(
                 &manifest,
-                &std::fs::read_to_string(&path)?,
-                &std::fs::read_to_string(&lock_path)?,
+                &std::fs::read(&path)?,
+                &std::fs::read(&lock_path)?,
                 &lock_file,
             )?;
         } else {

@@ -22,6 +22,7 @@ mod list_files;
 mod migrate;
 mod php_diff;
 mod pint_error;
+mod platform_reqs;
 mod prettier;
 mod render;
 mod report;

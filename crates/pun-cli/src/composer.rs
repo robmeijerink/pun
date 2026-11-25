@@ -19,6 +19,9 @@ enum ComposerCmd {
     /// Write the autoloader again from vendor/composer/installed.json, as `composer dump-autoload` does.
     #[command(visible_alias = "dumpautoload")]
     DumpAutoload(DumpArgs),
+    /// Check the platform requirements of the installed packages against the real platform, as
+    /// `composer check-platform-reqs` does.
+    CheckPlatformReqs(crate::platform_reqs::PlatformReqsArgs),
     #[command(external_subcommand)]
     Other(Vec<String>),
 }
@@ -67,6 +70,7 @@ struct DumpArgs {
 pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
     match a.cmd {
         ComposerCmd::DumpAutoload(d) => dump(&d),
+        ComposerCmd::CheckPlatformReqs(c) => crate::platform_reqs::run(&c),
         ComposerCmd::Other(args) => bail!(
             "`pun composer {}` is not built yet; Pun does not run the Composer CLI",
             args.first().map_or("", String::as_str)

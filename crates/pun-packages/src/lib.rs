@@ -11,6 +11,7 @@ pub mod lock;
 pub mod manifest_edit;
 pub mod paths;
 pub mod php;
+pub mod platform_reqs;
 pub mod plugin_host;
 pub mod plugins;
 pub mod resolver;

@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own. Only `dump-autoload` exists today.
+Run Composer commands that have no `pun` command of their own: `dump-autoload` and `check-platform-reqs`.
 
 ## Usage
 
@@ -14,6 +14,8 @@ pun composer <command> [options]
 ```bash
 pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
+pun composer check-platform-reqs
+pun composer check-platform-reqs --lock --no-dev --format=json
 ```
 
 ## Options
@@ -34,7 +36,18 @@ For `dump-autoload` (alias `dumpautoload`):
 | `--ignore-platform-reqs` | Write no `platform_check.php`. |
 | `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
 
+For `check-platform-reqs`:
+
+| Option | Description |
+| --- | --- |
+| `--no-dev` | Leave out the requirements of `require-dev` and of the dev packages. |
+| `--lock` | Check the packages of `composer.lock`, not those installed in `vendor/`. |
+| `-f`, `--format=<format>` | `text` (the default) or `json`. Another value is `text`, as in Composer. |
+| `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
+
 ## What happens
+
+`dump-autoload`:
 
 - Writes the autoloader again from `vendor/composer/installed.json`.
 - The files match `composer dump-autoload` byte for byte.
@@ -42,14 +55,21 @@ For `dump-autoload` (alias `dumpautoload`):
 - Without `--dev` or `--no-dev`, follows the last install.
 - Pun never calls the Composer CLI.
 
+`check-platform-reqs`:
+
+- Checks the platform requirements (`php`, `ext-*`, `lib-*`, `composer-plugin-api` and the rest) of the packages installed in `vendor/` and of the root against the real platform: the PHP that `PHP_BINARY`, else `php` on the `PATH`, runs. `config.platform` doesn't count, as in Composer.
+- With nothing installed in `vendor/`, it checks the packages of `composer.lock` instead. A package whose directory is gone from `vendor/` doesn't count as installed.
+- A package that provides or replaces a platform package meets its requirements, as in Composer.
+- Prints Composer's table, or its JSON with `--format=json`.
+
 ## Limitations
 
-- Only `dump-autoload` exists. Any other command exits 2.
+- Only `dump-autoload` and `check-platform-reqs` exist. Any other command exits 2.
 
 ## Exit codes
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written. |
-| 1 | Written, but a package is missing from `vendor/`. |
-| 2 | Unknown command, or another error. |
+| 0 | Written, or every platform requirement is met. |
+| 1 | Written, but a package is missing from `vendor/`; or the platform has a required package at a version that doesn't match. |
+| 2 | Unknown command, or another error; or the platform lacks a required package. |

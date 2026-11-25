@@ -104,7 +104,21 @@ CASES = [
     ('json-empty', {'composer.json': j({'name': 'acme/app'}), **installed(package('acme/plain'))}, ['--format=json']),
     ('format-text', {'composer.json': j(root()), **installed(OLD)}, ['--format=text']),
     ('format-invalid', {'composer.json': j(root()), **installed(OLD)}, ['--format=xml']),
+    # Branch aliases: the local repository and the lock hold an aliased package and its alias.
+    ('alias-provider', {'composer.json': j(root()), **installed(package('acme/poly', version='dev-main', version_normalized='dev-main', extra={'branch-alias': {'dev-main': '2.x-dev'}}, provide={'ext-fake': 'self.version'}), package('acme/wants', require={'ext-fake': '^9.0'}))}, []),
+    ('alias-failed-twice', {'composer.json': j(root()), **installed(package('acme/old-dev', version='dev-main', version_normalized='dev-main', default_branch=True, require={'php': '<8.0'}))}, []),
+    ('two-providers-fail', {'composer.json': j(root()), **installed(package('acme/p1', provide={'ext-fake': '1.0.0'}), package('acme/p2', replace={'ext-fake': '1.5.0'}), WANTS_FAKE2)}, []),
+    ('root-provides', {'composer.json': j(root(provide={'ext-fake': '2.1.0'}, require={'php': '>=8.1', 'ext-fake': '^2.0'})), **installed(package('acme/plain'))}, []),
+    ('lock-root-alias', {'composer.json': j(root()), 'composer.lock': j({'content-hash': 'x', 'packages': [package('acme/lib', version='dev-main', version_normalized='dev-main', require={'php': '<8.0'})], 'packages-dev': [], 'aliases': [{'package': 'acme/lib', 'version': 'dev-main', 'alias': '1.0.0', 'alias_normalized': '1.0.0.0'}]})}, ['--lock']),
+    ('working-dir', {'sub/composer.json': j(root()), **{'sub/' + k: v for k, v in installed(OLD).items()}}, ['-d', 'sub']),
+    ('text-empty', {'composer.json': j({'name': 'acme/app'}), **installed(package('acme/plain'))}, []),
+    ('no-dev-lock-fallback-dev-names', {'composer.json': j(root()), 'composer.lock': lock([OK], [DEV]), 'vendor/composer/installed.json': j({'packages': [OK], 'dev': True, 'dev-package-names': ['acme/ok']})}, ['--no-dev']),
     ('no-composer-json', {}, []),
+    # COMPOSER names the composer file, and its lock follows it.
+    ('composer-env', {'custom.json': j(root()), 'custom.lock': lock([OLD], []), 'composer.json': j({'name': 'acme/other'})}, ['--lock'], {'COMPOSER': 'custom.json'}),
+    ('composer-env-missing', {'composer.json': j(root())}, [], {'COMPOSER': 'nope.json'}),
+    ('invalid-json', {'composer.json': '{"name": "acme/app",}\n'}, []),
+    ('working-dir-missing', {'composer.json': j(root())}, ['-d', 'nope']),
     # A package whose directory is gone isn't installed, nor checked.
     ('package-directory-missing', {'composer.json': j(root()), **{k: v for k, v in installed(OK, OLD).items() if k != 'vendor/acme/old/.keep'}}, []),
     ('metapackage', {'composer.json': j(root()), **installed(package('acme/meta', type='metapackage', require={'ext-nope': '*'}))}, []),
@@ -116,9 +130,10 @@ def probe_script():
     return re.search(r'const PROBE: &str = r#"(.*?)"#;', source, re.S).group(1)
 
 
-def composer(cwd, args, home):
+def composer(cwd, args, home, extra_env=None):
     env = {'PATH': os.environ['PATH'], 'HOME': home, 'COMPOSER_HOME': os.path.join(home, '.composer'),
-           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500'}
+           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500',
+           **(extra_env or {})}
     return subprocess.run(['php', PHAR, '--no-interaction', *args], cwd=cwd, env=env, capture_output=True, text=True)
 
 
@@ -148,16 +163,18 @@ def exception_message(stderr):
     return message
 
 
-def record(name, files, args):
+def record(name, files, args, extra_env=None):
     home = tempfile.mkdtemp(prefix='pun-platform-home-')
     work = tempfile.mkdtemp(prefix='pun-platform-')
     try:
         write(work, files)
-        r = composer(work, ['check-platform-reqs', *args], home)
+        r = composer(work, ['check-platform-reqs', *args], home, extra_env)
         stderr = r.stderr.replace(os.path.realpath(work), '{dir}')
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': r.stdout, 'stderr': stderr}
+        if extra_env:
+            case['env'] = extra_env
         message = exception_message(stderr)
-        if 'Composer could not find a composer.json file' in stderr:
+        if 'Composer could not find' in stderr:
             # Composer prints this error itself, outside an exception block; it is still a run error.
             message = [line for line in stderr.splitlines() if line]
         if message is not None:
@@ -177,7 +194,7 @@ def main():
     probe = json.loads(probed.stdout)
     probe['ini'] = []
     probe['inputs'] = []
-    cases = [record(name, files, args) for name, files, args in CASES]
+    cases = [record(*case) for case in CASES]
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w') as f:
         json.dump({'probe': probe, 'cases': cases}, f, indent=1, ensure_ascii=False)

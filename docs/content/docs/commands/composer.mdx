@@ -58,7 +58,8 @@ For `check-platform-reqs`:
 `check-platform-reqs`:
 
 - Checks the platform requirements (`php`, `ext-*`, `lib-*`, `composer-plugin-api` and the rest) of the packages installed in `vendor/` and of the root against the real platform: the PHP that `PHP_BINARY`, else `php` on the `PATH`, runs. `config.platform` doesn't count, as in Composer.
-- With nothing installed in `vendor/`, it checks the packages of `composer.lock` instead. A package whose directory is gone from `vendor/` doesn't count as installed.
+- With nothing installed in `vendor/`, it checks the packages of `composer.lock` instead. A package whose directory is gone doesn't count as installed: the directory `vendor/composer/installed.json` records for it, which an installer plugin such as composer/installers can put outside `vendor/`.
+- A `self.version` link of the root uses the root's version as Composer finds it: its `version`, else `COMPOSER_ROOT_VERSION`, else git's, else `1.0.0`, with Composer's warning.
 - A package that provides or replaces a platform package meets its requirements, as in Composer.
 - Prints Composer's table, or its JSON with `--format=json`.
 

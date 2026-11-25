@@ -9,7 +9,8 @@ Composer checks the real platform of the PHP it runs on. So the manifest records
 script that prints it, so it checks the same platform on any machine.
 
 Each case is a set of files and the arguments after `check-platform-reqs`, run in a fresh temporary directory with a
-fresh HOME and COMPOSER_HOME, COMPOSER_ROOT_VERSION=1.0.0 and COLUMNS=500, as scripts/export-validate-cases.py does. A
+fresh HOME and COMPOSER_HOME, COMPOSER_ROOT_VERSION=1.0.0 and COLUMNS=500, as scripts/export-validate-cases.py does; a case's `env` adds to that
+environment, and a null in it leaves the variable out (the test gives Pun the same environment). A
 case records `exit`, `stdout` and `stderr`, and `message` (the lines of Composer's exception block) when Composer stops
 with an exception, which Pun prints as its own run error (exit 2).
 
@@ -72,6 +73,59 @@ WANTS_OTHER = package('acme/wants-other', require={'ext-other-fake': '^3.0'})
 MBSTRING_POLYFILL = package('acme/mbstring-polyfill', provide={'ext-mbstring': '*'})
 DEV = package('acme/dev', require={'ext-nope': '*'})
 
+ROOT_SELF = {'name': 'acme/app', 'provide': {'ext-fake': 'self.version'}, 'require': {'ext-fake': '^1.0'}}
+
+PLUGIN_PHP = '''<?php
+
+namespace Acme\\Installer;
+
+use Composer\\Composer;
+use Composer\\Installer\\LibraryInstaller;
+use Composer\\IO\\IOInterface;
+use Composer\\Package\\PackageInterface;
+use Composer\\Plugin\\PluginInterface;
+
+class Plugin implements PluginInterface
+{
+    public function activate(Composer $composer, IOInterface $io): void
+    {
+        $composer->getInstallationManager()->addInstaller(new ModuleInstaller($io, $composer));
+    }
+
+    public function deactivate(Composer $composer, IOInterface $io): void {}
+
+    public function uninstall(Composer $composer, IOInterface $io): void {}
+}
+
+class ModuleInstaller extends LibraryInstaller
+{
+    public function supports(string $packageType): bool
+    {
+        return $packageType === 'acme-module';
+    }
+
+    public function getInstallPath(PackageInterface $package): string
+    {
+        return 'modules/'.explode('/', $package->getName())[1];
+    }
+}
+'''
+
+
+def plugin_project(module_dir):
+    """An installer plugin (acme/installer) that installs `acme-module` packages to modules/<name>, and such a module:
+    with `module_dir` in modules/ only, else in vendor/ only, where it would be without the plugin."""
+    plugin = package('acme/installer', type='composer-plugin', require={'composer-plugin-api': '^2.0'},
+                     autoload={'psr-4': {'Acme\\Installer\\': 'src/'}}, extra={'class': 'Acme\\Installer\\Plugin'},
+                     install_path='../acme/installer')
+    module = package('acme/module', type='acme-module', require={'php': '<8.0'}, install_path='../../modules/module')
+    gone = package('acme/gone', require={'ext-nope': '*'}, install_path='../acme/gone')
+    files = {'vendor/composer/installed.json': j({'packages': [plugin, module, gone], 'dev': True, 'dev-package-names': []}),
+             'vendor/acme/installer/src/Plugin.php': PLUGIN_PHP}
+    files['modules/module/.keep' if module_dir else 'vendor/acme/module/.keep'] = ''
+    return files
+
+
 CASES = [
     ('vendor-success', {'composer.json': j(root()), **installed(OK, API)}, []),
     ('vendor-failed', {'composer.json': j(root()), **installed(OLD)}, []),
@@ -124,6 +178,15 @@ CASES = [
     ('composer-json-array', {'composer.json': '[]\n'}, []),
     ('composer-json-schema', {'composer.json': j({'name': 'acme/app', 'require': {'php': 5}})}, []),
     ('no-composer-json', {}, []),
+    # The root's version, which a `self.version` link of the root's shows: COMPOSER_ROOT_VERSION, else its `version`,
+    # else (outside git) 1.0.0+no-version-set.
+    ('root-version-guessed', {'composer.json': j(ROOT_SELF), **installed(package('acme/plain'))}, [], {'COMPOSER_ROOT_VERSION': None}),
+    ('root-version-manifest', {'composer.json': j({**ROOT_SELF, 'version': '1.4.0'}), **installed(package('acme/plain'))}, [], {'COMPOSER_ROOT_VERSION': None}),
+    ('root-version-env', {'composer.json': j({**ROOT_SELF, 'version': '1.4.0'}), **installed(package('acme/plain'))}, [], {'COMPOSER_ROOT_VERSION': '1.2-dev'}),
+    # An installer plugin puts its packages elsewhere: Composer loads the plugins before it drops the packages that
+    # aren't installed, so the plugin's install path counts, which installed.json records as `install-path`.
+    ('installer-plugin', {'composer.json': j(root(config={'allow-plugins': {'acme/installer': True}})), **plugin_project(module_dir=True)}, []),
+    ('installer-plugin-module-gone', {'composer.json': j(root(config={'allow-plugins': {'acme/installer': True}})), **plugin_project(module_dir=False)}, []),
     # COMPOSER names the composer file, and its lock follows it.
     ('composer-env', {'custom.json': j(root()), 'custom.lock': lock([OLD], []), 'composer.json': j({'name': 'acme/other'})}, ['--lock'], {'COMPOSER': 'custom.json'}),
     ('composer-env-missing', {'composer.json': j(root())}, [], {'COMPOSER': 'nope.json'}),
@@ -144,6 +207,7 @@ def composer(cwd, args, home, extra_env=None):
     env = {'PATH': os.environ['PATH'], 'HOME': home, 'COMPOSER_HOME': os.path.join(home, '.composer'),
            'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500',
            **(extra_env or {})}
+    env = {k: v for k, v in env.items() if v is not None}
     return subprocess.run(['php', PHAR, '--no-interaction', *args], cwd=cwd, env=env, capture_output=True, text=True)
 
 

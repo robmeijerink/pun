@@ -77,6 +77,13 @@ pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
         Some(stem) => format!("{stem}.lock"),
         None => format!("{file}.lock"),
     };
+    let (manifest, warning) =
+        pun_packages::platform_reqs::root_versioned(&manifest, &base, &|name| {
+            std::env::var(name).ok()
+        });
+    if let Some(warning) = warning {
+        eprintln!("{warning}");
+    }
     let vendor = pun_packages::install::dirs(&base.to_string_lossy(), &manifest).vendor;
     // The real platform: Composer checks it with `config.platform` left out.
     let probe = probe_cached(

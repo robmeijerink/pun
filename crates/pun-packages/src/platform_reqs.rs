@@ -53,10 +53,45 @@ pub struct Report {
     pub exit: u8,
 }
 
+/// `RootPackageLoader::load`'s root version, for the root package `manifest` in `dir`: its `version`, else
+/// `COMPOSER_ROOT_VERSION` from `env`, else the version git gives, else 1.0.0, which Composer warns about; the
+/// manifest with that version, and the warning.
+pub fn root_versioned(
+    manifest: &Map<String, Value>,
+    dir: &Path,
+    env: crate::Env,
+) -> (Map<String, Value>, Option<String>) {
+    let mut manifest = manifest.clone();
+    if manifest.contains_key("version") {
+        return (manifest, None);
+    }
+    if let Some(version) = crate::installed::root_version(env) {
+        manifest.insert("version".into(), version.into());
+        return (manifest, None);
+    }
+    if let Some(git) = crate::installed::git_version(&manifest, dir) {
+        manifest.insert("version".into(), git.pretty.into());
+        manifest.insert("version_normalized".into(), git.version.into());
+        return (manifest, None);
+    }
+    manifest.insert("version".into(), "1.0.0".into());
+    let name = manifest
+        .get("name")
+        .and_then(Value::as_str)
+        .unwrap_or("__root__");
+    let project = manifest.get("type").and_then(Value::as_str) == Some("project");
+    let warning = (name != "__root__" && !project).then(|| {
+        format!(
+            "Composer could not detect the root package ({name}) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version"
+        )
+    });
+    (manifest, warning)
+}
+
 /// A requirement's links: the package each is from and its description.
 type Links = Vec<(usize, &'static str, Link)>;
 
-/// What `check-platform-reqs` finds for the root package `manifest`, its lock at `lock_file` (named `lock_display` in
+/// What `check-platform-reqs` finds for the root package `manifest` (with its version: `root_versioned`), its lock at `lock_file` (named `lock_display` in
 /// messages) and its vendor dir `vendor`, on the platform `probe` describes.
 pub fn check(
     lock_file: &Path,
@@ -94,7 +129,6 @@ pub fn check(
     // The root package: `RootPackageRepository`, after the installed or locked packages.
     let mut root_data = manifest.clone();
     root_data.entry("name").or_insert_with(|| "__root__".into());
-    root_data.entry("version").or_insert_with(|| "1.0.0".into());
     let root_ids = load(root_data, Origin::Root, &mut arena)?;
     let repository: Vec<usize> = installed.iter().chain(&root_ids).copied().collect();
     let requires = requirements(
@@ -317,9 +351,20 @@ fn local(
     );
     let mut ids = vec![];
     for package in packages.iter().filter_map(Value::as_object) {
+        // The installer's path, which installed.json records relative to vendor/composer: an installer plugin's
+        // (loaded before the purge) puts its packages outside the vendor dir. Composer 1's list has none.
+        let path = match package.get("install-path").and_then(Value::as_str) {
+            Some(relative) => vendor.join("composer").join(relative),
+            None => vendor.join(
+                package
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .unwrap_or_default(),
+            ),
+        };
         let loaded = load(package.clone(), Origin::Locked, arena)?;
         let base = &arena[*loaded.last().expect("the package")];
-        if base.kind == "metapackage" || vendor.join(&base.pretty_name).exists() {
+        if base.kind == "metapackage" || path.exists() {
             ids.extend(loaded);
         }
     }

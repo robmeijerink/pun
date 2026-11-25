@@ -974,6 +974,47 @@
    "stderr": ""
   },
   {
+   "name": "lock-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/x\": true\n        }\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n"
+   },
+   "args": [
+    "suggests"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "root-version-guessed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/gamma\": \"*\"\n            },\n            \"suggest\": {\n                \"acme/zed\": \"For the zed feature\",\n                \"ext-gd\": \"For images (installed here)\",\n                \"ext-nope\": \"Not installed\",\n                \"acme/beta\": \"Installed, so left out\",\n                \"acme/alpha\": \"Itself\",\n                \"virtual/thing\": \"Provided by delta\",\n                \"acme/empty\": \"\",\n                \"Acme/Mixed\": \"Mixed case target\"\n            }\n        },\n        {\n            \"name\": \"acme/beta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/zed\": \"Beta wants zed too\",\n                \"acme/yak\": \"Line one\\nline two\\twith a tab <info>tag</info> and \\\\ backslash\"\n            }\n        },\n        {\n            \"name\": \"acme/gamma\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/transitive\": \"Only with --all\"\n            }\n        },\n        {\n            \"name\": \"acme/delta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"virtual/thing\": \"1.0\"\n            }\n        },\n        {\n            \"name\": \"Acme/Upper\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/from-upper\": \"Pretty name with capitals\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": "",
+    "vendor/acme/beta/.keep": "",
+    "vendor/acme/gamma/.keep": "",
+    "vendor/acme/delta/.keep": "",
+    "vendor/acme/upper/.keep": ""
+   },
+   "args": [
+    "suggests"
+   ],
+   "exit": 0,
+   "stdout": "acme/alpha suggests:\n - acme/zed: For the zed feature\n - ext-nope: Not installed\n - acme/alpha: Itself\n - acme/empty\n - Acme/Mixed: Mixed case target\n\nacme/app suggests:\n - acme/root-wish: The root suggests too\n\nacme/beta suggests:\n - acme/zed: Beta wants zed too\n - acme/yak: Line one line twowith a tab <info>tag</info> and \\ backslash\n\n2 additional suggestions by transitive dependencies can be shown with --all\n",
+   "stderr": "Composer could not detect the root package (acme/app) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version\n",
+   "env": {
+    "COMPOSER_ROOT_VERSION": null
+   }
+  },
+  {
    "name": "no-composer-json",
    "files": {},
    "args": [

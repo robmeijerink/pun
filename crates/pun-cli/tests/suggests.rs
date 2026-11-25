@@ -14,6 +14,10 @@ use std::process::Command;
 
 const FIXTURE: &str = include_str!("fixtures/suggests.json");
 
+/// Composer follows the first line of a JSON error with jsonlint's description of it, which Pun gives once it shares
+/// `validate`'s port of jsonlint (context/PLAN.md §3): only that first line is asked for.
+const FIRST_LINE_ONLY: &[&str] = &["lock-invalid-json"];
+
 struct Outcome {
     exit: Option<i32>,
     stdout: String,
@@ -38,7 +42,8 @@ fn run(case: &Value, probe: &Value) -> Outcome {
     )
     .unwrap();
     std::fs::set_permissions(&php, std::os::unix::fs::PermissionsExt::from_mode(0o755)).unwrap();
-    let out = common::clean_env(&mut Command::new(PUN), &["PATH"])
+    let mut command = Command::new(PUN);
+    common::clean_env(&mut command, &["PATH"])
         .arg("composer")
         .args(
             case["args"]
@@ -51,9 +56,15 @@ fn run(case: &Value, probe: &Value) -> Outcome {
         .env("PUN_AGENT", "0")
         .env("HOME", &dir)
         .env("COMPOSER_ROOT_VERSION", "1.0.0")
-        .env("PHP_BINARY", &php)
-        .output()
-        .unwrap();
+        .env("PHP_BINARY", &php);
+    // The case's own environment, where a null leaves a variable out.
+    for (key, value) in (case.get("env").and_then(Value::as_object).into_iter()).flatten() {
+        match value.as_str() {
+            Some(value) => command.env(key, value),
+            None => command.env_remove(key),
+        };
+    }
+    let out = command.output().unwrap();
     // The fixture writes the project's directory as `{dir}`.
     let here = dir.canonicalize().unwrap().to_string_lossy().into_owned();
     std::fs::remove_dir_all(&dir).unwrap();
@@ -111,7 +122,10 @@ fn suggests_matches_composer() {
         let got = run(case, &fixture["probe"]);
         let difference = match case.get("message").and_then(Value::as_array) {
             Some(message) => {
-                let lines: Vec<&str> = message.iter().map(|l| l.as_str().unwrap()).collect();
+                let mut lines: Vec<&str> = message.iter().map(|l| l.as_str().unwrap()).collect();
+                if FIRST_LINE_ONLY.contains(&case["name"].as_str().unwrap()) {
+                    lines.truncate(1);
+                }
                 run_error_difference(&lines, &got)
             }
             None => result_difference(case, &got),

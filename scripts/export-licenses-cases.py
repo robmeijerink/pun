@@ -91,6 +91,8 @@ CASES = [
     ('root-licenses', project(manifest={'name': 'acme/app', 'license': ['MIT', 'GPL-3.0-only'], 'version': '2.0.0'}, packages=[ALPHA]), ['licenses']),
     ('root-version-guessed', project(packages=[ALPHA]), ['licenses'], {'COMPOSER_ROOT_VERSION': None}),
     ('root-version-dev', project(packages=[ALPHA]), ['licenses', '-f', 'json'], {'COMPOSER_ROOT_VERSION': '1.2-dev'}),
+    # A root in git: the version git gives, and its commit (the case's `git` makes a repository of its files).
+    ('root-version-git', {**project(packages=[ALPHA]), 'git': True}, ['licenses'], {'COMPOSER_ROOT_VERSION': None}),
     # Nothing installed.
     ('empty', {'composer.json': j(ROOT_JSON)}, ['licenses']),
     ('empty-json', {'composer.json': j(ROOT_JSON)}, ['licenses', '-f', 'json']),
@@ -113,6 +115,8 @@ CASES = [
     ('locked-json', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALIASED], [])}, ['licenses', '--locked', '-f', 'json']),
     ('locked-alias', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALIASED, ALPHA], [])}, ['licenses', '--locked']),
     ('locked-alias-summary', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALIASED, ALPHA], [])}, ['licenses', '--locked', '-f', 'summary']),
+    ('locked-invalid-lock', {'composer.json': j({**ROOT_JSON, 'config': {'allow-plugins': {'acme/x': True}}}), 'composer.lock': '{"packages": [\n'}, ['licenses', '--locked']),
+    ('locked-lock-without-packages', {'composer.json': j(ROOT_JSON), 'composer.lock': '{}\n'}, ['licenses', '--locked']),
     ('locked-without-lock', {'composer.json': j(ROOT_JSON)}, ['licenses', '--locked']),
     ('locked-without-packages-dev', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALPHA], None)}, ['licenses', '--locked']),
     ('locked-without-packages-dev-no-dev', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALPHA], None)}, ['licenses', '--locked', '--no-dev']),
@@ -148,15 +152,30 @@ def exception_message(stderr):
     return message
 
 
+# The commit a case's `git` makes: always the same, so its hash is too (crates/pun-cli/tests/licenses.rs makes it so).
+GIT_ENV = {'GIT_AUTHOR_NAME': 'a', 'GIT_AUTHOR_EMAIL': 'a@b', 'GIT_COMMITTER_NAME': 'a', 'GIT_COMMITTER_EMAIL': 'a@b',
+           'GIT_AUTHOR_DATE': '2026-01-01T00:00:00Z', 'GIT_COMMITTER_DATE': '2026-01-01T00:00:00Z'}
+
+
+def git_commit(work):
+    env = {'PATH': os.environ['PATH'], 'HOME': work, **GIT_ENV}
+    for args in (['init', '-q', '-b', 'main'], ['add', '-A'], ['-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'one']):
+        subprocess.run(['git', *args], cwd=work, env=env, check=True)
+
+
 def record(name, files, args, extra_env=None):
     home = tempfile.mkdtemp(prefix='pun-licenses-home-')
     work = tempfile.mkdtemp(prefix='pun-licenses-')
+    files = dict(files)
+    git = files.pop('git', False)
     try:
         for path, content in files.items():
             file = os.path.join(work, path)
             os.makedirs(os.path.dirname(file), exist_ok=True)
             with open(file, 'w') as f:
                 f.write(content)
+        if git:
+            git_commit(work)
         r = composer(work, args, home, extra_env)
         here = os.path.realpath(work)
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode,
@@ -164,6 +183,8 @@ def record(name, files, args, extra_env=None):
                 'stderr': r.stderr.replace(here, '{dir}').replace(work, '{dir}')}
         if extra_env:
             case['env'] = extra_env
+        if git:
+            case['git'] = True
         message = exception_message(case['stderr'])
         if 'Composer could not find' in case['stderr']:
             # Composer prints this error itself, outside an exception block; it is still a run error.

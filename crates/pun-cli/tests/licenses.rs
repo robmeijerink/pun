@@ -12,6 +12,36 @@ use std::process::Command;
 
 const FIXTURE: &str = include_str!("fixtures/licenses.json");
 
+/// Composer follows the first line of a JSON error with jsonlint's description of it, which Pun gives once it shares
+/// `validate`'s port of jsonlint (context/PLAN.md §3): only that first line is asked for.
+const FIRST_LINE_ONLY: &[&str] = &["locked-invalid-lock"];
+
+/// A case's `git`: its files as the one commit of a repository on `main`, made as the recorder makes it (the same
+/// author, committer and dates), so it has the same hash.
+fn git_commit(dir: &std::path::Path) {
+    for args in [
+        &["init", "-q", "-b", "main"][..],
+        &["add", "-A"],
+        &["-c", "commit.gpgsign=false", "commit", "-q", "-m", "one"],
+    ] {
+        let status = common::clean_env(&mut Command::new("git"), &["PATH"])
+            .args(args)
+            .current_dir(dir)
+            .env("HOME", dir)
+            .envs([
+                ("GIT_AUTHOR_NAME", "a"),
+                ("GIT_AUTHOR_EMAIL", "a@b"),
+                ("GIT_COMMITTER_NAME", "a"),
+                ("GIT_COMMITTER_EMAIL", "a@b"),
+                ("GIT_AUTHOR_DATE", "2026-01-01T00:00:00Z"),
+                ("GIT_COMMITTER_DATE", "2026-01-01T00:00:00Z"),
+            ])
+            .status()
+            .unwrap();
+        assert!(status.success(), "git {args:?}");
+    }
+}
+
 struct Outcome {
     exit: Option<i32>,
     stdout: String,
@@ -24,6 +54,9 @@ fn run(case: &Value) -> Outcome {
         let file = dir.join(path);
         std::fs::create_dir_all(file.parent().unwrap()).unwrap();
         std::fs::write(&file, content.as_str().unwrap()).unwrap();
+    }
+    if case["git"].as_bool() == Some(true) {
+        git_commit(&dir);
     }
     let mut command = Command::new(PUN);
     common::clean_env(&mut command, &["PATH"])
@@ -103,7 +136,10 @@ fn licenses_matches_composer() {
         let got = run(case);
         let difference = match case.get("message").and_then(Value::as_array) {
             Some(message) => {
-                let lines: Vec<&str> = message.iter().map(|l| l.as_str().unwrap()).collect();
+                let mut lines: Vec<&str> = message.iter().map(|l| l.as_str().unwrap()).collect();
+                if FIRST_LINE_ONLY.contains(&case["name"].as_str().unwrap()) {
+                    lines.truncate(1);
+                }
                 run_error_difference(&lines, &got)
             }
             None => result_difference(case, &got),

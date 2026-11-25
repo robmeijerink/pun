@@ -250,6 +250,24 @@
    }
   },
   {
+   "name": "root-version-git",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.2.3\",\n            \"version_normalized\": \"1.2.3.0\",\n            \"type\": \"library\",\n            \"license\": [\n                \"MIT\"\n            ],\n            \"homepage\": \"https://alpha.example\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": ""
+   },
+   "args": [
+    "licenses"
+   ],
+   "exit": 0,
+   "stdout": "Name: acme/app\nVersion: dev-main 96de5c4\nLicenses: MIT\nDependencies:\n\nName       Version Licenses \nacme/alpha 1.2.3   MIT      \n",
+   "stderr": "",
+   "env": {
+    "COMPOSER_ROOT_VERSION": null
+   },
+   "git": true
+  },
+  {
    "name": "empty",
    "files": {
     "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n"
@@ -437,6 +455,44 @@
    "exit": 0,
    "stdout": " --------- ------------------------ \n  License   Number of dependencies  \n --------- ------------------------ \n  MIT       3                       \n --------- ------------------------ \n\n",
    "stderr": ""
+  },
+  {
+   "name": "locked-invalid-lock",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\",\n    \"config\": {\n        \"allow-plugins\": {\n            \"acme/x\": true\n        }\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n"
+   },
+   "args": [
+    "licenses",
+    "--locked"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "locked-lock-without-packages",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "composer.lock": "{}\n"
+   },
+   "args": [
+    "licenses",
+    "--locked"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Valid composer.json and composer.lock files are required to run this command with --locked"
+   ]
   },
   {
    "name": "locked-without-lock",

@@ -9,7 +9,8 @@ platform once, as Pun's own probe (the PROBE script of crates/pun-packages/src/r
 prints it.
 
 Each case is a set of files and the words after `composer`, run in a fresh temporary directory with a fresh HOME and
-COMPOSER_HOME, COMPOSER_ROOT_VERSION=1.0.0 and COLUMNS=500, without a terminal on stdin. A case records `exit`,
+COMPOSER_HOME, COMPOSER_ROOT_VERSION=1.0.0 (unless the case's `env` leaves it out with a null) and COLUMNS=500,
+without a terminal on stdin. A case records `exit`,
 `stdout` and `stderr`, and `message` (the lines of Composer's exception block) when Composer stops with an exception,
 which Pun prints as its own run error (exit 2).
 
@@ -105,14 +106,20 @@ CASES = [
     ('lock-no-dev-filter-two-dev', lock_project(packages_dev=(BETA, package('acme/dev2'))), ['suggests', '--no-dev', 'acme/beta', 'acme/dev2']),
     ('lock-platform-overrides', lock_project(**{'platform-overrides': {'ext-nope': '2.0'}}), ['suggests']),
     ('lock-over-vendor', {**lock_project(packages=(GAMMA,), packages_dev=()), **installed(ALPHA)}, ['suggests', '--all']),
+    # A lock that isn't JSON (read as the lock, not for allow-plugins, which is set).
+    ('lock-invalid-json', {'composer.json': j({**ROOT_JSON, 'config': {'allow-plugins': {'acme/x': True}}}), 'composer.lock': '{"packages": [\n'}, ['suggests']),
+    # Composer's warning about a root version it can't find.
+    ('root-version-guessed', vendor_project(), ['suggests'], {'COMPOSER_ROOT_VERSION': None}),
     # No composer.json.
     ('no-composer-json', {}, ['suggests']),
 ]
 
 
-def composer(cwd, args, home):
+def composer(cwd, args, home, extra_env=None):
     env = {'PATH': os.environ['PATH'], 'HOME': home, 'COMPOSER_HOME': os.path.join(home, '.composer'),
-           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500'}
+           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500',
+           **(extra_env or {})}
+    env = {k: v for k, v in env.items() if v is not None}
     return subprocess.run(['php', PHAR, *args], cwd=cwd, env=env, capture_output=True, text=True, stdin=subprocess.DEVNULL,
                           timeout=60)
 
@@ -135,7 +142,7 @@ def exception_message(stderr):
     return message
 
 
-def record(name, files, args):
+def record(name, files, args, extra_env=None):
     home = tempfile.mkdtemp(prefix='pun-suggests-home-')
     work = tempfile.mkdtemp(prefix='pun-suggests-')
     try:
@@ -144,11 +151,13 @@ def record(name, files, args):
             os.makedirs(os.path.dirname(file), exist_ok=True)
             with open(file, 'w') as f:
                 f.write(content)
-        r = composer(work, args, home)
+        r = composer(work, args, home, extra_env)
         here = os.path.realpath(work)
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode,
                 'stdout': r.stdout.replace(here, '{dir}').replace(work, '{dir}'),
                 'stderr': r.stderr.replace(here, '{dir}').replace(work, '{dir}')}
+        if extra_env:
+            case['env'] = extra_env
         message = exception_message(case['stderr'])
         if 'Composer could not find' in case['stderr']:
             # Composer prints this error itself, outside an exception block; it is still a run error.

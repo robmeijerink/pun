@@ -965,6 +965,130 @@
    "stderr": "No vendor dir present, checking non-dev platform requirements from the lock file\n"
   },
   {
+   "name": "installed-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\"packages\": [\n",
+    "vendor/acme/old/.keep": "",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": []\n}\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Invalid repository data in {dir}/vendor/composer/installed.json, packages could not be loaded: [Seld\\JsonLint\\ParsingException] \"{dir}/vendor/composer/installed.json\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "installed-list",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "[\n    {\n        \"name\": \"acme/old\",\n        \"version\": \"1.0.0\",\n        \"version_normalized\": \"1.0.0.0\",\n        \"type\": \"library\",\n        \"require\": {\n            \"php\": \"<8.0\"\n        }\n    }\n]\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "installed-not-a-list",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": 5\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": []\n}\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Invalid repository data in {dir}/vendor/composer/installed.json, packages could not be loaded: [UnexpectedValueException] Could not parse package list from the repository"
+   ]
+  },
+  {
+   "name": "lock-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\"packages\": [\n"
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.lock\" does not contain valid JSON",
+    "Parse error on line 1:",
+    "{\"packages\": [",
+    "-------------^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', ']'"
+   ]
+  },
+  {
+   "name": "lock-empty",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [],\n    \"packages-dev\": []\n}\n"
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 0,
+   "stdout": "php 8.5.4   success \n",
+   "stderr": "Checking platform requirements using the lock file\n"
+  },
+  {
+   "name": "lock-not-an-object",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "[]\n"
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Undefined array key \"packages\""
+   ]
+  },
+  {
+   "name": "composer-json-array",
+   "files": {
+    "composer.json": "[]\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - Array value found, but an object is required"
+   ]
+  },
+  {
+   "name": "composer-json-schema",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": 5\n    }\n}\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - require.php : Integer value found, but a string is required"
+   ]
+  },
+  {
    "name": "no-composer-json",
    "files": {},
    "args": [],

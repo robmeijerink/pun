@@ -56,10 +56,11 @@ pub struct Report {
 /// A requirement's links: the package each is from and its description.
 type Links = Vec<(usize, &'static str, Link)>;
 
-/// What `check-platform-reqs` finds for the root package `manifest`, its lock at `lock_file` and its vendor dir `vendor`,
-/// on the platform `probe` describes.
+/// What `check-platform-reqs` finds for the root package `manifest`, its lock at `lock_file` (named `lock_display` in
+/// messages) and its vendor dir `vendor`, on the platform `probe` describes.
 pub fn check(
     lock_file: &Path,
+    lock_display: &str,
     manifest: &Map<String, Value>,
     vendor: &Path,
     probe: &Value,
@@ -69,13 +70,19 @@ pub fn check(
     let mut arena: Vec<Package> = vec![];
     let mut dev_names: Vec<String> = vec![];
     let (source, installed) = if lock {
-        (Source::Lock, locked(lock_file, !no_dev, &mut arena)?)
+        (
+            Source::Lock,
+            locked(lock_file, lock_display, !no_dev, &mut arena)?,
+        )
     } else {
         let local = local(vendor, &mut arena, &mut dev_names)?;
         if local.is_empty() {
             // The lock leaves its dev packages out itself; the vendor dir's dev package names don't apply.
             dev_names.clear();
-            (Source::NoVendor, locked(lock_file, !no_dev, &mut arena)?)
+            (
+                Source::NoVendor,
+                locked(lock_file, lock_display, !no_dev, &mut arena)?,
+            )
         } else {
             if !no_dev {
                 dev_names.clear();
@@ -184,11 +191,9 @@ fn requirement(
                 package.pretty_version.clone(),
             )
         } else {
-            let Some(link) =
-                (package.provides.iter().chain(&package.replaces)).find(|l| l.target == target)
-            else {
-                continue;
-            };
+            let link = (package.provides.iter().chain(&package.replaces))
+                .find(|l| l.target == target)
+                .expect("a candidate not named so provides or replaces it");
             // `self.version` was parsed from the version of the package that wrote it: an alias keeps its package's
             // link first, so that version shows.
             let shown = if link.pretty == "self.version" {
@@ -267,13 +272,39 @@ fn local(
     arena: &mut Vec<Package>,
     dev_names: &mut Vec<String>,
 ) -> Result<Vec<usize>> {
-    let Ok(text) = std::fs::read(vendor.join("composer/installed.json")) else {
+    let path = vendor.join("composer/installed.json");
+    let Ok(text) = std::fs::read(&path) else {
         return Ok(vec![]);
     };
-    let data: Value = serde_json::from_slice(&text).unwrap_or(Value::Null);
-    let packages = match &data {
-        Value::Object(m) => m.get("packages").cloned().unwrap_or(Value::Null),
-        other => other.clone(),
+    // `FilesystemRepository::initialize`'s error, around the reason. Composer follows a JSON error with jsonlint's
+    // description of it (context/PLAN.md §3).
+    let invalid = |why: &str| {
+        format!(
+            "Invalid repository data in {}, packages could not be loaded: {why}",
+            path.display()
+        )
+    };
+    let Ok(data) = serde_json::from_slice::<Value>(&text) else {
+        bail!(
+            "{}",
+            invalid(&format!(
+                "[Seld\\JsonLint\\ParsingException] \"{}\" does not contain valid JSON",
+                path.display()
+            ))
+        );
+    };
+    // Composer 2's `{"packages": [...]}`, or Composer 1's list.
+    let packages = match data.get("packages").filter(|p| !p.is_null()) {
+        Some(packages) => packages.clone(),
+        None => data.clone(),
+    };
+    let packages: Vec<Value> = match packages {
+        Value::Array(list) => list,
+        Value::Object(map) => map.into_iter().map(|(_, p)| p).collect(),
+        _ => bail!(
+            "{}",
+            invalid("[UnexpectedValueException] Could not parse package list from the repository")
+        ),
     };
     dev_names.extend(
         (data
@@ -285,12 +316,7 @@ fn local(
         .map(str::to_ascii_lowercase),
     );
     let mut ids = vec![];
-    for package in packages
-        .as_array()
-        .into_iter()
-        .flatten()
-        .filter_map(Value::as_object)
-    {
+    for package in packages.iter().filter_map(Value::as_object) {
         let loaded = load(package.clone(), Origin::Locked, arena)?;
         let base = &arena[*loaded.last().expect("the package")];
         if base.kind == "metapackage" || vendor.join(&base.pretty_name).exists() {
@@ -302,11 +328,20 @@ fn local(
 
 /// `Locker::getLockedRepository`: the lock's packages, with `packages-dev` when `dev`, each branch alias before its
 /// package, then the root's inline aliases the lock records.
-fn locked(lock_file: &Path, dev: bool, arena: &mut Vec<Package>) -> Result<Vec<usize>> {
+fn locked(
+    lock_file: &Path,
+    display: &str,
+    dev: bool,
+    arena: &mut Vec<Package>,
+) -> Result<Vec<usize>> {
     let Ok(text) = std::fs::read(lock_file) else {
         bail!("No lockfile found. Unable to read locked packages");
     };
-    let data: Value = serde_json::from_slice(&text).unwrap_or(Value::Null);
+    // Composer follows this with jsonlint's description of the error (context/PLAN.md §3). A lock that isn't an object
+    // has no `packages`, which PHP warns about; without that warning it has no `packages-dev` either.
+    let Ok(data) = serde_json::from_slice::<Value>(&text) else {
+        bail!("\"{display}\" does not contain valid JSON");
+    };
     let list = |key: &str| {
         data.get(key)
             .filter(|v| !v.is_null())

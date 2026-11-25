@@ -1,7 +1,7 @@
 //! `pun composer check-platform-reqs`: Composer 2.11.2's `CheckPlatformReqsCommand`, its output and exit codes included.
 
 use crate::Exit;
-use anyhow::{Context, Result, bail};
+use anyhow::{Result, bail};
 use pun_packages::platform_reqs::{Source, check};
 use pun_packages::resolver::platform::probe_cached;
 use serde_json::{Map, Value};
@@ -53,11 +53,25 @@ pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
             "{missing}\nTo initialize a project, please create a composer.json file. See https://getcomposer.org/basic-usage"
         );
     }
-    let text = std::fs::read(&path).with_context(|| format!("can't read {}", path.display()))?;
-    // Composer adds jsonlint's description of the error (context/PLAN.md §3).
+    let Ok(text) = std::fs::read(&path) else {
+        bail!("The file \"./{file}\" is not readable.");
+    };
+    // Composer adds jsonlint's description of a JSON error, and checks the rest against its schema (context/PLAN.md
+    // §3). A value that isn't an object fails the schema's first check.
     let manifest: Map<String, Value> = match serde_json::from_slice(&text) {
         Ok(Value::Object(manifest)) => manifest,
-        _ => bail!("\"./{file}\" does not contain valid JSON"),
+        Ok(other) => bail!(
+            "\"./{file}\" does not match the expected JSON schema:\n - {} value found, but an object is required",
+            match other {
+                Value::Null => "NULL",
+                Value::Bool(_) => "Boolean",
+                Value::Number(n) if n.is_i64() || n.is_u64() => "Integer",
+                Value::Number(_) => "Double",
+                Value::String(_) => "String",
+                _ => "Array",
+            }
+        ),
+        Err(_) => bail!("\"./{file}\" does not contain valid JSON"),
     };
     let lock_file = match file.strip_suffix(".json") {
         Some(stem) => format!("{stem}.lock"),
@@ -70,7 +84,8 @@ pub(crate) fn run(a: &PlatformReqsArgs) -> Result<Exit> {
         pun_config::cache_dir().as_deref(),
     )?;
     let report = check(
-        &base.join(lock_file),
+        &base.join(&lock_file),
+        &format!("./{lock_file}"),
         &manifest,
         &PathBuf::from(vendor),
         &probe,

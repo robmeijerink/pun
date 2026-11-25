@@ -113,6 +113,16 @@ CASES = [
     ('working-dir', {'sub/composer.json': j(root()), **{'sub/' + k: v for k, v in installed(OLD).items()}}, ['-d', 'sub']),
     ('text-empty', {'composer.json': j({'name': 'acme/app'}), **installed(package('acme/plain'))}, []),
     ('no-dev-lock-fallback-dev-names', {'composer.json': j(root()), 'composer.lock': lock([OK], [DEV]), 'vendor/composer/installed.json': j({'packages': [OK], 'dev': True, 'dev-package-names': ['acme/ok']})}, ['--no-dev']),
+    # Files that don't read as Composer expects them.
+    ('installed-invalid-json', {'composer.json': j(root()), 'vendor/composer/installed.json': '{"packages": [\n', 'vendor/acme/old/.keep': '', 'composer.lock': lock([OLD], [])}, []),
+    ('installed-list', {'composer.json': j(root()), 'vendor/composer/installed.json': j([OLD]), 'vendor/acme/old/.keep': ''}, []),
+    ('installed-not-a-list', {'composer.json': j(root()), 'vendor/composer/installed.json': j({'packages': 5}), 'composer.lock': lock([OLD], [])}, []),
+    ('lock-invalid-json', {'composer.json': j(root()), 'composer.lock': '{"packages": [\n'}, ['--lock']),
+    # What lock-not-an-object gives without Composer's crash: a lock with no packages.
+    ('lock-empty', {'composer.json': j(root()), 'composer.lock': lock([], [])}, ['--lock']),
+    ('lock-not-an-object', {'composer.json': j(root()), 'composer.lock': '[]\n'}, ['--lock']),
+    ('composer-json-array', {'composer.json': '[]\n'}, []),
+    ('composer-json-schema', {'composer.json': j({'name': 'acme/app', 'require': {'php': 5}})}, []),
     ('no-composer-json', {}, []),
     # COMPOSER names the composer file, and its lock follows it.
     ('composer-env', {'custom.json': j(root()), 'custom.lock': lock([OLD], []), 'composer.json': j({'name': 'acme/other'})}, ['--lock'], {'COMPOSER': 'custom.json'}),

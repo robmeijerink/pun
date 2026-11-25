@@ -9,6 +9,10 @@ use serde_json::{Map, Value};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "one bool per option of Composer's that changes how scripts run"
+)]
 pub struct Runner {
     pub base: PathBuf,
     pub vendor: String,
@@ -21,6 +25,12 @@ pub struct Runner {
     /// Composer's `process-timeout` in seconds for each command; 0 for none. Callbacks run without one, as they run
     /// inside Composer there.
     pub timeout: u64,
+    /// `-q`: print nothing, not even what the commands print, but the warnings and errors Composer prints anyway.
+    pub quiet: bool,
+    /// `-v`: print each command, and each reference to a script, with its event's name.
+    pub verbose: bool,
+    /// Give the commands `COMPOSER_DEV_MODE`, as Composer's `run-script` and installs do; `exec` doesn't.
+    pub dev_mode_env: bool,
     path: String,
     env: Vec<(String, Option<String>)>,
     stack: Vec<String>,
@@ -51,9 +61,34 @@ impl Runner {
                 global_timeout(crate::fetch::composer_dirs().map(|(home, _)| home)).as_ref(),
                 env("COMPOSER_PROCESS_TIMEOUT"),
             ),
+            quiet: false,
+            verbose: false,
+            dev_mode_env: true,
             path: env("PATH").unwrap_or_default(),
             env: vec![],
             stack: vec![],
+        }
+    }
+
+    /// `composer exec`: `binary` (with `args`) as the one command of Composer's `__exec_command` event, which prints
+    /// no `> binary` line.
+    pub fn exec(&mut self, binary: &str, args: &[String]) -> Result<()> {
+        self.stack.push(EXEC_EVENT.to_string());
+        let result = self.run(EXEC_EVENT, binary, args);
+        self.stack.pop();
+        result
+    }
+
+    /// The `> command` line Composer prints before it runs `command` for `event`: with the event's name under `-v`;
+    /// else none for `exec`'s own event, or a script that runs as its own command.
+    fn announce(&self, event: &str, command: &str) {
+        if self.quiet {
+            return;
+        }
+        if self.verbose {
+            eprintln!("> {event}: {command}");
+        } else if self.echo && event != EXEC_EVENT {
+            eprintln!("> {command}");
         }
     }
 
@@ -128,6 +163,15 @@ impl Runner {
             if !had {
                 forwarded.extend(args.iter().cloned());
             }
+            if self.verbose && !self.quiet {
+                // `$formattedEventNameWithArgs`: the event's name, and its arguments in brackets.
+                let with_args = if args.is_empty() {
+                    event.to_string()
+                } else {
+                    format!("{event} ({})", args.join(", "))
+                };
+                eprintln!("> {with_args}: {callable}");
+            }
             if self.listeners(&name).is_empty() {
                 eprintln!("You made a reference to a non-existent script {callable}");
             }
@@ -141,9 +185,7 @@ impl Runner {
                 .trim_start_matches('\\')
                 .eq_ignore_ascii_case("Composer\\Config::disableProcessTimeout")
             {
-                if self.echo {
-                    eprintln!("> {callable}");
-                }
+                self.announce(event, &callable);
                 self.timeout = 0;
                 return Ok(());
             }
@@ -159,21 +201,39 @@ impl Runner {
         } else if let Some(rest) = callable.strip_prefix("@php ") {
             format!("{} {}", quote(&self.php), self.php_script(&with_args(rest)))
         } else {
-            with_args(&callable)
+            self.root_binary(&callable, with_args(&callable))
         };
-        if self.echo {
-            eprintln!("> {}", with_args(&callable));
-        }
+        self.announce(event, &with_args(&callable));
         // `/bin/sh`, as Symfony's Process starts it for Composer: the child's PATH puts the bin dir first.
         let mut command = self.command("/bin/sh");
         let status = wait(command.arg("-c").arg(&exec), &exec, self.timeout)?;
         failed(&callable, event, status)
     }
 
+    /// `doDispatch`: a command that a binary of the root's own `bin` ends with, at a word boundary, runs through the
+    /// interpreter that binary's shebang names, else php (`BinaryInstaller::determineBinaryCaller`), from its path.
+    fn root_binary(&self, callable: &str, exec: String) -> String {
+        let bins: Vec<&str> = match self.manifest.get("bin") {
+            Some(Value::String(bin)) => vec![bin.as_str()],
+            Some(Value::Array(bins)) => bins.iter().filter_map(Value::as_str).collect(),
+            _ => return exec,
+        };
+        let word = |b: u8| b.is_ascii_alphanumeric() || b == b'_';
+        // `preg_replace('{^callable}')`: only a command that starts with it, which one with `@additional_args` may not.
+        let Some(bin) = bins.into_iter().find(|bin| {
+            exec.starts_with(callable)
+                && bin.strip_suffix(callable).is_some_and(|before| {
+                    word(callable.as_bytes()[0]) != before.bytes().last().is_some_and(word)
+                })
+        }) else {
+            return exec;
+        };
+        let caller = crate::bins::binary_caller(bin, &self.base.join(bin));
+        format!("{caller} {bin}{}", &exec[callable.len()..])
+    }
+
     fn callback(&mut self, event: &str, callable: &str, args: &[String]) -> Result<()> {
-        if self.echo {
-            eprintln!("> {callable}");
-        }
+        self.announce(event, callable);
         let runner = Helper::new(
             "script-callback.php",
             include_str!("../assets/script-callback.php"),
@@ -216,7 +276,13 @@ impl Runner {
         if Path::new(&self.bin_dir).is_dir() && !path.split(':').any(|p| p == self.bin_dir) {
             c.env("PATH", format!("{}:{path}", self.bin_dir));
         }
-        c.env("COMPOSER_DEV_MODE", if self.dev_mode { "1" } else { "0" });
+        if self.dev_mode_env {
+            c.env("COMPOSER_DEV_MODE", if self.dev_mode { "1" } else { "0" });
+        }
+        if self.quiet {
+            c.stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null());
+        }
         c.env("PHP_BINARY", &self.php);
         for (k, v) in &self.env {
             match v {
@@ -227,6 +293,9 @@ impl Runner {
         c
     }
 }
+
+/// The event `composer exec` dispatches its binary on.
+const EXEC_EVENT: &str = "__exec_command";
 
 /// The events of Composer's `ScriptEvents`: a script named after one runs on that event and is no command of its own.
 pub const SCRIPT_EVENTS: [&str; 12] = [

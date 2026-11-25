@@ -23,13 +23,13 @@ pub(crate) struct ComposerArgs {
 
 /// Composer's global options that Pun takes, before or after the command's name.
 #[derive(clap::Args)]
-struct Globals {
+pub(crate) struct Globals {
     /// Run in this directory instead of the current one.
     #[arg(short = 'd', long, value_name = "DIR", global = true)]
-    working_dir: Option<PathBuf>,
-    /// Ask no questions: `run-script` without a script name is then an error.
+    pub(crate) working_dir: Option<PathBuf>,
+    /// Ask no questions: `run-script` without a script name is then an error, `exec` without a binary lists them.
     #[arg(short = 'n', long, global = true)]
-    no_interaction: bool,
+    pub(crate) no_interaction: bool,
 }
 
 #[derive(clap::Subcommand)]
@@ -40,6 +40,8 @@ enum ComposerCmd {
     /// Run a script from composer.json, as `composer run-script` does; a script also runs as `pun composer <script>`.
     #[command(visible_alias = "run")]
     RunScript(RunArgs),
+    /// Run a binary of the bin dir or of composer.json's `bin`, as `composer exec` does.
+    Exec(crate::exec::ExecArgs),
     #[command(external_subcommand)]
     Other(Vec<String>),
 }
@@ -170,6 +172,7 @@ pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
             let project = project(globals.working_dir.as_ref(), false)?;
             run_script(&project, &r, &globals, true)
         }
+        ComposerCmd::Exec(e) => crate::exec::run(&e, &globals),
         ComposerCmd::Other(args) => {
             let name = args.first().map_or("", String::as_str);
             let parsed = ScriptCommand::read(&args);
@@ -256,10 +259,15 @@ fn run_script(project: &Project, r: &RunArgs, globals: &Globals, echo: bool) -> 
     if let Some(seconds) = timeout {
         events.timeout(seconds);
     }
-    match events.dispatch_script(&script, &r.args) {
+    finish(events.dispatch_script(&script, &r.args), false)
+}
+
+/// How a run of scripts ends: a script that failed prints its line, then each reference that led to it, and exits
+/// with its code, as Composer does (with `color`, in its error style); any other error is a run error.
+pub(crate) fn finish(result: pun_packages::error::Result<()>, color: bool) -> Result<Exit> {
+    match result {
         Ok(()) => Ok(Exit::Success),
         Err(e) => match e.script_code() {
-            // Composer prints the failed script's line, then each reference that led to it, and exits with its code.
             Some(code) => {
                 let mut lines = vec![e.to_string()];
                 let mut cause = std::error::Error::source(&e);
@@ -268,7 +276,11 @@ fn run_script(project: &Project, r: &RunArgs, globals: &Globals, echo: bool) -> 
                     cause = c.source();
                 }
                 for line in lines.iter().rev() {
-                    eprintln!("{line}");
+                    if color {
+                        eprintln!("\x1b[37;41m{line}\x1b[39;49m");
+                    } else {
+                        eprintln!("{line}");
+                    }
                 }
                 std::process::exit(code)
             }
@@ -280,15 +292,7 @@ fn run_script(project: &Project, r: &RunArgs, globals: &Globals, echo: bool) -> 
 /// Composer asks which script to run when none is named, in a terminal and with scripts to choose from; `None` when
 /// it can't ask, or the question was cancelled.
 fn pick(project: &Project) -> Result<Option<String>> {
-    use std::io::IsTerminal;
     let rows = script_rows(project);
-    if rows.is_empty()
-        || !std::io::stdin().is_terminal()
-        || !std::io::stderr().is_terminal()
-        || crate::agent::enabled()
-    {
-        return Ok(None);
-    }
     let width = rows.iter().map(|r| r.0.chars().count()).max().unwrap_or(0);
     let items: Vec<String> = (rows.iter())
         .map(|(name, description)| {
@@ -297,12 +301,25 @@ fn pick(project: &Project) -> Result<Option<String>> {
                 .to_string()
         })
         .collect();
-    let chosen = dialoguer::Select::with_theme(&crate::init::theme())
-        .with_prompt("Script to run")
-        .items(&items)
+    Ok(select("Script to run", &items)?.map(|i| rows[i].0.clone()))
+}
+
+/// Asks which of `items` to take, in a terminal and with items to choose from; `None` when it can't ask, or the
+/// question was cancelled.
+pub(crate) fn select(prompt: &str, items: &[String]) -> Result<Option<usize>> {
+    use std::io::IsTerminal;
+    if items.is_empty()
+        || !std::io::stdin().is_terminal()
+        || !std::io::stderr().is_terminal()
+        || crate::agent::enabled()
+    {
+        return Ok(None);
+    }
+    Ok(dialoguer::Select::with_theme(&crate::init::theme())
+        .with_prompt(prompt)
+        .items(items)
         .default(0)
-        .interact_on_opt(&dialoguer::console::Term::stderr())?;
-    Ok(chosen.map(|i| rows[i].0.clone()))
+        .interact_on_opt(&dialoguer::console::Term::stderr())?)
 }
 
 /// Each script with the description Composer gives it: its `scripts-descriptions` entry, else the default one; a

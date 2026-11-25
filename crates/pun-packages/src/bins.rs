@@ -132,6 +132,26 @@ fn proxy(bin: &str, link: &str, head: &[u8], vendor: &str) -> String {
     )
 }
 
+/// `BinaryInstaller::determineBinaryCaller` for the binary `bin` at `path`: `call` for a `.bat` or `.exe`, else the
+/// interpreter its shebang names, else php (also when it can't be read).
+#[expect(
+    clippy::case_sensitive_file_extension_comparisons,
+    reason = "Composer compares the last four bytes as they are"
+)]
+pub(crate) fn binary_caller(bin: &str, path: &Path) -> String {
+    if bin.ends_with(".bat") || bin.ends_with(".exe") {
+        return "call".to_string();
+    }
+    let text = std::fs::read(path).unwrap_or_default();
+    let line = text
+        .split_inclusive(|&b| b == b'\n')
+        .next()
+        .unwrap_or_default();
+    let shebang = String::from_utf8_lossy(line);
+    shebang_caller(shebang.trim_end_matches([' ', '\t', '\r', '\n']))
+        .unwrap_or_else(|| "php".to_string())
+}
+
 fn shebang_caller(shebang: &str) -> Option<String> {
     static SHEBANG: LazyLock<Regex> = LazyLock::new(|| {
         re(r"^#!(?:/[a-zA-Z0-9_.+-]+)*/([a-zA-Z0-9_.+][a-zA-Z0-9_.+-]*(?:[ \t].*)?)$")

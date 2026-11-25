@@ -11,6 +11,7 @@ mod baseline;
 mod cache;
 mod composer;
 mod console;
+mod exec;
 mod extensions;
 pub mod finder;
 mod fix_report;

@@ -2,7 +2,7 @@
 //! `pun-cli/tests/fixtures/check_platform_reqs.json` (`scripts/export-platform-reqs-cases.py`): the table or JSON each
 //! case prints, its exit code, where its packages came from, and the errors that stop it.
 
-use pun_packages::platform_reqs::{Source, check};
+use pun_packages::platform_reqs::{Source, check, root_versioned};
 use serde_json::{Map, Value};
 use std::path::Path;
 
@@ -57,6 +57,25 @@ fn heading(source: Source, no_dev: bool) -> String {
     }
 }
 
+/// The root package `manifest` with its version and Composer's warning, in the recorder's environment:
+/// `COMPOSER_ROOT_VERSION=1.0.0`, unless the case leaves it out or sets its own.
+fn versioned(
+    case: &Value,
+    manifest: &Map<String, Value>,
+    base: &Path,
+) -> (Map<String, Value>, Option<String>) {
+    let root_version = match case["env"].get("COMPOSER_ROOT_VERSION") {
+        Some(Value::String(v)) => Some(v.clone()),
+        Some(_) => None,
+        None => Some("1.0.0".to_string()),
+    };
+    root_versioned(manifest, base, &|name| {
+        (name == "COMPOSER_ROOT_VERSION")
+            .then(|| root_version.clone())
+            .flatten()
+    })
+}
+
 /// How Pun's report for `case` differs from Composer's, if it does.
 fn difference(fixture: &Value, case: &Value) -> Option<String> {
     let name = case["name"].as_str().unwrap();
@@ -94,6 +113,7 @@ fn difference(fixture: &Value, case: &Value) -> Option<String> {
         std::fs::remove_dir_all(&dir).unwrap();
         return None;
     };
+    let (manifest, warning) = versioned(case, &manifest, &base);
     let vendor = (manifest
         .get("config")
         .and_then(|c| c.get("vendor-dir"))
@@ -138,7 +158,11 @@ fn difference(fixture: &Value, case: &Value) -> Option<String> {
             let got = (
                 i64::from(report.exit),
                 stdout,
-                format!("{}\n", heading(report.source, no_dev)),
+                format!(
+                    "{}{}\n",
+                    warning.map_or_else(String::new, |w| format!("{w}\n")),
+                    heading(report.source, no_dev)
+                ),
             );
             let want = (
                 case["exit"].as_i64().unwrap(),
@@ -168,4 +192,41 @@ fn reports_as_composer_does() {
         failures.len(),
         failures.join("\n\n")
     );
+}
+
+/// In a git repository, without `version` or `COMPOSER_ROOT_VERSION`, the root's version is git's: on `main`,
+/// `dev-main`, as Composer's `VersionGuesser` gives it, without the warning about 1.0.0.
+#[test]
+fn root_version_from_git() {
+    let dir = std::env::temp_dir().join(format!("pun-platform-git-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    for args in [
+        &["init", "-q", "-b", "main"][..],
+        &["commit", "-q", "--allow-empty", "-m", "one"],
+    ] {
+        let status = std::process::Command::new("git")
+            .args([
+                "-c",
+                "user.email=a@b",
+                "-c",
+                "user.name=a",
+                "-c",
+                "commit.gpgsign=false",
+            ])
+            .args(args)
+            .current_dir(&dir)
+            .env_remove("GIT_DIR")
+            .status()
+            .unwrap();
+        assert!(status.success(), "git {args:?}");
+    }
+    let manifest = serde_json::json!({"name": "acme/app"})
+        .as_object()
+        .unwrap()
+        .clone();
+    let (versioned, warning) = root_versioned(&manifest, &dir, &|_| None);
+    std::fs::remove_dir_all(&dir).unwrap();
+    assert_eq!(versioned["version"], "dev-main");
+    assert_eq!(warning, None);
 }

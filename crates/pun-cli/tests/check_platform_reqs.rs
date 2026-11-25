@@ -57,23 +57,23 @@ fn check(case: &Value, probe: &Value) -> Outcome {
     let args: Vec<&str> = (case["args"].as_array().unwrap().iter())
         .map(|a| a.as_str().unwrap())
         .collect();
-    let out = common::clean_env(&mut Command::new(PUN), &["PATH"])
+    let mut command = Command::new(PUN);
+    common::clean_env(&mut command, &["PATH"])
         .args(["composer", "check-platform-reqs"])
         .args(&args)
         .current_dir(&dir)
         .env("PUN_AGENT", "0")
         .env("HOME", &dir)
-        .env("PHP_BINARY", &php)
-        .envs(
-            (case
-                .get("env")
-                .and_then(Value::as_object)
-                .into_iter()
-                .flatten())
-            .map(|(k, v)| (k, v.as_str().unwrap())),
-        )
-        .output()
-        .unwrap();
+        .env("PHP_BINARY", &php);
+    // The recorder's environment: COMPOSER_ROOT_VERSION=1.0.0 and the case's own, where a null leaves a variable out.
+    command.env("COMPOSER_ROOT_VERSION", "1.0.0");
+    for (key, value) in (case.get("env").and_then(Value::as_object).into_iter()).flatten() {
+        match value.as_str() {
+            Some(value) => command.env(key, value),
+            None => command.env_remove(key),
+        };
+    }
+    let out = command.output().unwrap();
     // The fixture writes the project's directory as `{dir}`.
     let here = dir.canonicalize().unwrap().to_string_lossy().into_owned();
     std::fs::remove_dir_all(&dir).unwrap();

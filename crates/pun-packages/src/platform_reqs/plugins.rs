@@ -56,7 +56,7 @@ pub(super) fn load(
     root: usize,
     rules: &Rules,
 ) -> Result<(bool, Vec<String>)> {
-    let required = required(arena, local, root);
+    let required = required(arena, local, root, true);
     let mut any = false;
     let mut warnings = vec![];
     // Composer goes through them in `PackageSorter`'s order, which only the order of several warnings shows.
@@ -136,11 +136,16 @@ fn allowed(name: &str, rules: &Rules, optional: bool) -> Result<bool> {
     )
 }
 
-/// `RepositoryUtils::filterRequiredPackages`: the packages of `local` the root requires (with require-dev), and those
-/// they require, by any of their names.
-fn required(arena: &[Package], local: &[usize], root: usize) -> Vec<usize> {
+/// `RepositoryUtils::filterRequiredPackages`: the packages of `local` the root requires (with require-dev when
+/// `dev`), and those they require, by any of their names.
+pub(crate) fn required(arena: &[Package], local: &[usize], root: usize, dev: bool) -> Vec<usize> {
     let mut found: Vec<usize> = vec![];
-    let mut targets: Vec<&str> = (arena[root].requires.iter().chain(&arena[root].dev_requires))
+    let dev_requires = if dev {
+        &arena[root].dev_requires[..]
+    } else {
+        &[]
+    };
+    let mut targets: Vec<&str> = (arena[root].requires.iter().chain(dev_requires))
         .map(|l| l.target.as_str())
         .collect();
     while let Some(target) = targets.pop() {

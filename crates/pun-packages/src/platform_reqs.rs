@@ -10,7 +10,7 @@ use serde_json::{Map, Value, json};
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
-mod plugins;
+pub(crate) mod plugins;
 
 /// Where the packages came from, which the first line names.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -65,18 +65,47 @@ pub fn root_versioned(
     dir: &Path,
     env: crate::Env,
 ) -> (Map<String, Value>, Option<String>) {
+    let root = root_package(manifest, dir, env);
+    (root.manifest, root.warning)
+}
+
+/// The root package as `RootPackageLoader::load` makes it: see [`root_package`].
+pub struct Root {
+    /// The manifest with its version (the one its links were read with).
+    pub manifest: Map<String, Value>,
+    /// Composer's warning about a version it couldn't find.
+    pub warning: Option<String>,
+    /// The version Composer shows: `1.0.0+no-version-set` for one it couldn't find (`replaceVersion`).
+    pub pretty_version: String,
+    /// The commit git gave the version from, which Composer records as its source and dist reference.
+    pub commit: Option<String>,
+}
+
+/// [`root_versioned`]'s root package, with the version Composer shows and the commit of a version from git.
+pub fn root_package(manifest: &Map<String, Value>, dir: &Path, env: crate::Env) -> Root {
     let mut manifest = manifest.clone();
+    let root = |manifest: Map<String, Value>, commit: Option<String>| {
+        let pretty_version = (manifest.get("version").and_then(Value::as_str))
+            .unwrap_or_default()
+            .to_string();
+        Root {
+            manifest,
+            warning: None,
+            pretty_version,
+            commit,
+        }
+    };
     if manifest.contains_key("version") {
-        return (manifest, None);
+        return root(manifest, None);
     }
     if let Some(version) = crate::installed::root_version(env) {
         manifest.insert("version".into(), version.into());
-        return (manifest, None);
+        return root(manifest, None);
     }
     if let Some(git) = crate::installed::git_version(&manifest, dir) {
         manifest.insert("version".into(), git.pretty.into());
         manifest.insert("version_normalized".into(), git.version.into());
-        return (manifest, None);
+        return root(manifest, git.commit);
     }
     manifest.insert("version".into(), "1.0.0".into());
     let name = manifest
@@ -89,7 +118,53 @@ pub fn root_versioned(
             "Composer could not detect the root package ({name}) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version"
         )
     });
-    (manifest, warning)
+    Root {
+        manifest,
+        warning,
+        pretty_version: "1.0.0+no-version-set".into(),
+        commit: None,
+    }
+}
+
+/// The local repository as `Factory::createComposer` leaves it: the packages installed in the vendor dir (each and
+/// its branch alias), their `dev-package-names`, and Composer's warnings about the plugins it didn't load.
+pub(crate) struct Installed {
+    pub(crate) ids: Vec<usize>,
+    pub(crate) dev_names: Vec<String>,
+    pub(crate) warnings: Vec<String>,
+}
+
+/// [`Installed`] for the root package `root` (in `arena`), its lock at `lock_file` (named `lock_display` in messages)
+/// and its vendor dir `vendor`: the plugin manager (which reads allow-plugins, and the lock with it), the installed
+/// plugins (none with `no_plugins`), then the local repository without the packages that aren't installed.
+pub(crate) fn installed(
+    arena: &mut Vec<Package>,
+    root: usize,
+    lock_file: &Path,
+    lock_display: &str,
+    vendor: &Path,
+    no_plugins: bool,
+) -> Result<Installed> {
+    let config = (arena[root].data().get("config").and_then(Value::as_object))
+        .cloned()
+        .unwrap_or_default();
+    let rules = plugins::rules(&config, lock_file, lock_display)?;
+    let (entries, dev_names) = local(vendor, arena)?;
+    let all: Vec<usize> = entries.iter().flat_map(|e| e.ids.clone()).collect();
+    let (any_plugin, warnings) = if no_plugins {
+        (false, vec![])
+    } else {
+        plugins::load(arena, &all, root, &rules)?
+    };
+    let ids = (entries.iter())
+        .filter(|e| e.installed(any_plugin))
+        .flat_map(|e| e.ids.clone())
+        .collect();
+    Ok(Installed {
+        ids,
+        dev_names,
+        warnings,
+    })
 }
 
 /// A requirement's links: the package each is from and its description.
@@ -124,21 +199,18 @@ pub fn check(
     root_data.entry("name").or_insert_with(|| "__root__".into());
     let root_ids = load(root_data, Origin::Root, &mut arena)?;
     let root = *root_ids.last().expect("the root");
-    let config = (manifest.get("config").and_then(Value::as_object))
-        .cloned()
-        .unwrap_or_default();
-    let rules = plugins::rules(&config, lock_file, lock_display)?;
-    let (entries, mut dev_names) = local(vendor, &mut arena)?;
-    let all: Vec<usize> = entries.iter().flat_map(|e| e.ids.clone()).collect();
-    let (any_plugin, warnings) = if options.no_plugins {
-        (false, vec![])
-    } else {
-        plugins::load(&arena, &all, root, &rules)?
-    };
-    let local: Vec<usize> = (entries.iter())
-        .filter(|e| e.installed(any_plugin))
-        .flat_map(|e| e.ids.clone())
-        .collect();
+    let Installed {
+        ids: local,
+        mut dev_names,
+        warnings,
+    } = installed(
+        &mut arena,
+        root,
+        lock_file,
+        lock_display,
+        vendor,
+        options.no_plugins,
+    )?;
     let dev = !options.no_dev;
     let (source, installed) = if options.lock {
         (
@@ -421,7 +493,7 @@ fn local(vendor: &Path, arena: &mut Vec<Package>) -> Result<(Vec<Entry>, Vec<Str
 
 /// `Locker::getLockedRepository`: the lock's packages, with `packages-dev` when `dev`, each branch alias before its
 /// package, then the root's inline aliases the lock records.
-fn locked(
+pub(crate) fn locked(
     lock_file: &Path,
     display: &str,
     dev: bool,

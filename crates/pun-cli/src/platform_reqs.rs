@@ -61,7 +61,17 @@ impl PlatformReqsArgs {
     }
 }
 
-pub(crate) fn run(a: &PlatformReqsArgs, globals: &Globals) -> Result<Exit> {
+/// The project a Composer command reads, as `Factory` finds it: its directory (`-d`, else the current one), its
+/// composer.json (`COMPOSER`, else composer.json) and the lock named after it.
+pub(crate) struct ComposerJson {
+    pub(crate) base: PathBuf,
+    pub(crate) manifest: Map<String, Value>,
+    pub(crate) lock_file: String,
+}
+
+/// [`ComposerJson`], with Composer's errors for a missing directory and a composer.json that is missing, unreadable or
+/// not an object.
+pub(crate) fn composer_json(globals: &Globals) -> Result<ComposerJson> {
     // Composer changes to `-d` and works from `getcwd()`.
     let base = match &globals.working_dir {
         Some(d) => d.canonicalize().map_err(|_| {
@@ -115,6 +125,19 @@ pub(crate) fn run(a: &PlatformReqsArgs, globals: &Globals) -> Result<Exit> {
         Some(stem) => format!("{stem}.lock"),
         None => format!("{file}.lock"),
     };
+    Ok(ComposerJson {
+        base,
+        manifest,
+        lock_file,
+    })
+}
+
+pub(crate) fn run(a: &PlatformReqsArgs, globals: &Globals) -> Result<Exit> {
+    let ComposerJson {
+        base,
+        manifest,
+        lock_file,
+    } = composer_json(globals)?;
     let (manifest, root_warning) =
         root_versioned(&manifest, &base, &|name| std::env::var(name).ok());
     let vendor = pun_packages::install::dirs(&base.to_string_lossy(), &manifest).vendor;

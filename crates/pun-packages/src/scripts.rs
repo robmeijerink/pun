@@ -4,7 +4,7 @@
 )]
 
 use crate::Env;
-use crate::error::{Context, Result, bail};
+use crate::error::{Context, Error, Result, bail};
 use serde_json::{Map, Value};
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -16,6 +16,11 @@ pub struct Runner {
     pub manifest: Map<String, Value>,
     pub dev_mode: bool,
     pub php: String,
+    /// Print each command before it runs; Composer doesn't when a script runs as its own command (`composer test`).
+    pub echo: bool,
+    /// Composer's `process-timeout` in seconds for each command; 0 for none. Callbacks run without one, as they run
+    /// inside Composer there.
+    pub timeout: u64,
     path: String,
     env: Vec<(String, Option<String>)>,
     stack: Vec<String>,
@@ -39,6 +44,12 @@ impl Runner {
             php: which(
                 &php_binary(env("PHP_BINARY")),
                 &env("PATH").unwrap_or_default(),
+            ),
+            echo: true,
+            timeout: process_timeout(
+                manifest,
+                global_timeout(crate::fetch::composer_dirs().map(|(home, _)| home)).as_ref(),
+                env("COMPOSER_PROCESS_TIMEOUT"),
             ),
             path: env("PATH").unwrap_or_default(),
             env: vec![],
@@ -125,6 +136,17 @@ impl Runner {
                 .with_context(|| format!("Script {callable} was called via {event}"));
         }
         if !callable.contains(' ') && callable.contains("::") {
+            // Composer's own callback, which turns the timeout off for the commands after it.
+            if callable
+                .trim_start_matches('\\')
+                .eq_ignore_ascii_case("Composer\\Config::disableProcessTimeout")
+            {
+                if self.echo {
+                    eprintln!("> {callable}");
+                }
+                self.timeout = 0;
+                return Ok(());
+            }
             return self.callback(event, &callable, args);
         }
         let with_args = |c: &str| match (c.contains("@additional_args"), quoted.is_empty()) {
@@ -135,24 +157,23 @@ impl Runner {
         let exec = if let Some(rest) = callable.strip_prefix("@composer ") {
             format!("composer {}", with_args(rest))
         } else if let Some(rest) = callable.strip_prefix("@php ") {
-            format!("{} {}", quote(&self.php), with_args(rest))
+            format!("{} {}", quote(&self.php), self.php_script(&with_args(rest)))
         } else {
             with_args(&callable)
         };
-        eprintln!("> {}", with_args(&callable));
-        // `/bin/sh`, as Symfony's Process starts it for Composer: the child's PATH puts the bin dir first.
-        let status = self.command("/bin/sh").arg("-c").arg(&exec).status()?;
-        if !status.success() {
-            bail!(
-                "Script {callable} handling the {event} event returned with error code {}",
-                status.code().unwrap_or(1)
-            );
+        if self.echo {
+            eprintln!("> {}", with_args(&callable));
         }
-        Ok(())
+        // `/bin/sh`, as Symfony's Process starts it for Composer: the child's PATH puts the bin dir first.
+        let mut command = self.command("/bin/sh");
+        let status = wait(command.arg("-c").arg(&exec), &exec, self.timeout)?;
+        failed(&callable, event, status)
     }
 
     fn callback(&mut self, event: &str, callable: &str, args: &[String]) -> Result<()> {
-        eprintln!("> {callable}");
+        if self.echo {
+            eprintln!("> {callable}");
+        }
         let runner = Helper::new(
             "script-callback.php",
             include_str!("../assets/script-callback.php"),
@@ -171,13 +192,21 @@ impl Runner {
             .status();
         drop(runner);
         let status = status.with_context(|| format!("can't run {} for {callable}", self.php))?;
-        if !status.success() {
-            bail!(
-                "Script {callable} handling the {event} event returned with error code {}",
-                status.code().unwrap_or(1)
-            );
+        failed(callable, event, status)
+    }
+
+    /// Composer's `@php <script>`: a first word with no quote or slash that is no file in the project is looked up
+    /// on the PATH, the bin dir first, so `@php phpstan` runs `vendor/bin/phpstan` on Composer's PHP.
+    fn php_script(&self, path_and_args: &str) -> String {
+        let end = (path_and_args
+            .find(|c: char| matches!(c, '\'' | '"' | '/' | '\\') || c.is_whitespace()))
+        .unwrap_or(path_and_args.len());
+        let word = &path_and_args[..end];
+        if word.is_empty() || self.base.join(word).exists() {
+            return path_and_args.to_string();
         }
-        Ok(())
+        let found = which(word, &format!("{}:{}", self.bin_dir, self.path));
+        format!("{found}{}", &path_and_args[end..])
     }
 
     fn command(&self, program: &str) -> Command {
@@ -197,6 +226,141 @@ impl Runner {
         }
         c
     }
+}
+
+/// The events of Composer's `ScriptEvents`: a script named after one runs on that event and is no command of its own.
+pub const SCRIPT_EVENTS: [&str; 12] = [
+    "pre-install-cmd",
+    "post-install-cmd",
+    "pre-update-cmd",
+    "post-update-cmd",
+    "pre-status-cmd",
+    "post-status-cmd",
+    "pre-archive-cmd",
+    "post-archive-cmd",
+    "pre-autoload-dump",
+    "post-autoload-dump",
+    "post-root-package-install",
+    "post-create-project-cmd",
+];
+
+/// Runs `command` to its end, or stops it after `timeout` seconds (0, or more than the clock can hold, for never) as
+/// Symfony's Process does: SIGTERM, then SIGKILL when it is still running a moment later. Composer then fails with the
+/// Process's message.
+fn wait(command: &mut Command, exec: &str, timeout: u64) -> Result<std::process::ExitStatus> {
+    use std::time::{Duration, Instant};
+    let limit = Duration::from_secs(timeout);
+    if timeout == 0 || Instant::now().checked_add(limit).is_none() {
+        return Ok(command.status()?);
+    }
+    let mut child = command.spawn()?;
+    let exited = exit_signal(child.id());
+    if exited.recv_timeout(limit).is_ok() {
+        return Ok(child.wait()?);
+    }
+    if let Ok(pid) = libc::pid_t::try_from(child.id()) {
+        // SAFETY: `kill` takes any pid and signal; only this thread reaps the child, which it hasn't yet, so the pid
+        // is still the child's.
+        unsafe { libc::kill(pid, libc::SIGTERM) };
+    }
+    if exited.recv_timeout(Duration::from_millis(1)).is_err() {
+        let _ = child.kill();
+    }
+    let _ = child.wait();
+    eprintln!("The following exception is caused by a process timeout");
+    eprintln!("Check https://getcomposer.org/doc/06-config.md#process-timeout for details");
+    bail!("The process \"{exec}\" exceeded the timeout of {timeout} seconds.")
+}
+
+/// A message when process `pid` exits, from a thread that waits for it without reaping it (`WNOWAIT`): the caller
+/// still owns the exit status, and the pid stays the child's until the caller reaps it.
+fn exit_signal(pid: u32) -> std::sync::mpsc::Receiver<()> {
+    let (sender, receiver) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        loop {
+            // SAFETY: `info` is a zeroed `siginfo_t` that `waitid` only writes into, and it outlives the call.
+            let mut info: libc::siginfo_t = unsafe { std::mem::zeroed() };
+            // SAFETY: as above; `waitid` with WNOWAIT leaves the child to be reaped by its owner.
+            let ret = unsafe {
+                libc::waitid(
+                    libc::P_PID,
+                    pid,
+                    &raw mut info,
+                    libc::WEXITED | libc::WNOWAIT,
+                )
+            };
+            if ret == 0 || std::io::Error::last_os_error().kind() != std::io::ErrorKind::Interrupted
+            {
+                break;
+            }
+        }
+        let _ = sender.send(());
+    });
+    receiver
+}
+
+/// The `process-timeout` of the global Composer config (`$COMPOSER_HOME/config.json`), which composer.json overrides.
+fn global_timeout(home: Option<PathBuf>) -> Option<Value> {
+    let home = home?;
+    let config: Value =
+        serde_json::from_slice(&std::fs::read(home.join("config.json")).ok()?).ok()?;
+    config.get("config")?.get("process-timeout").cloned()
+}
+
+/// Composer's `process-timeout`, never below 0: `COMPOSER_PROCESS_TIMEOUT` read as PHP's `(int)` reads it, else
+/// composer.json's `config.process-timeout`, else the global config's, else 300. Composer's schema takes only an
+/// integer there and refuses to load any other value; Pun, which doesn't check the schema, passes over it.
+fn process_timeout(
+    manifest: &Map<String, Value>,
+    global: Option<&Value>,
+    env: Option<String>,
+) -> u64 {
+    let project = manifest
+        .get("config")
+        .and_then(|c| c.get("process-timeout"));
+    let value = match env {
+        Some(v) => php_int(&v),
+        None => (project.and_then(Value::as_i64))
+            .or_else(|| global.and_then(Value::as_i64))
+            .unwrap_or(300),
+    };
+    u64::try_from(value).unwrap_or(0)
+}
+
+/// PHP's `(int)` of a string: leading whitespace, a sign and the digits after it; 0 without digits.
+fn php_int(s: &str) -> i64 {
+    let s = s.trim_start_matches([' ', '\t', '\n', '\r', '\x0b', '\x0c']);
+    let (negative, digits) = match s.as_bytes().first() {
+        Some(b'-') => (true, &s[1..]),
+        Some(b'+') => (false, &s[1..]),
+        _ => (false, s),
+    };
+    let end = digits
+        .bytes()
+        .position(|b| !b.is_ascii_digit())
+        .unwrap_or(digits.len());
+    let n = digits[..end]
+        .parse::<i64>()
+        .unwrap_or(if end == 0 { 0 } else { i64::MAX });
+    if negative { -n } else { n }
+}
+
+/// Composer's error for a script that exited with `status`, carrying its code: a shell killed by a signal exits
+/// 128 plus the signal, as Symfony's Process reports it.
+fn failed(callable: &str, event: &str, status: std::process::ExitStatus) -> Result<()> {
+    use std::os::unix::process::ExitStatusExt;
+    if status.success() {
+        return Ok(());
+    }
+    let code = (status.code())
+        .or_else(|| status.signal().map(|s| 128 + s))
+        .unwrap_or(1);
+    Err(Error::Script {
+        message: format!(
+            "Script {callable} handling the {event} event returned with error code {code}"
+        ),
+        code,
+    })
 }
 
 /// A PHP helper pun writes for one run, in a directory made for it alone and readable only by this user, so no other
@@ -390,6 +554,11 @@ mod tests {
         let d = project("fail");
         let error =
             |scripts: Value, event: &str| format!("{:#}", run(&d, scripts, event).unwrap_err());
+        let code = |scripts: Value| run(&d, scripts, "a").unwrap_err().script_code();
+        assert_eq!(code(json!({"a": "exit 3"})), Some(3));
+        assert_eq!(code(json!({"a": "@b", "b": "exit 4"})), Some(4));
+        assert_eq!(code(json!({"a": "kill -9 $$"})), Some(137));
+        assert_eq!(code(json!({"a": "@a"})), None);
         assert_eq!(
             error(json!({"a": "exit 3"}), "a"),
             "Script exit 3 handling the a event returned with error code 3"
@@ -459,6 +628,162 @@ mod tests {
         drop(a);
         assert!(!dir.exists());
         std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    /// Composer 2.11.2 with `process-timeout: 1`: `sleep 3; echo done` stops at 1 s with Symfony's message and prints
+    /// nothing; `Composer\Config::disableProcessTimeout` lets the commands after it run on.
+    #[test]
+    fn commands_stop_at_composers_timeout() {
+        let d = project("timeout");
+        let manifest = json!({"config": {"process-timeout": 1}, "scripts": {
+            "slow": "sleep 3; echo done >> out.txt",
+            "off": ["Composer\\Config::disableProcessTimeout", "sleep 2", "echo ok >> out.txt"],
+            // Composer takes the class with a leading backslash, and in any case, as PHP does.
+            "slash": ["\\Composer\\Config::disableProcessTimeout", "sleep 2", "echo slash >> out.txt"],
+            "case": ["composer\\config::DISABLEPROCESSTIMEOUT", "sleep 2", "echo case >> out.txt"],
+        }});
+        let manifest = manifest.as_object().unwrap().clone();
+        let vendor = d.join("vendor").to_string_lossy().into_owned();
+        let bin = d.join("vendor/bin").to_string_lossy().into_owned();
+        let runner = || {
+            Runner::new(&d, &vendor, &bin, &manifest, true, &|k| {
+                (k != "COMPOSER_PROCESS_TIMEOUT")
+                    .then(|| std::env::var(k).ok())
+                    .flatten()
+            })
+        };
+        let started = std::time::Instant::now();
+        let err = runner().dispatch("slow", &[]).unwrap_err();
+        assert!(started.elapsed() < std::time::Duration::from_secs(3));
+        assert_eq!(
+            (err.to_string(), err.script_code()),
+            (
+                "The process \"sleep 3; echo done >> out.txt\" exceeded the timeout of 1 seconds."
+                    .into(),
+                None
+            )
+        );
+        // A command that ignores SIGTERM gets SIGKILL, as Symfony's `stop(0)` sends it.
+        let stubborn =
+            json!({"config": {"process-timeout": 1}, "scripts": {"t": "trap '' TERM; sleep 4"}});
+        let stubborn = stubborn.as_object().unwrap().clone();
+        let started = std::time::Instant::now();
+        let err = Runner::new(&d, &vendor, &bin, &stubborn, true, &|k| {
+            (k != "COMPOSER_PROCESS_TIMEOUT")
+                .then(|| std::env::var(k).ok())
+                .flatten()
+        })
+        .dispatch("t", &[])
+        .unwrap_err();
+        assert!(
+            started.elapsed() < std::time::Duration::from_secs(3),
+            "{err}"
+        );
+        std::thread::sleep(std::time::Duration::from_millis(2500));
+        assert!(!d.join("out.txt").exists());
+        for name in ["off", "slash", "case"] {
+            runner().dispatch(name, &[]).unwrap();
+        }
+        // A timeout beyond what the clock can hold (`--timeout` takes up to PHP_INT_MAX seconds) means none.
+        let mut forever = runner();
+        forever.timeout = i64::MAX.unsigned_abs();
+        forever.dispatch("slow", &[]).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(d.join("out.txt")).unwrap(),
+            "ok\nslash\ncase\ndone\n"
+        );
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    /// Composer 2.11.2 runs `@php tool x` with `vendor/bin/tool` (a PHP file without a shebang) found on the PATH, the
+    /// bin dir first; a name that is a file in the project stays as it is.
+    #[test]
+    fn php_scripts_are_found_on_the_path() {
+        let d = project("php-path");
+        let tool = d.join("vendor/bin/tool");
+        std::fs::write(
+            &tool,
+            "<?php echo \"tool \", implode(\",\", array_slice($argv, 1)), \"\\n\";\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&tool, std::os::unix::fs::PermissionsExt::from_mode(0o755))
+            .unwrap();
+        std::fs::write(d.join("local"), "<?php echo \"local\\n\";\n").unwrap();
+        run(
+            &d,
+            json!({"a": ["@php tool x >> out.txt", "@php local >> out.txt"]}),
+            "a",
+        )
+        .unwrap();
+        assert_eq!(
+            std::fs::read_to_string(d.join("out.txt")).unwrap(),
+            "tool x\nlocal\n"
+        );
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
+    /// Composer 2.11.2's `process-timeout`: the environment (through PHP's `(int)`, values from
+    /// `php -r 'echo (int) "..."'`) over composer.json over the global config over 300, never below 0. A value that
+    /// is no integer, which Composer's schema refuses, counts as none.
+    #[test]
+    fn process_timeout_like_composer() {
+        let m = |config: Value| json!({"config": config}).as_object().unwrap().clone();
+        let none = Map::new();
+        assert_eq!(process_timeout(&none, None, None), 300);
+        let home = project("global-config");
+        assert_eq!(global_timeout(Some(home.clone())), None);
+        std::fs::write(
+            home.join("config.json"),
+            r#"{"config": {"process-timeout": 60}}"#,
+        )
+        .unwrap();
+        assert_eq!(global_timeout(Some(home.clone())), Some(json!(60)));
+        assert_eq!(global_timeout(None), None);
+        std::fs::remove_dir_all(&home).unwrap();
+        let global = json!(60);
+        assert_eq!(process_timeout(&none, Some(&global), None), 60);
+        assert_eq!(
+            process_timeout(&m(json!({"process-timeout": 5})), Some(&global), None),
+            5
+        );
+        assert_eq!(
+            process_timeout(&m(json!({"process-timeout": 0})), None, None),
+            0
+        );
+        assert_eq!(
+            process_timeout(&m(json!({"process-timeout": -5})), None, None),
+            0
+        );
+        for refused in [
+            json!(1.5),
+            json!("20"),
+            json!(true),
+            json!(null),
+            json!([1]),
+        ] {
+            let config = m(json!({ "process-timeout": refused }));
+            assert_eq!(process_timeout(&config, None, None), 300, "{refused}");
+            assert_eq!(
+                process_timeout(&config, Some(&global), None),
+                60,
+                "{refused}"
+            );
+        }
+        assert_eq!(
+            process_timeout(&m(json!({"process-timeout": 9})), None, Some("0".into())),
+            0
+        );
+        assert_eq!(process_timeout(&none, None, Some("-5".into())), 0);
+        for (text, int) in [
+            (" 12abc", 12),
+            ("+7", 7),
+            ("abc", 0),
+            ("", 0),
+            ("99999999999999999999", i64::MAX),
+            ("\t3", 3),
+        ] {
+            assert_eq!(php_int(text), int, "{text:?}");
+        }
     }
 
     #[test]

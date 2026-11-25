@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own. Only `dump-autoload` exists today.
+Run Composer commands that have no `pun` command of their own: `dump-autoload` and `run-script`.
 
 ## Usage
 
@@ -14,6 +14,10 @@ pun composer <command> [options]
 ```bash
 pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
+pun composer run test
+pun composer run test -- --filter=UserTest
+pun composer test
+pun composer run --list
 ```
 
 ## Options
@@ -32,9 +36,30 @@ For `dump-autoload` (alias `dumpautoload`):
 | `--no-plugins` | Skip Composer plugins. |
 | `--ignore-platform-req=<req>` | Leave one requirement out of `platform_check.php`. |
 | `--ignore-platform-reqs` | Write no `platform_check.php`. |
+
+For `run-script` (alias `run`):
+
+| Option | Description |
+| --- | --- |
+| `<script> [args]...` | The script to run, and arguments passed on to it. Put arguments that start with `-` after `--`. |
+| `-l`, `--list` | List the scripts and their `scripts-descriptions`. |
+| `--dev` | Run in dev mode (the default). |
+| `--no-dev` | Run with `COMPOSER_DEV_MODE=0`. |
+| `--timeout=<seconds>` | Stop each command after this many seconds; `0` never stops one. Default: `config.process-timeout`, else 300. |
+| `--no-plugins` | Skip Composer plugins. |
+
+For every command, before or after its name:
+
+| Option | Description |
+| --- | --- |
 | `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
+| `-n`, `--no-interaction` | Ask nothing: `run-script` without a script name exits 2. |
+
+A script also runs as `pun composer <script>`, or by a name from `scripts-aliases`, as in Composer. That form takes `--dev`, `--no-dev`, `--no-plugins`, `-d` and `-n`, and, like Composer, stops reading at the first option it doesn't know: that option and every word after it are dropped, unless they follow `--`. Scripts named after a Composer event, such as `post-autoload-dump`, run only through `run-script`.
 
 ## What happens
+
+`dump-autoload`:
 
 - Writes the autoloader again from `vendor/composer/installed.json`.
 - The files match `composer dump-autoload` byte for byte.
@@ -42,14 +67,25 @@ For `dump-autoload` (alias `dumpautoload`):
 - Without `--dev` or `--no-dev`, follows the last install.
 - Pun never calls the Composer CLI.
 
+`run-script`:
+
+- Runs the script's commands as Composer does: `/bin/sh` with `vendor/bin` first on the `PATH`, `@php` (a bare name such as `@php phpstan` is found on that `PATH`), `@composer`, `@putenv`, references to other scripts with `@<name>`, `@additional_args`, and PHP callbacks such as `Foo\Bar::baz`.
+- Sets `COMPOSER_DEV_MODE` and `PHP_BINARY` for each command.
+- Runs the listeners of allowed Composer plugins for the script's event.
+- Stops a command that runs longer than Composer's `process-timeout` (300 seconds unless `--timeout`, `COMPOSER_PROCESS_TIMEOUT`, composer.json's or the global Composer config's `config.process-timeout` says otherwise; `Composer\Config::disableProcessTimeout` turns it off) and exits 2.
+- Without a script name, in a terminal, asks which script to run.
+- `@composer` runs the `composer` on your `PATH`.
+
 ## Limitations
 
-- Only `dump-autoload` exists. Any other command exits 2.
+- Only `dump-autoload` and `run-script` exist. Any other command exits 2.
+- `run-script` without a script name outside a terminal exits 2.
 
 ## Exit codes
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written. |
+| 0 | Written, or the script succeeded. |
 | 1 | Written, but a package is missing from `vendor/`. |
-| 2 | Unknown command, or another error. |
+| 2 | Unknown command or script, or another error. |
+| other | `run-script`: the failed script's exit code, as in Composer. |

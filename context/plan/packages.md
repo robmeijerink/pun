@@ -19,7 +19,7 @@ The everyday commands are top-level, with Composer's names and flags:
 | `pun update [packages]` | `composer update` | Resolves again, writes composer.lock, installs |
 | `pun require <pkg[:constraint]>` | `composer require` | Adds to composer.json, then a partial update |
 | `pun remove <pkg>` | `composer remove` | Removes from composer.json, then a partial update |
-| `pun composer <command>` | `composer <command>` | Every other Composer command: `dump-autoload` (built), `show`, `outdated`, `why`, `why-not`, `audit`, `validate`, `licenses`, `run-script`, `check-platform-reqs`, `config`, ... (not built yet) |
+| `pun composer <command>` | `composer <command>` | Every other Composer command. Built: `dump-autoload`, `run-script`. Not built: `show`, `outdated`, `why`, `why-not`, `audit`, `validate`, `licenses`, `check-platform-reqs`, `config`, ... |
 
 `pun composer install` and `pun install` are the same command. A `pun composer` command Pun has not built yet is a
 run error (exit 2) that names it; Pun does not shell out to the Composer CLI.
@@ -119,8 +119,8 @@ teammates run, and it needs no resolver.
 5. **`pun composer dump-autoload`.** Done when Composer's autoload fixtures pass and the corpus `vendor/composer/` is
    identical in all modes. Built; shown on pinkary with every flag.
 6. **Scripts and events.** Done when pinkary's `post-autoload-dump` runs and `php artisan package:discover` writes the
-   same `bootstrap/cache/packages.php` after `pun install` as after `composer install`. *Left:*
-   `pun composer run-script`.
+   same `bootstrap/cache/packages.php` after `pun install` as after `composer install`. Built, `pun composer
+   run-script` included.
 7. **Plugins.** The host with the script, package and installer events and plugin commands; then the native ports,
    each tested against the real plugin. Done when every corpus project and a plugin fixture set (pest-plugin,
    php-http/discovery, extension-installer, composer/installers, phpcodesniffer-composer-installer, laravel/vet,

@@ -35,6 +35,10 @@ enum ComposerCmd {
     /// Check the platform requirements of the installed packages against the real platform, as
     /// `composer check-platform-reqs` does.
     CheckPlatformReqs(crate::platform_reqs::PlatformReqsArgs),
+    /// Show the licenses of the root and its dependencies, as `composer licenses` does.
+    Licenses(crate::licenses::LicensesArgs),
+    /// Show the packages the root and its dependencies suggest, as `composer suggests` does.
+    Suggests(crate::suggests::SuggestsArgs),
     #[command(external_subcommand)]
     Other(Vec<String>),
 }
@@ -82,6 +86,8 @@ pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
     match a.cmd {
         ComposerCmd::DumpAutoload(d) => dump(&d, &globals),
         ComposerCmd::CheckPlatformReqs(c) => crate::platform_reqs::run(&c, &globals),
+        ComposerCmd::Licenses(l) => crate::licenses::run(&l, &globals),
+        ComposerCmd::Suggests(s) => crate::suggests::run(&s, &globals),
         ComposerCmd::Other(args) => bail!(
             "`pun composer {}` is not built yet; Pun does not run the Composer CLI",
             args.first().map_or("", String::as_str)

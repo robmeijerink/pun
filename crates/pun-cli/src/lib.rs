@@ -17,6 +17,7 @@ mod fix_report;
 mod github;
 mod init;
 mod install;
+mod licenses;
 mod lint_plan;
 mod list_files;
 mod migrate;
@@ -30,6 +31,7 @@ mod run;
 #[cfg(feature = "pprof")]
 mod sampler;
 mod self_update;
+mod suggests;
 mod update;
 mod watch;
 mod workspace;

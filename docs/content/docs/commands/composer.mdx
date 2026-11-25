@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own: `dump-autoload` and `check-platform-reqs`.
+Run Composer commands that have no `pun` command of their own: `dump-autoload`, `check-platform-reqs`, `licenses` and `suggests`.
 
 ## Usage
 
@@ -16,6 +16,10 @@ pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
 pun composer check-platform-reqs
 pun composer check-platform-reqs --lock --no-dev --format=json
+pun composer licenses --format=json
+pun composer licenses --locked --no-dev --format=summary
+pun composer suggests --by-suggestion
+pun composer suggests --all --list
 ```
 
 ## Options
@@ -55,6 +59,27 @@ For `check-platform-reqs`:
 | `-v`, `-vv`, `-vvv` | Taken, as in Composer, but Pun prints no debug output. |
 | `--no-scripts`, `--no-cache` | Taken, as in Composer. This command runs no scripts and uses no cache. |
 
+For `licenses`:
+
+| Option | Description |
+| --- | --- |
+| `-f`, `--format=<format>` | `text` (the default), `json` or `summary`. |
+| `--no-dev` | Leave out the packages only `require-dev` needs. |
+| `--locked` | Show the packages of `composer.lock`, not those installed in `vendor/`. |
+| `--ansi`, `--no-ansi` | Colour the output, with each package's name a link to its source or homepage, or don't; `--ansi` wins when both are given. By default each of stdout and stderr is coloured on a terminal. |
+
+For `suggests`:
+
+| Option | Description |
+| --- | --- |
+| `[packages]...` | Show only what these packages suggest, transitive ones included. |
+| `--by-package` | Group by the package that suggests (the default). |
+| `--by-suggestion` | Group by the suggested package; with `--by-package`, both, by package first. |
+| `-a`, `--all` | Show the suggestions of every dependency, not only those of the root and the packages it requires. |
+| `--list` | Show only the names of the suggested packages. |
+| `--no-dev` | With a `composer.lock`, leave out the packages only `require-dev` needs. |
+| `--ansi`, `--no-ansi` | Colour the output, or don't; `--ansi` wins when both are given. |
+
 ## What happens
 
 `dump-autoload`:
@@ -74,16 +99,29 @@ For `check-platform-reqs`:
 - A package that provides or replaces a platform package meets its requirements, as in Composer.
 - Prints Composer's table, or its JSON with `--format=json`.
 
+`licenses`:
+
+- Lists the root's licenses, then each package installed in `vendor/` (or locked, with `--locked`) with its version and licenses, by name. A package with a branch alias shows twice, as the alias and the package, as in Composer; the JSON holds it once.
+- A dev version shows the start of its commit, as Composer shows it (`dev-main 1234567`).
+- Packages count as installed as for `check-platform-reqs` (the same plugin rules); the root's version is the one Composer finds, `1.0.0+no-version-set` when it finds none.
+
+`suggests`:
+
+- Lists what the root and its dependencies suggest, from `composer.lock` when there is one, else from `vendor/`. Without a lock, `--no-dev` changes nothing, as in Composer.
+- Leaves out what is already there: a suggested package some other package is, provides or replaces, and a platform package the PHP you run has (`config.platform`, or the lock's platform overrides, count too).
+- Without `--all` or package names, shows only what the root and the packages it requires suggest, and how many more `--all` shows.
+- A named package that isn't installed, or that `--no-dev` leaves out, prints Composer's error and exits 1.
+
 ## Limitations
 
-- Only `dump-autoload` and `check-platform-reqs` exist. Any other command exits 2.
-- `check-platform-reqs` prints only the first line of Composer's message for a composer.json, composer.lock or installed.json that isn't valid JSON, without the description of the error. It doesn't check composer.json against Composer's schema, apart from it being an object.
+- Only `dump-autoload`, `check-platform-reqs`, `licenses` and `suggests` exist. Any other command exits 2.
+- `check-platform-reqs`, `licenses` and `suggests` print only the first line of Composer's message for a composer.json, composer.lock or installed.json that isn't valid JSON, without the description of the error. It doesn't check composer.json against Composer's schema, apart from it being an object.
 - Only `-d` and `-n` work before the command's name; put the other options after it.
 
 ## Exit codes
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written, or every platform requirement is met. |
-| 1 | Written, but a package is missing from `vendor/`; or the platform has a required package at a version that doesn't match. |
+| 0 | Written, or every platform requirement is met, or listed. |
+| 1 | Written, but a package is missing from `vendor/`; or the platform has a required package at a version that doesn't match; or `suggests` was given a package that isn't installed. |
 | 2 | Unknown command, or another error; or the platform lacks a required package. |

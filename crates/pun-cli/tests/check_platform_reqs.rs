@@ -19,6 +19,10 @@ const FIRST_LINE_ONLY: &[&str] = &[
     "invalid-json",
     "installed-invalid-json",
     "lock-invalid-json",
+    "global-quiet-error",
+    "vendor-lock-invalid-json",
+    "vendor-lock-invalid-json-no-plugins",
+    "lock-installed-invalid-json",
 ];
 
 /// Composer checks composer.json against its schema, which Pun does once it shares `validate`'s port of it
@@ -59,7 +63,16 @@ fn check(case: &Value, probe: &Value) -> Outcome {
         .collect();
     let mut command = Command::new(PUN);
     common::clean_env(&mut command, &["PATH"])
-        .args(["composer", "check-platform-reqs"])
+        .arg("composer")
+        .args(
+            (case
+                .get("before")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten())
+            .map(|a| a.as_str().unwrap()),
+        )
+        .arg("check-platform-reqs")
         .args(&args)
         .current_dir(&dir)
         .env("PUN_AGENT", "0")

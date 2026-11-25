@@ -2,7 +2,7 @@
 //! `pun-cli/tests/fixtures/check_platform_reqs.json` (`scripts/export-platform-reqs-cases.py`): the table or JSON each
 //! case prints, its exit code, where its packages came from, and the errors that stop it.
 
-use pun_packages::platform_reqs::{Source, check, root_versioned};
+use pun_packages::platform_reqs::{Options, Report, Source, Style, check, root_versioned};
 use serde_json::{Map, Value};
 use std::path::Path;
 
@@ -10,7 +10,14 @@ const FIXTURE: &str = include_str!("../../pun-cli/tests/fixtures/check_platform_
 
 /// The cases pun-cli's `tests/check_platform_reqs.rs` checks only in part, for the reasons it gives there: the first line
 /// of a JSON error, a schema check to come, and the lock Composer crashes on.
-const FIRST_LINE_ONLY: &[&str] = &["installed-invalid-json", "lock-invalid-json"];
+const FIRST_LINE_ONLY: &[&str] = &[
+    "installed-invalid-json",
+    "lock-invalid-json",
+    "global-quiet-error",
+    "vendor-lock-invalid-json",
+    "vendor-lock-invalid-json-no-plugins",
+    "lock-installed-invalid-json",
+];
 const NEEDS_THE_SCHEMA: &[&str] = &["composer-json-schema"];
 const AS_ANOTHER: &[(&str, &str)] = &[("lock-not-an-object", "lock-without-packages-dev")];
 
@@ -22,39 +29,72 @@ fn write(dir: &Path, case: &Value) {
     }
 }
 
-/// The case's options: `-d`, `--no-dev`, `--lock`, and whether it asks for JSON.
-fn options(args: &[&str]) -> (String, bool, bool, bool) {
-    let mut working_dir = ".".to_string();
-    let mut json = false;
-    let mut words = args.iter();
-    while let Some(&word) = words.next() {
+/// What a case asks for, from its arguments and `before`, Composer's global options before the command's name.
+struct Asked {
+    working_dir: String,
+    options: Options,
+    json: bool,
+    color: bool,
+    quiet: bool,
+}
+
+fn asked(case: &Value) -> Asked {
+    let mut words = (case
+        .get("before")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten())
+    .chain(case["args"].as_array().unwrap())
+    .map(|a| a.as_str().unwrap());
+    let mut asked = Asked {
+        working_dir: ".".to_string(),
+        options: Options::default(),
+        json: false,
+        color: false,
+        quiet: false,
+    };
+    while let Some(word) = words.next() {
         match word {
-            "-d" => working_dir = (*words.next().unwrap()).to_string(),
-            "--format" | "-f" => json = *words.next().unwrap() == "json",
-            w if w.starts_with("--format=") => json = w == "--format=json",
+            "-d" => asked.working_dir = words.next().unwrap().to_string(),
+            "--format" | "-f" => asked.json = words.next() == Some("json"),
+            w if w.starts_with("--format=") => asked.json = w == "--format=json",
+            "--no-dev" => asked.options.no_dev = true,
+            "--lock" => asked.options.lock = true,
+            "--no-plugins" => asked.options.no_plugins = true,
+            "--ansi" => asked.color = true,
+            "-q" | "--quiet" => asked.quiet = true,
             _ => {}
         }
     }
-    (
-        working_dir,
-        args.contains(&"--no-dev"),
-        args.contains(&"--lock"),
-        json,
-    )
+    asked
 }
 
-/// The line Composer starts with, for where the packages came from.
-fn heading(source: Source, no_dev: bool) -> String {
+/// What Composer prints on stderr before the table: the warnings, then the line that says where the packages came
+/// from, in its styles with `color`.
+fn stderr(report: &Report, root_warning: Option<&String>, no_dev: bool, color: bool) -> String {
     let non_dev = if no_dev { "non-dev " } else { "" };
-    match source {
-        Source::Lock => format!("Checking {non_dev}platform requirements using the lock file"),
-        Source::Vendor => {
-            format!("Checking {non_dev}platform requirements for packages in the vendor dir")
-        }
-        Source::NoVendor => format!(
-            "No vendor dir present, checking {non_dev}platform requirements from the lock file"
+    let (style, first) = match report.source {
+        Source::Lock => (
+            Style::Info,
+            format!("Checking {non_dev}platform requirements using the lock file"),
         ),
+        Source::Vendor => (
+            Style::Info,
+            format!("Checking {non_dev}platform requirements for packages in the vendor dir"),
+        ),
+        Source::NoVendor => (
+            Style::Warning,
+            format!(
+                "No vendor dir present, checking {non_dev}platform requirements from the lock file"
+            ),
+        ),
+    };
+    let mut out = String::new();
+    for warning in root_warning.into_iter().chain(&report.warnings) {
+        out += &Style::Warning.paint(warning, color);
+        out.push('\n');
     }
+    out + &style.paint(&first, color) + "\n"
 }
 
 /// The root package `manifest` with its version and Composer's warning, in the recorder's environment:
@@ -87,19 +127,16 @@ fn difference(fixture: &Value, case: &Value) -> Option<String> {
                 .find(|c| c["name"] == *other)
                 .expect("the case it stands for")
         });
-    let args: Vec<&str> = (case["args"].as_array().unwrap().iter())
-        .map(|a| a.as_str().unwrap())
-        .collect();
-    let (working_dir, no_dev, lock, json) = options(&args);
+    let asked = asked(case);
     let dir = std::env::temp_dir().join(format!("pun-platform-lib-{name}-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     write(&dir, case);
     // The project's directory, or its `-d` directory (no `/./` in the paths it names).
-    let base = if working_dir == "." {
+    let base = if asked.working_dir == "." {
         dir.clone()
     } else {
-        dir.join(&working_dir)
+        dir.join(&asked.working_dir)
     };
     let file = case["env"]["COMPOSER"].as_str().unwrap_or("composer.json");
     let lock_file = file
@@ -126,8 +163,7 @@ fn difference(fixture: &Value, case: &Value) -> Option<String> {
         &manifest,
         &base.join(vendor),
         &fixture["probe"],
-        no_dev,
-        lock,
+        asked.options,
     );
     // The fixture writes the project's directory as `{dir}`.
     let here = dir.canonicalize().unwrap().to_string_lossy().into_owned();
@@ -150,20 +186,18 @@ fn difference(fixture: &Value, case: &Value) -> Option<String> {
                 .then(|| format!("want the lines {lines:?}\ngot {got}"))
         }
         (Ok(report), None) => {
-            let stdout = if json {
+            let stdout = if asked.json {
                 format!("{}\n", report.json())
             } else {
-                report.text()
+                report.text(asked.color)
             };
-            let got = (
-                i64::from(report.exit),
-                stdout,
-                format!(
-                    "{}{}\n",
-                    warning.map_or_else(String::new, |w| format!("{w}\n")),
-                    heading(report.source, no_dev)
-                ),
-            );
+            let stderr = stderr(&report, warning.as_ref(), asked.options.no_dev, asked.color);
+            // `-q` prints nothing; Pun's CLI leaves both out.
+            let got = if asked.quiet {
+                (i64::from(report.exit), String::new(), String::new())
+            } else {
+                (i64::from(report.exit), stdout, stderr)
+            };
             let want = (
                 case["exit"].as_i64().unwrap(),
                 case["stdout"].as_str().unwrap().to_string(),

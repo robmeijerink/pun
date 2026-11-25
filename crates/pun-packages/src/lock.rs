@@ -114,7 +114,9 @@ pub fn content_hash(manifest: &Map<String, Value>) -> String {
         .collect();
     let mut config = Map::new();
     for key in ["platform", "policy"] {
-        if let Some(v) = manifest.get("config").and_then(|c| c.get(key)) {
+        // `isset()`: a null value is left out.
+        if let Some(v) = (manifest.get("config").and_then(|c| c.get(key))).filter(|v| !v.is_null())
+        {
             config.insert(key.to_string(), v.clone());
         }
     }
@@ -367,6 +369,20 @@ mod tests {
         assert_eq!(
             content_hash(manifest.as_object().unwrap()),
             "1f6b30e94de0732cc8351f3d4a2ecc8c"
+        ); // `isset()`: a null config.platform or config.policy is left out, an empty or false one is not
+        // (`Locker::getContentHash` of Composer 2.11.2).
+        let hash = |v: Value| content_hash(v.as_object().unwrap());
+        assert_eq!(
+            hash(json!({"name": "acme/app", "config": {"platform": null, "policy": null}})),
+            "d9a7311a656b3b9666e0e3ecc3877138"
+        );
+        assert_eq!(
+            hash(json!({"name": "acme/app", "config": {"platform": null, "policy": {"x": 1}}})),
+            "d06e7312cfd6483163d443be57c573a3"
+        );
+        assert_eq!(
+            hash(json!({"name": "acme/app", "config": {"platform": {}, "policy": false}})),
+            "1fd3c97901be068ed5b049d753a16c02"
         );
     }
 

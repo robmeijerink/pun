@@ -906,6 +906,82 @@
   "stderr": "./composer.lock is present but ignored as the \"lock\" config option is disabled.\n./composer.lock is present but ignored as the \"lock\" config option is disabled.\n"
  },
  {
+  "name": "lock-config-false-and-warnings",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"config\": {\n        \"lock\": false\n    }\n}\n",
+   "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [],\n    \"packages-dev\": []\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "./composer.lock is present but ignored as the \"lock\" config option is disabled.\n./composer.lock is present but ignored as the \"lock\" config option is disabled.\n./composer.json is valid, but with a few warnings\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# General warnings\n- No license specified, it is recommended to do so. For closed-source software you may use \"proprietary\" as license.\n"
+ },
+ {
+  "name": "lock-without-packages-dev",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": []\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Locker.php line 188:\n                                                                                                                                                                  \n  The lock file does not contain require-dev information, run install with the --no-dev option or delete it and run composer update to generate a new lock file.  \n                                                                                                                                                                  \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "The lock file does not contain require-dev information, run install with the --no-dev option or delete it and run composer update to generate a new lock file."
+  ]
+ },
+ {
+  "name": "lock-legacy-hash-fresh",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "composer.lock": "{\n    \"hash\": \"b3dfff88d0e47663f5a60549c201783c\",\n    \"packages\": [],\n    \"packages-dev\": []\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "lock-legacy-hash-stale",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "composer.lock": "{\n    \"hash\": \"abc\",\n    \"packages\": [],\n    \"packages-dev\": []\n}\n"
+  },
+  "args": [],
+  "exit": 2,
+  "stdout": "./composer.json is valid but your composer.lock has some errors\n",
+  "stderr": "# Lock file errors\n- The lock file is not up to date with the latest changes in composer.json, it is recommended that you run `composer update` or `composer update <package name>`.\n"
+ },
+ {
+  "name": "lock-without-packages",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "composer.lock": "{\n    \"content-hash\": \"abc\"\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "lock-invalid-json",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "composer.lock": "{\"content-hash\": \n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn JsonFile.php line 401:\n                                                                          \n  \"./composer.lock\" does not contain valid JSON                           \n  Parse error on line 1:                                                  \n  {\"content-hash\":                                                        \n  ----------------^                                                       \n  Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['  \n                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.lock\" does not contain valid JSON",
+   "Parse error on line 1:",
+   "{\"content-hash\":",
+   "----------------^",
+   "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+  ]
+ },
+ {
   "name": "lock-missing-requirement",
   "files": {
    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\",\n        \"acme/lib\": \"^1.0\"\n    },\n    \"repositories\": [\n        {\n            \"packagist.org\": false\n        },\n        {\n            \"type\": \"package\",\n            \"package\": [\n                {\n                    \"name\": \"acme/lib\",\n                    \"version\": \"1.2.0\",\n                    \"dist\": {\n                        \"type\": \"zip\",\n                        \"url\": \"https://example.com/lib.zip\"\n                    }\n                },\n                {\n                    \"name\": \"acme/tool\",\n                    \"version\": \"2.0.0\",\n                    \"dist\": {\n                        \"type\": \"zip\",\n                        \"url\": \"https://example.com/tool.zip\"\n                    }\n                }\n            ]\n        }\n    ]\n}\n",
@@ -940,6 +1016,21 @@
   "exit": 2,
   "stdout": "./composer.json is valid\n",
   "stderr": "acme/dep is valid for simple usage with Composer but has\nstrict errors that make it unable to be published as a package\n# Publish errors\n- description : The property description is required\n# General warnings\n- No license specified, it is recommended to do so. For closed-source software you may use \"proprietary\" as license.\n- require.acme/x : unbound version constraints (*) should be avoided\n"
+ },
+ {
+  "name": "with-dependencies-vendor-path",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/dep\",\n            \"version\": \"1.0.0\",\n            \"type\": \"library\",\n            \"install-path\": \"../elsewhere/dep\"\n        },\n        {\n            \"name\": \"acme/meta\",\n            \"version\": \"1.0.0\",\n            \"type\": \"metapackage\"\n        },\n        {\n            \"name\": \"acme/gone\",\n            \"version\": \"1.0.0\",\n            \"type\": \"library\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+   "vendor/elsewhere/dep/composer.json": "{\n    \"name\": \"acme/dep\",\n    \"description\": \"d\",\n    \"license\": \"MIT\",\n    \"version\": \"1.0.0\"\n}\n",
+   "vendor/acme/dep/composer.json": "{\n    \"name\": \"acme/dep\",\n    \"description\": \"d\",\n    \"license\": \"MIT\",\n    \"keywords\": [\n        \"bad!\"\n    ]\n}\n"
+  },
+  "args": [
+   "-A"
+  ],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": "acme/dep is valid, but with a few warnings\n# General warnings\n- keywords.0 : invalid value (bad!), must match [\\p{N}\\p{L} ._-]+\n"
  },
  {
   "name": "with-dependencies-strict",

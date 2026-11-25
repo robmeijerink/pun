@@ -131,10 +131,19 @@ CASES = [
     ('lock-stale-no-check-lock', {'composer.json': j(LOCKED)}, ['--no-check-lock'], {'lock': True, 'after_lock': {'composer.json': j(dict(LOCKED, require={'php': '^8.3', 'acme/lib': '^1.0', 'acme/tool': '^2.0'}))}}),
     ('lock-stale-config-lock-false', {'composer.json': j(LOCKED)}, [], {'lock': True, 'after_lock': {'composer.json': j(dict(LOCKED, require={'php': '^8.3', 'acme/lib': '^1.0', 'acme/tool': '^2.0'}, config={'lock': False}))}}),
     ('lock-stale-config-lock-false-check-lock', {'composer.json': j(LOCKED)}, ['--check-lock'], {'lock': True, 'after_lock': {'composer.json': j(dict(LOCKED, require={'php': '^8.3', 'acme/lib': '^1.0', 'acme/tool': '^2.0'}, config={'lock': False}))}}),
+    ('lock-config-false-and-warnings', {'composer.json': j(base(license=None, config={'lock': False})), 'composer.lock': j({'content-hash': 'x', 'packages': [], 'packages-dev': []})}, []),
+    ('lock-without-packages-dev', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'x', 'packages': []})}, []),
+    # An old lock with only `hash`, the md5 of composer.json's text; a lock without `packages` isn't one.
+    ('lock-legacy-hash-fresh', {'composer.json': j(BASE), 'composer.lock': j({'hash': __import__('hashlib').md5(j(BASE).encode()).hexdigest(), 'packages': [], 'packages-dev': []})}, []),
+    ('lock-legacy-hash-stale', {'composer.json': j(BASE), 'composer.lock': j({'hash': 'abc', 'packages': [], 'packages-dev': []})}, []),
+    ('lock-without-packages', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'abc'})}, []),
+    ('lock-invalid-json', {'composer.json': j(BASE), 'composer.lock': '{"content-hash": \n'}, []),
     ('lock-missing-requirement', {'composer.json': j(LOCKED)}, [], {'lock': True, 'drop_locked': 'acme/lib'}),
     ('lock-and-warnings', {'composer.json': j(LOCKED)}, [], {'lock': True, 'after_lock': {'composer.json': j(dict(LOCKED, require={'php': '^8.3', 'acme/lib': '^1.0', 'acme/tool': '*'}))}}),
     # --with-dependencies: each installed package's composer.json, by its pretty name.
     ('with-dependencies', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'require': {'acme/x': '*'}})}, ['--with-dependencies']),
+    # Composer validates vendor/<name>, not the package's install-path, and skips what isn't there.
+    ('with-dependencies-vendor-path', {'composer.json': j(BASE), 'vendor/composer/installed.json': j({'packages': [{'name': 'acme/dep', 'version': '1.0.0', 'type': 'library', 'install-path': '../elsewhere/dep'}, {'name': 'acme/meta', 'version': '1.0.0', 'type': 'metapackage'}, {'name': 'acme/gone', 'version': '1.0.0', 'type': 'library'}], 'dev': True, 'dev-package-names': []}), 'vendor/elsewhere/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'version': '1.0.0'}), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'keywords': ['bad!']})}, ['-A']),
     ('with-dependencies-strict', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'require': {'acme/x': '*'}})}, ['-A', '--strict']),
 ]
 

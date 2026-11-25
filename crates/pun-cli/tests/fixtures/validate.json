@@ -371,6 +371,363 @@
   ]
  },
  {
+  "name": "schema-uri-format",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"support\": {\n        \"issues\": \"not a uri\",\n        \"source\": \"https://example.com/a{b\"\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                              \n  \"./composer.json\" does not match the expected JSON schema:  \n   - support.issues : Invalid URL format                      \n   - support.source : Invalid URL format                      \n                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - support.issues : Invalid URL format",
+   " - support.source : Invalid URL format"
+  ]
+ },
+ {
+  "name": "schema-email-format",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"support\": {\n        \"email\": \"\\u00fcnicode@example.com\"\n    },\n    \"authors\": [\n        {\n            \"name\": \"A\",\n            \"email\": \"a@example\"\n        }\n    ]\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                              \n  \"./composer.json\" does not match the expected JSON schema:  \n   - authors[0].email : Invalid email                         \n                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - authors[0].email : Invalid email"
+  ]
+ },
+ {
+  "name": "schema-require-empty-array",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": []\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                              \n  \"./composer.json\" does not match the expected JSON schema:  \n   - require : Array value found, but an object is required   \n                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - require : Array value found, but an object is required"
+  ]
+ },
+ {
+  "name": "schema-require-empty-object",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {}\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "schema-require-number",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"acme/a\": 5\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "Composer\\Pcre\\Preg::isMatch(): Argument #2 ($subject) must be of type string, int given"
+ },
+ {
+  "name": "schema-root-number",
+  "files": {
+   "composer.json": "5\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "Cannot use a scalar value as an array"
+ },
+ {
+  "name": "schema-root-null",
+  "files": {
+   "composer.json": "null\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                              \n  \"./composer.json\" does not match the expected JSON schema:  \n   - NULL value found, but an object is required              \n                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - NULL value found, but an object is required"
+  ]
+ },
+ {
+  "name": "schema-root-string",
+  "files": {
+   "composer.json": "\"x\"\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "Cannot access offset of type string on string"
+ },
+ {
+  "name": "schema-license-number",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": 5,\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "strtolower(): Argument #1 ($string) must be of type string, int given"
+ },
+ {
+  "name": "schema-license-mixed-array",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": [\n        \"MIT\",\n        5\n    ],\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "strtolower(): Argument #1 ($string) must be of type string, int given"
+ },
+ {
+  "name": "schema-policy-reserved",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"config\": {\n        \"policy\": {\n            \"ignore-x\": {},\n            \"package\": {}\n        }\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                    \n  \"./composer.json\" does not match the expected JSON schema:        \n   - config.policy.ignore-x : Matched a schema which it should not  \n   - config.policy.package : Matched a schema which it should not   \n                                                                    \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - config.policy.ignore-x : Matched a schema which it should not",
+   " - config.policy.package : Matched a schema which it should not"
+  ]
+ },
+ {
+  "name": "schema-process-timeout",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"config\": {\n        \"process-timeout\": \"soon\",\n        \"platform\": {\n            \"php\": true\n        }\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                              \n  \"./composer.json\" does not match the expected JSON schema:                  \n   - config.process-timeout : String value found, but an integer is required  \n                                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - config.process-timeout : String value found, but an integer is required"
+  ]
+ },
+ {
+  "name": "schema-repositories",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"repositories\": [\n        {\n            \"type\": \"composer\"\n        },\n        {\n            \"type\": \"vcs\",\n            \"url\": 5\n        },\n        {\n            \"type\": \"nope\",\n            \"url\": \"x\"\n        },\n        \"not-an-object\"\n    ]\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                                                                                                                           \n  \"./composer.json\" does not match the expected JSON schema:                                                                                                               \n   - repositories[0].url : The property url is required                                                                                                                    \n   - repositories[0].type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]  \n   - repositories[0].type : Does not have a value in the enumeration [\"path\"]                                                                                              \n   - repositories[0].type : Does not have a value in the enumeration [\"artifact\"]                                                                                          \n   - repositories[0].type : Does not have a value in the enumeration [\"pear\"]                                                                                              \n   - repositories[0].package : The property package is required                                                                                                            \n   - repositories[0].type : Does not have a value in the enumeration [\"package\"]                                                                                           \n   - repositories[0] : Failed to match at least one schema                                                                                                                 \n   - repositories[0].type : String value found, but a boolean is required                                                                                                  \n   - repositories[0].type : Does not have a value in the enumeration [false]                                                                                               \n   - repositories[1].type : Does not have a value in the enumeration [\"composer\"]                                                                                          \n   - repositories[1].url : Integer value found, but a string is required                                                                                                   \n   - repositories[1].type : Does not have a value in the enumeration [\"path\"]                                                                                              \n   - repositories[1].type : Does not have a value in the enumeration [\"artifact\"]                                                                                          \n   - repositories[1].type : Does not have a value in the enumeration [\"pear\"]                                                                                              \n   - repositories[1].package : The property package is required                                                                                                            \n   - repositories[1].type : Does not have a value in the enumeration [\"package\"]                                                                                           \n   - repositories[1] : Failed to match at least one schema                                                                                                                 \n   - repositories[1] : Must contain no more than 1 properties                                                                                                              \n   - repositories[1].type : String value found, but a boolean is required                                                                                                  \n   - repositories[1].type : Does not have a value in the enumeration [false]                                                                                               \n   - repositories[1].url : Integer value found, but a boolean is required                                                                                                  \n   - repositories[1].url : Does not have a value in the enumeration [false]                                                                                                \n   - repositories[2].type : Does not have a value in the enumeration [\"composer\"]                                                                                          \n   - repositories[2].type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]  \n   - repositories[2].type : Does not have a value in the enumeration [\"path\"]                                                                                              \n   - repositories[2].type : Does not have a value in the enumeration [\"artifact\"]                                                                                          \n   - repositories[2].type : Does not have a value in the enumeration [\"pear\"]                                                                                              \n   - repositories[2].package : The property package is required                                                                                                            \n   - repositories[2].type : Does not have a value in the enumeration [\"package\"]                                                                                           \n   - repositories[2] : Failed to match at least one schema                                                                                                                 \n   - repositories[2] : Must contain no more than 1 properties                                                                                                              \n   - repositories[2].type : String value found, but a boolean is required                                                                                                  \n   - repositories[2].type : Does not have a value in the enumeration [false]                                                                                               \n   - repositories[2].url : String value found, but a boolean is required                                                                                                   \n   - repositories[2].url : Does not have a value in the enumeration [false]                                                                                                \n   - repositories[3] : String value found, but an object is required                                                                                                       \n   - repositories[3] : Failed to match at least one schema                                                                                                                 \n                                                                                                                                                                           \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - repositories[0].url : The property url is required",
+   " - repositories[0].type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]",
+   " - repositories[0].type : Does not have a value in the enumeration [\"path\"]",
+   " - repositories[0].type : Does not have a value in the enumeration [\"artifact\"]",
+   " - repositories[0].type : Does not have a value in the enumeration [\"pear\"]",
+   " - repositories[0].package : The property package is required",
+   " - repositories[0].type : Does not have a value in the enumeration [\"package\"]",
+   " - repositories[0] : Failed to match at least one schema",
+   " - repositories[0].type : String value found, but a boolean is required",
+   " - repositories[0].type : Does not have a value in the enumeration [false]",
+   " - repositories[1].type : Does not have a value in the enumeration [\"composer\"]",
+   " - repositories[1].url : Integer value found, but a string is required",
+   " - repositories[1].type : Does not have a value in the enumeration [\"path\"]",
+   " - repositories[1].type : Does not have a value in the enumeration [\"artifact\"]",
+   " - repositories[1].type : Does not have a value in the enumeration [\"pear\"]",
+   " - repositories[1].package : The property package is required",
+   " - repositories[1].type : Does not have a value in the enumeration [\"package\"]",
+   " - repositories[1] : Failed to match at least one schema",
+   " - repositories[1] : Must contain no more than 1 properties",
+   " - repositories[1].type : String value found, but a boolean is required",
+   " - repositories[1].type : Does not have a value in the enumeration [false]",
+   " - repositories[1].url : Integer value found, but a boolean is required",
+   " - repositories[1].url : Does not have a value in the enumeration [false]",
+   " - repositories[2].type : Does not have a value in the enumeration [\"composer\"]",
+   " - repositories[2].type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]",
+   " - repositories[2].type : Does not have a value in the enumeration [\"path\"]",
+   " - repositories[2].type : Does not have a value in the enumeration [\"artifact\"]",
+   " - repositories[2].type : Does not have a value in the enumeration [\"pear\"]",
+   " - repositories[2].package : The property package is required",
+   " - repositories[2].type : Does not have a value in the enumeration [\"package\"]",
+   " - repositories[2] : Failed to match at least one schema",
+   " - repositories[2] : Must contain no more than 1 properties",
+   " - repositories[2].type : String value found, but a boolean is required",
+   " - repositories[2].type : Does not have a value in the enumeration [false]",
+   " - repositories[2].url : String value found, but a boolean is required",
+   " - repositories[2].url : Does not have a value in the enumeration [false]",
+   " - repositories[3] : String value found, but an object is required",
+   " - repositories[3] : Failed to match at least one schema"
+  ]
+ },
+ {
+  "name": "schema-repositories-object",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"repositories\": {\n        \"a\": {\n            \"type\": \"path\"\n        },\n        \"packagist.org\": false\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                                                                                                                          \n  \"./composer.json\" does not match the expected JSON schema:                                                                                                              \n   - repositories.a.url : The property url is required                                                                                                                    \n   - repositories.a.type : Does not have a value in the enumeration [\"composer\"]                                                                                          \n   - repositories.a.type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]  \n   - repositories.a.type : Does not have a value in the enumeration [\"artifact\"]                                                                                          \n   - repositories.a.type : Does not have a value in the enumeration [\"pear\"]                                                                                              \n   - repositories.a.package : The property package is required                                                                                                            \n   - repositories.a.type : Does not have a value in the enumeration [\"package\"]                                                                                           \n   - repositories.a : Failed to match at least one schema                                                                                                                 \n   - repositories.a : Failed to match all schemas                                                                                                                         \n   - repositories.a : Object value found, but a boolean is required                                                                                                       \n   - repositories.a : Does not have a value in the enumeration [false]                                                                                                    \n                                                                                                                                                                          \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - repositories.a.url : The property url is required",
+   " - repositories.a.type : Does not have a value in the enumeration [\"composer\"]",
+   " - repositories.a.type : Does not have a value in the enumeration [\"vcs\",\"github\",\"git\",\"gitlab\",\"bitbucket\",\"git-bitbucket\",\"hg\",\"fossil\",\"perforce\",\"svn\",\"forgejo\"]",
+   " - repositories.a.type : Does not have a value in the enumeration [\"artifact\"]",
+   " - repositories.a.type : Does not have a value in the enumeration [\"pear\"]",
+   " - repositories.a.package : The property package is required",
+   " - repositories.a.type : Does not have a value in the enumeration [\"package\"]",
+   " - repositories.a : Failed to match at least one schema",
+   " - repositories.a : Failed to match all schemas",
+   " - repositories.a : Object value found, but a boolean is required",
+   " - repositories.a : Does not have a value in the enumeration [false]"
+  ]
+ },
+ {
+  "name": "schema-authors-extra",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"authors\": [\n        {\n            \"name\": \"A\",\n            \"age\": 3\n        },\n        \"B\"\n    ]\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                                                           \n  \"./composer.json\" does not match the expected JSON schema:                                               \n   - authors[0] : The property age is not defined and the definition does not allow additional properties  \n   - authors[1] : String value found, but an object is required                                            \n                                                                                                           \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - authors[0] : The property age is not defined and the definition does not allow additional properties",
+   " - authors[1] : String value found, but an object is required"
+  ]
+ },
+ {
+  "name": "schema-autoload",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Acme\\\\\": [\n                \"src/\",\n                5\n            ]\n        },\n        \"classmap\": \"src/\",\n        \"unknown\": []\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                              \n  \"./composer.json\" does not match the expected JSON schema:                  \n   - autoload.psr-4.Acme\\[1] : Integer value found, but a string is required  \n   - autoload.classmap : String value found, but an array is required         \n                                                                              \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - autoload.psr-4.Acme\\[1] : Integer value found, but a string is required",
+   " - autoload.classmap : String value found, but an array is required"
+  ]
+ },
+ {
+  "name": "schema-scripts",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"scripts\": {\n        \"a\": 5,\n        \"b\": [\n            \"x\",\n            6\n        ],\n        \"c\": true\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "schema-bin-and-type",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"bin\": 5,\n    \"type\": [\n        \"library\"\n    ]\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                      \n  \"./composer.json\" does not match the expected JSON schema:          \n   - type : Array value found, but a string is required               \n   - bin : Integer value found, but a string or an array is required  \n                                                                      \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - type : Array value found, but a string is required",
+   " - bin : Integer value found, but a string or an array is required"
+  ]
+ },
+ {
+  "name": "schema-dollar-schema-strict",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"$schema\": \"https://getcomposer.org/schema.json\"\n}\n"
+  },
+  "args": [],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": ""
+ },
+ {
+  "name": "schema-float-and-bool",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"config\": {\n        \"process-timeout\": 1.5,\n        \"optimize-autoloader\": \"yes\",\n        \"sort-packages\": 1\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                                 \n  \"./composer.json\" does not match the expected JSON schema:                     \n   - config.process-timeout : Double value found, but an integer is required     \n   - config.optimize-autoloader : String value found, but a boolean is required  \n   - config.sort-packages : Integer value found, but a boolean is required       \n                                                                                 \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - config.process-timeout : Double value found, but an integer is required",
+   " - config.optimize-autoloader : String value found, but a boolean is required",
+   " - config.sort-packages : Integer value found, but a boolean is required"
+  ]
+ },
+ {
+  "name": "schema-funding",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"funding\": [\n        {\n            \"type\": \"github\"\n        },\n        {\n            \"url\": \"not a uri\"\n        },\n        5\n    ]\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Factory.php line 319:\n                                                                  \n  \"./composer.json\" does not match the expected JSON schema:      \n   - funding[1].url : Invalid URL format                          \n   - funding[2] : Integer value found, but an object is required  \n                                                                  \n\nvalidate [--no-check-all] [--check-lock] [--no-check-lock] [--no-check-publish] [--no-check-version] [-A|--with-dependencies] [--strict] [--] [<file>]\n\n",
+  "message": [
+   "\"./composer.json\" does not match the expected JSON schema:",
+   " - funding[1].url : Invalid URL format",
+   " - funding[2] : Integer value found, but an object is required"
+  ]
+ },
+ {
+  "name": "schema-archive",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    },\n    \"archive\": {\n        \"exclude\": \"x\",\n        \"name\": 5\n    }\n}\n"
+  },
+  "args": [],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "crash": "Composer\\Package\\CompletePackage::setArchiveName(): Argument #1 ($name) must be of type ?string, int given"
+ },
+ {
+  "name": "schema-strict-several",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"extra-root\": 1,\n    \"license\": \"MIT\",\n    \"other\": 2\n}\n"
+  },
+  "args": [],
+  "exit": 2,
+  "stdout": "",
+  "stderr": "./composer.json is valid for simple usage with Composer but has\nstrict errors that make it unable to be published as a package\nSee https://getcomposer.org/doc/04-schema.md for details on the schema\n# Publish errors\n- description : The property description is required\n- The property extra-root is not defined and the definition does not allow additional properties\n- The property other is not defined and the definition does not allow additional properties\n"
+ },
+ {
+  "name": "schema-dependency-errors",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/dep\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"install-path\": \"../acme/dep\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+   "vendor/acme/dep/composer.json": "{\n    \"name\": \"acme/dep\",\n    \"description\": 5,\n    \"require\": [],\n    \"extra\": \"x\"\n}\n"
+  },
+  "args": [
+   "-A"
+  ],
+  "exit": 2,
+  "stdout": "./composer.json is valid\n",
+  "stderr": "acme/dep is invalid, the following errors/warnings were found:\n# General errors\n- description : Integer value found, but a string is required\n- require : Array value found, but an object is required\n- extra : String value found, but an object or an array is required\n- extra : should be an array, string given\n- description : should be a string, int given\n# General warnings\n- No license specified, it is recommended to do so. For closed-source software you may use \"proprietary\" as license.\n"
+ },
+ {
   "name": "parse-error-unterminated-string",
   "files": {
    "composer.json": "{\"name\": \"acme/app}\n"

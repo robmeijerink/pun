@@ -344,33 +344,50 @@ mod tests {
     }
 }
 
-/// `filter_var($value, FILTER_VALIDATE_EMAIL)`: PHP's own pattern (`php_filter_validate_email` in
+/// `filter_var($value, FILTER_VALIDATE_EMAIL)`: PHP's own pattern (`regexp0` of `php_filter_validate_email` in
 /// `ext/filter/logical_filters.c`), for addresses of at most 320 bytes.
 pub fn is_email(value: &str) -> bool {
-    static EMAIL: std::sync::LazyLock<pcre2::bytes::Regex> = std::sync::LazyLock::new(|| {
-        pcre2::bytes::RegexBuilder::new()
-            .caseless(true)
-            .build(concat!(
-                r"^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})",
-                r"(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)",
-                r"(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|",
-                r"(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))",
-                r"(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|",
-                r"(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*",
-                r"@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}",
-                r"(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|",
-                r"(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|",
-                r"(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::",
-                r"(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|",
-                r"(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|",
-                r"(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::",
-                r"(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?",
-                r"(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))",
-                r"(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))\z",
-            ))
-            .expect("PHP's email pattern")
-    });
+    static EMAIL: std::sync::LazyLock<pcre2::bytes::Regex> =
+        std::sync::LazyLock::new(|| email_pattern(false));
     value.len() <= 320 && EMAIL.is_match(value.as_bytes()).unwrap_or(false)
+}
+
+/// The same with `FILTER_FLAG_EMAIL_UNICODE` (`regexp1`): letters and digits of any script in the local part, matched
+/// as UTF-8.
+pub fn is_email_unicode(value: &str) -> bool {
+    static EMAIL: std::sync::LazyLock<pcre2::bytes::Regex> =
+        std::sync::LazyLock::new(|| email_pattern(true));
+    value.len() <= 320 && EMAIL.is_match(value.as_bytes()).unwrap_or(false)
+}
+
+/// PHP's email pattern; `unicode` adds `\pL\pN` to the local part's characters and the `u` flag.
+fn email_pattern(unicode: bool) -> pcre2::bytes::Regex {
+    let local = if unicode { r"\pL\pN" } else { "" };
+    let pattern = [
+        r"^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})",
+        r"(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)",
+        &format!(r"(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E{local}]+)|"),
+        &format!(r"(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F{local}]|(?:\x5C[\x00-\x7F]))*\x22))"),
+        &format!(r"(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E{local}]+)|"),
+        &format!(r"(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F{local}]|(?:\x5C[\x00-\x7F]))*\x22)))*"),
+        r"@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}",
+        r"(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|",
+        r"(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|",
+        r"(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::",
+        r"(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|",
+        r"(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|",
+        r"(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::",
+        r"(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?",
+        r"(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))",
+        r"(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))\z",
+    ]
+    .concat();
+    pcre2::bytes::RegexBuilder::new()
+        .caseless(true)
+        .utf(unicode)
+        .ucp(unicode)
+        .build(&pattern)
+        .expect("PHP's email pattern")
 }
 
 /// The scheme and host `parse_url` finds, as far as `php_url_parse_ex2` (ext/standard/url.c) reads them; `None` where

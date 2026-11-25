@@ -1,7 +1,7 @@
 //! The ports of PHP's `filter_var(FILTER_VALIDATE_EMAIL)` and `parse_url` against PHP 8.5's own answers
 //! (`fixtures/php-filters.json`, from `scripts/export-php-filters.php`).
 
-use pun_packages::php::{UrlParts, is_email, parse_url};
+use pun_packages::php::{UrlParts, is_email, is_email_unicode, parse_url};
 use serde_json::Value;
 
 const FIXTURE: &str = include_str!("fixtures/php-filters.json");
@@ -11,6 +11,16 @@ fn emails_as_php_validates_them() {
     let fixture: Value = serde_json::from_str(FIXTURE).unwrap();
     let wrong: Vec<String> = (fixture["email"].as_object().unwrap().iter())
         .filter(|(email, valid)| is_email(email) != valid.as_bool().unwrap())
+        .map(|(email, valid)| format!("{email:?}: PHP says {valid}"))
+        .collect();
+    assert!(wrong.is_empty(), "{}", wrong.join("\n"));
+}
+
+#[test]
+fn unicode_emails_as_php_validates_them() {
+    let fixture: Value = serde_json::from_str(FIXTURE).unwrap();
+    let wrong: Vec<String> = (fixture["email_unicode"].as_object().unwrap().iter())
+        .filter(|(email, valid)| is_email_unicode(email) != valid.as_bool().unwrap())
         .map(|(email, valid)| format!("{email:?}: PHP says {valid}"))
         .collect();
     assert!(wrong.is_empty(), "{}", wrong.join("\n"));

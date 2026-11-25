@@ -6,7 +6,8 @@ Each case is a set of files and the arguments after `validate`. Composer runs on
 directory, with a fresh HOME and COMPOSER_HOME (no global config), COMPOSER_ROOT_VERSION=1.0.0 (no "could not detect
 the root package version" line outside git) and COLUMNS=500 (no wrapped exception blocks). A case records `exit`,
 `stdout` and `stderr`; when Composer stops with an exception (exit 1 and its "In <file> line <n>:" block), it also
-records `message`, the block's lines, which Pun prints as its own run error (exit 2).
+records `message`, the block's lines, which Pun prints as its own run error (exit 2). When Composer crashes on input it
+doesn't expect (a PHP error with its trace), it records `crash`, the error's first line, instead.
 
 Cases marked `lock` get a composer.lock that Composer writes itself (`update --no-install` against inline `package`
 repositories, so no network), before the case's `after_lock` edits to composer.json or the lock.
@@ -82,6 +83,31 @@ CASES = [
     ('schema-lax-email', {'composer.json': j(base(authors=[{'name': 'A', 'email': 'not-an-email'}]))}, []),
     ('schema-lax-several', {'composer.json': j(base(description=5, minimum_stability='nightly', keywords='x'))}, []),
     ('schema-lax-nested', {'composer.json': j(base(autoload={'psr-4': {'Acme\\': 5}}))}, []),
+    # The schema's other paths: formats, anyOf/oneOf/not, patternProperties, numbers, empty containers.
+    ('schema-uri-format', {'composer.json': j(base(support={'issues': 'not a uri', 'source': 'https://example.com/a{b'}))}, []),
+    ('schema-email-format', {'composer.json': j(base(support={'email': 'ünicode@example.com'}, authors=[{'name': 'A', 'email': 'a@example'}]))}, []),
+    ('schema-require-empty-array', {'composer.json': j(base(require=[]))}, []),
+    ('schema-require-empty-object', {'composer.json': j(base(require={}))}, []),
+    ('schema-require-number', {'composer.json': j(base(require={'acme/a': 5}))}, []),
+    ('schema-root-number', {'composer.json': '5\n'}, []),
+    ('schema-root-null', {'composer.json': 'null\n'}, []),
+    ('schema-root-string', {'composer.json': '"x"\n'}, []),
+    ('schema-license-number', {'composer.json': j(base(license=5))}, []),
+    ('schema-license-mixed-array', {'composer.json': j(base(license=['MIT', 5]))}, []),
+    ('schema-policy-reserved', {'composer.json': j(base(config={'policy': {'ignore-x': {}, 'package': {}}}))}, []),
+    ('schema-process-timeout', {'composer.json': j(base(config={'process-timeout': 'soon', 'platform': {'php': True}}))}, []),
+    ('schema-repositories', {'composer.json': j(base(repositories=[{'type': 'composer'}, {'type': 'vcs', 'url': 5}, {'type': 'nope', 'url': 'x'}, 'not-an-object']))}, []),
+    ('schema-repositories-object', {'composer.json': j(base(repositories={'a': {'type': 'path'}, 'packagist.org': False}))}, []),
+    ('schema-authors-extra', {'composer.json': j(base(authors=[{'name': 'A', 'age': 3}, 'B']))}, []),
+    ('schema-autoload', {'composer.json': j(base(autoload={'psr-4': {'Acme\\': ['src/', 5]}, 'classmap': 'src/', 'unknown': []}))}, []),
+    ('schema-scripts', {'composer.json': j(base(scripts={'a': 5, 'b': ['x', 6], 'c': True}))}, []),
+    ('schema-bin-and-type', {'composer.json': j(base(bin=5, type=['library']))}, []),
+    ('schema-dollar-schema-strict', {'composer.json': j(dict(BASE, **{'$schema': 'https://getcomposer.org/schema.json'}))}, []),
+    ('schema-float-and-bool', {'composer.json': j(base(config={'process-timeout': 1.5, 'optimize-autoloader': 'yes', 'sort-packages': 1}))}, []),
+    ('schema-funding', {'composer.json': j(base(funding=[{'type': 'github'}, {'url': 'not a uri'}, 5]))}, []),
+    ('schema-archive', {'composer.json': j(base(archive={'exclude': 'x', 'name': 5}))}, []),
+    ('schema-strict-several', {'composer.json': j({'name': 'acme/app', 'extra-root': 1, 'license': 'MIT', 'other': 2})}, []),
+    ('schema-dependency-errors', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 5, 'require': [], 'extra': 'x'})}, ['-A']),
     ('parse-error-unterminated-string', {'composer.json': '{"name": "acme/app}\n'}, []),
     ('parse-error-invalid-escape', {'composer.json': '{"name": "acme\\x/app"}\n'}, []),
     ('parse-error-later-line', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app"\n    "license": "MIT"\n}\n'}, []),
@@ -216,8 +242,12 @@ def record(name, files, args, options):
             write(work, files)
         r = composer(work, ['validate', *args], home)
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': r.stdout, 'stderr': r.stderr}
-        message = exception_message(r.stderr) if r.returncode == 1 else None
-        if message is not None:
+        if 'Exception trace:' in r.stderr:
+            # Composer itself crashed (a PHP TypeError and the like): tests/validate.rs says what Pun does instead.
+            # Its first line, without where it was called from, and no trace: those name local paths.
+            case['crash'] = exception_message(r.stderr)[0].split(', called in ')[0]
+            case['stderr'] = ''
+        elif r.returncode == 1 and (message := exception_message(r.stderr)) is not None:
             case['message'] = message
         return case
     finally:

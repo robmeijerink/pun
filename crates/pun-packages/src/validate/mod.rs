@@ -6,6 +6,7 @@ use crate::lock::{Lock, content_hash};
 use crate::verify::missing_requirements;
 
 mod loader;
+mod schema;
 mod spdx;
 use pcre2::bytes::Regex;
 use serde_json::{Map, Value};
@@ -33,15 +34,25 @@ pub struct Checks {
 /// `ConfigValidator::validate`: a file that doesn't read as a composer.json is one error and nothing else.
 pub fn validate(file: &Path, display: &str, checks: Checks) -> Findings {
     let mut findings = Findings::default();
-    let (manifest, text) = match read_text(file, display) {
+    let (data, text) = match read_text(file, display) {
         Ok(read) => read,
         Err(e) => {
             findings.errors.push(format!("{e:#}"));
             return findings;
         }
     };
+    // The schema as shipped, then the strict one: what only the strict one refuses can't be published.
+    let lax = schema::errors(&data, false);
+    if lax.is_empty() {
+        findings.publish_errors = schema::errors(&data, true);
+    } else {
+        findings.errors = lax;
+    }
+    let manifest = data.as_object().cloned().unwrap_or_default();
     let warnings = &mut findings.warnings;
-    if let Some((key, line)) = first_duplicate_key(&text) {
+    if data.is_object()
+        && let Some((key, line)) = first_duplicate_key(&text)
+    {
         warnings.push(format!(
             "Key {key} is a duplicate in {display} at line {line}"
         ));
@@ -424,17 +435,26 @@ pub fn load_root(manifest: &Map<String, Value>) -> Result<()> {
     Ok(())
 }
 
-/// The composer.json at `file` (`display` as the user named it), which must be a JSON object.
+/// The composer.json at `file` (`display` as the user named it) as Composer loads the root package: valid JSON that the
+/// schema as shipped accepts (`Factory`'s `validateSchema(LAX_SCHEMA)`), so a JSON object.
 pub fn read(file: &Path, display: &str) -> Result<Map<String, Value>> {
-    read_text(file, display).map(|(manifest, _)| manifest)
+    let (data, _) = read_text(file, display)?;
+    let errors = schema::errors(&data, false);
+    if !errors.is_empty() {
+        bail!(
+            "\"{display}\" does not match the expected JSON schema:\n - {}",
+            errors.join("\n - ")
+        );
+    }
+    Ok(data.as_object().cloned().unwrap_or_default())
 }
 
-fn read_text(file: &Path, display: &str) -> Result<(Map<String, Value>, String)> {
+/// The JSON in `file` and its text.
+fn read_text(file: &Path, display: &str) -> Result<(Value, String)> {
     let text =
         std::fs::read_to_string(file).with_context(|| format!("\"{display}\" is not readable"))?;
     match serde_json::from_str(&text) {
-        Ok(Value::Object(manifest)) => Ok((manifest, text)),
-        Ok(_) => bail!("\"{display}\" does not match the expected JSON schema"),
+        Ok(data) => Ok((data, text)),
         Err(_) => bail!("\"{display}\" does not contain valid JSON"),
     }
 }

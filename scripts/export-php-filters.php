@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 /*
- * What PHP itself answers for the two checks Composer's ValidatingArrayLoader makes on URLs and emails, for the ports in
- * crates/pun-packages/src/php.rs. Writes crates/pun-packages/tests/fixtures/php-filters.json:
- * {email: {input: valid}, url: {input: {scheme, host} | false}} (parse_url's scheme and host, or false when it fails).
+ * What PHP and Composer's json-schema library answer for the URL and email checks of `composer validate`, for the ports
+ * in crates/pun-packages/src/php.rs and src/validate/schema.rs. Writes crates/pun-packages/tests/fixtures/php-filters.json:
+ * - email: {input: valid}, filter_var(FILTER_VALIDATE_EMAIL), as ValidatingArrayLoader checks;
+ * - email_unicode: {input: valid}, the same with FILTER_FLAG_EMAIL_UNICODE, as the schema's "email" format checks;
+ * - url: {input: {scheme, host} | false}, parse_url's scheme and host, or false when it fails;
+ * - uri: {input: valid}, json-schema's UriValidator (the "uri" format), from .oracle/composer/composer.phar.
  *
  *   php scripts/export-php-filters.php
  */
@@ -22,6 +25,8 @@ $emails = [
     'a@example.com.', 'a@.example.com', '', 'a@b.c.d.e.f.gh',
 ];
 
+require 'phar://'.dirname(__DIR__).'/.oracle/composer/composer.phar/vendor/autoload.php';
+
 $urls = [
     'https://example.com', 'http://example.com/path?q=1#f', 'HTTPS://EXAMPLE.COM', 'ftp://example.com', 'example.com',
     '//example.com', 'http://', 'http:///path', 'http:/example.com', 'http:example.com', 'https://user:pass@example.com:8080/x',
@@ -34,9 +39,21 @@ $urls = [
     'http://example.com:65536', 'https://exam%20ple.com',
 ];
 
-$out = ['email' => [], 'url' => []];
+$uris = array_merge($urls, [
+    'https://example.com/a/b?c=d#e', 'https://example.com/a{b', 'https://example.com/a<b', 'https://exa..mple.com',
+    'https://[2001:db8::1]/', 'https://example.com:0/', 'https://example.com:65535/', 'https://user@example.com/',
+    'mailto:a@example.com', 'mailto:not-an-email', 'urn:isbn:0451450523', 'news:comp.lang.php', 'news:bad group',
+    'tel:+1-201-555-0123', 'tel:abc', 'data:text/plain,hi', 'file:/etc/passwd', 'MAILTO:A@EXAMPLE.COM', 'ftp://x',
+    'git+ssh://example.com/repo', 'https://example.com/%7Euser', "https://example.com/a\nb", 'https://', 'https:',
+]);
+
+$out = ['email' => [], 'email_unicode' => [], 'url' => [], 'uri' => []];
 foreach ($emails as $email) {
     $out['email'][$email] = false !== filter_var($email, FILTER_VALIDATE_EMAIL);
+    $out['email_unicode'][$email] = false !== filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE);
+}
+foreach ($uris as $uri) {
+    $out['uri'][$uri] = JsonSchema\Tool\Validator\UriValidator::isValid($uri);
 }
 foreach ($urls as $url) {
     $bits = parse_url($url);
@@ -46,4 +63,4 @@ file_put_contents(
     dirname(__DIR__).'/crates/pun-packages/tests/fixtures/php-filters.json',
     json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)."\n",
 );
-printf("PHP %s: %d emails, %d urls\n", PHP_VERSION, count($emails), count($urls));
+printf("PHP %s: %d emails, %d urls, %d uris\n", PHP_VERSION, count($emails), count($urls), count($uris));

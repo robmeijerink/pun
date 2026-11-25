@@ -4,6 +4,9 @@
 use crate::error::{Context, Result, bail};
 use crate::lock::{Lock, content_hash};
 use crate::verify::missing_requirements;
+
+mod loader;
+mod spdx;
 use pcre2::bytes::Regex;
 use serde_json::{Map, Value};
 use std::path::Path;
@@ -71,6 +74,16 @@ pub fn validate(file: &Path, display: &str, checks: Checks) -> Findings {
             ));
         }
     }
+    // `ValidatingArrayLoader`, on the manifest with a version and a name when it has none.
+    let mut config = manifest;
+    for (key, default) in [("version", "1.0.0"), ("name", "dummy/dummy")] {
+        if !isset(config.get(key)) {
+            config.insert(key.into(), Value::String(default.into()));
+        }
+    }
+    let loaded = loader::load(config, checks.constraints);
+    findings.errors.extend(loaded.errors);
+    findings.warnings.extend(loaded.warnings);
     findings
 }
 
@@ -96,7 +109,7 @@ fn empty(value: Option<&Value>) -> bool {
 fn spdx_licenses() -> &'static std::collections::HashMap<String, bool> {
     static LICENSES: LazyLock<std::collections::HashMap<String, bool>> = LazyLock::new(|| {
         let data: Value =
-            serde_json::from_str(include_str!("../assets/spdx.json")).expect("valid spdx.json");
+            serde_json::from_str(include_str!("../../assets/spdx.json")).expect("valid spdx.json");
         (data["licenses"].as_object().expect("licenses").iter())
             .map(|(id, deprecated)| (id.to_ascii_lowercase(), deprecated.as_bool() == Some(true)))
             .collect()
@@ -148,7 +161,7 @@ fn licenses(manifest: &Map<String, Value>, warnings: &mut Vec<String>) {
 
 /// `ConfigValidator`'s suggestion for a name with capitals: a dash between a lower-case letter and a capital, and
 /// before a capital that starts a capitalised word after another capital, then all lower-case.
-fn suggested_name(name: &str) -> String {
+pub(super) fn suggested_name(name: &str) -> String {
     static WORDS: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))").expect("valid"));
     let bytes = name.as_bytes();
@@ -347,6 +360,68 @@ impl Scan<'_> {
         }
         serde_json::from_slice(&self.text[start..self.at]).unwrap_or_default()
     }
+}
+
+/// What `RootPackageLoader::load` refuses when Composer loads the root package, before `validate` reports: an invalid
+/// name, a link constraint that doesn't parse, a package requiring itself, an invalid link name. Each stops the command.
+pub fn load_root(manifest: &Map<String, Value>) -> Result<()> {
+    let name = manifest.get("name").filter(|n| !n.is_null());
+    if let Some(name) = name.and_then(Value::as_str)
+        && let Some(error) = loader::package_naming_error(name, false)
+    {
+        bail!("Your package name {error}");
+    }
+    let source = name.and_then(Value::as_str).unwrap_or("__root__");
+    // `ArrayLoader::parseLinks`, in `BasePackage::$supportedLinkTypes`' order, with each type's `Link` method.
+    let links = [
+        ("require", "requires"),
+        ("conflict", "conflicts"),
+        ("provide", "provides"),
+        ("replace", "replaces"),
+        ("require-dev", "devRequires"),
+    ];
+    for (link, method) in links {
+        for (target, constraint) in manifest
+            .get(link)
+            .and_then(Value::as_object)
+            .into_iter()
+            .flatten()
+        {
+            let Some(constraint) = constraint.as_str().filter(|c| *c != "self.version") else {
+                continue;
+            };
+            if let Err(e) = crate::constraint::parse(constraint) {
+                return Err(e).with_context(|| {
+                    format!(
+                        "Link constraint in {source} {method} > {} should be a valid version constraint, got \"{constraint}\"",
+                        target.to_lowercase()
+                    )
+                });
+            }
+        }
+    }
+    for link in ["require", "require-dev"] {
+        let targets = manifest.get(link).and_then(Value::as_object);
+        if name.is_some() && targets.is_some_and(|t| t.keys().any(|k| k.to_lowercase() == source)) {
+            bail!(
+                "Root package '{source}' cannot require itself in its composer.json\nDid you accidentally name your root package after an external package?"
+            );
+        }
+    }
+    for (link, _) in links {
+        for target in manifest
+            .get(link)
+            .and_then(Value::as_object)
+            .into_iter()
+            .flatten()
+            .map(|e| e.0)
+        {
+            if let Some(error) = loader::package_naming_error(target, true) {
+                bail!("{link}.{error}");
+            }
+        }
+    }
+    Ok(())
 }
 
 /// The composer.json at `file` (`display` as the user named it), which must be a JSON object.

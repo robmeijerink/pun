@@ -2,7 +2,7 @@
 
 use crate::Exit;
 use anyhow::Result;
-use pun_packages::validate::{Checks, Findings, lock_errors, read, validate};
+use pun_packages::validate::{Checks, Findings, load_root, lock_errors, read, validate};
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 
@@ -71,6 +71,7 @@ pub(crate) fn run(a: &ValidateArgs) -> Result<Exit> {
 
     // `createComposerInstance`: a composer.json that doesn't load stops the command.
     let manifest = read(&path, &file)?;
+    load_root(&manifest)?;
     let locking = manifest.get("config").and_then(|c| c.get("lock")) != Some(&Value::Bool(false));
     let lock_file = lock_file(&file);
     let lock_path = base.join(&lock_file);

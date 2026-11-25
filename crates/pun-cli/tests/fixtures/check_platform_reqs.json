@@ -1,0 +1,898 @@
+{
+ "probe": {
+  "php": "8.5.4",
+  "debug": false,
+  "zts": false,
+  "bits64": true,
+  "ipv6": true,
+  "ext": [
+   [
+    "date",
+    "8.5.4"
+   ],
+   [
+    "lexbor",
+    "8.5.4"
+   ],
+   [
+    "openssl",
+    "8.5.4"
+   ],
+   [
+    "pcre",
+    "8.5.4"
+   ],
+   [
+    "sqlite3",
+    "8.5.4"
+   ],
+   [
+    "zlib",
+    "8.5.4"
+   ],
+   [
+    "bcmath",
+    "8.5.4"
+   ],
+   [
+    "bz2",
+    "8.5.4"
+   ],
+   [
+    "calendar",
+    "8.5.4"
+   ],
+   [
+    "ctype",
+    "8.5.4"
+   ],
+   [
+    "curl",
+    "8.5.4"
+   ],
+   [
+    "dba",
+    "8.5.4"
+   ],
+   [
+    "uri",
+    "8.5.4"
+   ],
+   [
+    "json",
+    "8.5.4"
+   ],
+   [
+    "mbstring",
+    "8.5.4"
+   ],
+   [
+    "SPL",
+    "8.5.4"
+   ],
+   [
+    "FFI",
+    "8.5.4"
+   ],
+   [
+    "fileinfo",
+    "8.5.4"
+   ],
+   [
+    "filter",
+    "8.5.4"
+   ],
+   [
+    "ftp",
+    "8.5.4"
+   ],
+   [
+    "gd",
+    "8.5.4"
+   ],
+   [
+    "gettext",
+    "8.5.4"
+   ],
+   [
+    "gmp",
+    "8.5.4"
+   ],
+   [
+    "hash",
+    "8.5.4"
+   ],
+   [
+    "iconv",
+    "8.5.4"
+   ],
+   [
+    "intl",
+    "8.5.4"
+   ],
+   [
+    "session",
+    "8.5.4"
+   ],
+   [
+    "ldap",
+    "8.5.4"
+   ],
+   [
+    "libxml",
+    "8.5.4"
+   ],
+   [
+    "mysqlnd",
+    "mysqlnd 8.5.4"
+   ],
+   [
+    "mysqli",
+    "8.5.4"
+   ],
+   [
+    "odbc",
+    "8.5.4"
+   ],
+   [
+    "Zend OPcache",
+    "8.5.4"
+   ],
+   [
+    "pcntl",
+    "8.5.4"
+   ],
+   [
+    "PDO",
+    "8.5.4"
+   ],
+   [
+    "pdo_dblib",
+    "8.5.4"
+   ],
+   [
+    "pdo_mysql",
+    "8.5.4"
+   ],
+   [
+    "PDO_ODBC",
+    "8.5.4"
+   ],
+   [
+    "pdo_pgsql",
+    "8.5.4"
+   ],
+   [
+    "pdo_sqlite",
+    "8.5.4"
+   ],
+   [
+    "pgsql",
+    "8.5.4"
+   ],
+   [
+    "Phar",
+    "8.5.4"
+   ],
+   [
+    "posix",
+    "8.5.4"
+   ],
+   [
+    "random",
+    "8.5.4"
+   ],
+   [
+    "readline",
+    "8.5.4"
+   ],
+   [
+    "Reflection",
+    "8.5.4"
+   ],
+   [
+    "exif",
+    "8.5.4"
+   ],
+   [
+    "shmop",
+    "8.5.4"
+   ],
+   [
+    "SimpleXML",
+    "8.5.4"
+   ],
+   [
+    "snmp",
+    "8.5.4"
+   ],
+   [
+    "soap",
+    "8.5.4"
+   ],
+   [
+    "sockets",
+    "8.5.4"
+   ],
+   [
+    "sodium",
+    "8.5.4"
+   ],
+   [
+    "sysvmsg",
+    "8.5.4"
+   ],
+   [
+    "sysvsem",
+    "8.5.4"
+   ],
+   [
+    "sysvshm",
+    "8.5.4"
+   ],
+   [
+    "tidy",
+    "8.5.4"
+   ],
+   [
+    "tokenizer",
+    "8.5.4"
+   ],
+   [
+    "dom",
+    "20031129"
+   ],
+   [
+    "xml",
+    "8.5.4"
+   ],
+   [
+    "xmlreader",
+    "8.5.4"
+   ],
+   [
+    "xmlwriter",
+    "8.5.4"
+   ],
+   [
+    "xsl",
+    "8.5.4"
+   ],
+   [
+    "zip",
+    "1.22.7"
+   ]
+  ],
+  "lib": [
+   [
+    "date-timelib",
+    "2022.15",
+    [],
+    []
+   ],
+   [
+    "date-zoneinfo",
+    "2025.3",
+    [],
+    []
+   ],
+   [
+    "openssl",
+    "3.6.1",
+    [],
+    []
+   ],
+   [
+    "pcre",
+    "10.49",
+    [],
+    []
+   ],
+   [
+    "pcre-unicode",
+    "17.0.0",
+    [],
+    []
+   ],
+   [
+    "sqlite3-sqlite",
+    "3.54.1",
+    [],
+    []
+   ],
+   [
+    "zlib",
+    "1.2.12",
+    [],
+    []
+   ],
+   [
+    "bz2",
+    "1.0.8",
+    [],
+    []
+   ],
+   [
+    "curl",
+    "8.23.0",
+    [],
+    []
+   ],
+   [
+    "curl-openssl",
+    "4.1.0",
+    [],
+    []
+   ],
+   [
+    "curl-libssh2",
+    "1.11.1",
+    [],
+    []
+   ],
+   [
+    "curl-zlib",
+    "1.2.12",
+    [],
+    []
+   ],
+   [
+    "mbstring-libmbfl",
+    "1.3.2",
+    [],
+    []
+   ],
+   [
+    "mbstring-oniguruma",
+    "6.9.10",
+    [],
+    []
+   ],
+   [
+    "fileinfo-libmagic",
+    "5.46",
+    [],
+    []
+   ],
+   [
+    "gd",
+    "2.3.3",
+    [],
+    []
+   ],
+   [
+    "gmp",
+    "6.3.0",
+    [],
+    []
+   ],
+   [
+    "iconv",
+    "1.11",
+    [],
+    []
+   ],
+   [
+    "icu",
+    "78.2",
+    [],
+    []
+   ],
+   [
+    "icu-zoneinfo",
+    "2026.1",
+    [],
+    []
+   ],
+   [
+    "icu-cldr",
+    "48",
+    [],
+    []
+   ],
+   [
+    "icu-unicode",
+    "17.0.0",
+    [],
+    []
+   ],
+   [
+    "ldap-openldap",
+    "2.6.13",
+    [],
+    []
+   ],
+   [
+    "libxml",
+    "2.9.13",
+    [],
+    [
+     "dom-libxml",
+     "xml-libxml",
+     "xmlreader-libxml",
+     "xmlwriter-libxml"
+    ]
+   ],
+   [
+    "pdo_pgsql-libpq",
+    "18.6",
+    [],
+    []
+   ],
+   [
+    "pdo_sqlite-sqlite",
+    "3.54.1",
+    [],
+    []
+   ],
+   [
+    "pgsql-libpq",
+    "18.6",
+    [],
+    []
+   ],
+   [
+    "libsodium",
+    "1.0.21",
+    [],
+    []
+   ],
+   [
+    "libxslt",
+    "1.1.35",
+    [
+     "xsl"
+    ],
+    []
+   ],
+   [
+    "libxslt-libxml",
+    "2.9.13",
+    [],
+    []
+   ],
+   [
+    "zip-libzip",
+    "1.11.4",
+    [
+     "zip"
+    ],
+    []
+   ]
+  ],
+  "ini": [],
+  "inputs": []
+ },
+ "cases": [
+  {
+   "name": "vendor-success",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/api\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-ctype\": \"*\",\n                \"composer-plugin-api\": \"^2.0\",\n                \"composer-runtime-api\": \"^2.2\",\n                \"composer\": \"^2.0\",\n                \"php-64bit\": \"*\",\n                \"php-ipv6\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/api/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "composer             2.11.2   success \ncomposer-plugin-api  2.11.0   success \ncomposer-runtime-api 2.2.2    success \next-ctype            8.5.4    success \next-json             8.5.4    success \next-mbstring         8.5.4    success \nlib-pcre             10.49    success \nphp                  8.5.4    success \nphp-64bit            8.5.4    success \nphp-ipv6             8.5.4    success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "vendor-failed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "vendor-missing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/missing\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\",\n                \"lib-nope\": \"^1.0\",\n                \"php-zts\": \"*\",\n                \"php-debug\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/missing/.keep": ""
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-nope  n/a   acme/missing requires ext-nope (*)                              acme/missing requires ext-nope (*)    missing \nlib-nope  n/a   acme/missing requires lib-nope ([>= 1.0.0.0-dev < 2.0.0.0-dev]) acme/missing requires lib-nope (^1.0) missing \nphp       8.5.4                                                                                                       success \nphp-debug n/a   acme/missing requires php-debug (*)                             acme/missing requires php-debug (*)   missing \nphp-zts   n/a   acme/missing requires php-zts (*)                               acme/missing requires php-zts (*)     missing \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "vendor-all",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        },\n        {\n            \"name\": \"acme/missing\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\",\n                \"lib-nope\": \"^1.0\",\n                \"php-zts\": \"*\",\n                \"php-debug\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/old/.keep": "",
+    "vendor/acme/missing/.keep": ""
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                                                                       success \next-mbstring 8.5.4                                                                                                       success \next-nope     n/a   acme/missing requires ext-nope (*)                              acme/missing requires ext-nope (*)    missing \nlib-nope     n/a   acme/missing requires lib-nope ([>= 1.0.0.0-dev < 2.0.0.0-dev]) acme/missing requires lib-nope (^1.0) missing \nlib-pcre     10.49                                                                                                       success \nphp          8.5.4 acme/old requires php (< 8.0.0.0-dev)                           acme/old requires php (<8.0)          failed  \nphp-debug    n/a   acme/missing requires php-debug (*)                             acme/missing requires php-debug (*)   missing \nphp-zts      n/a   acme/missing requires php-zts (*)                               acme/missing requires php-zts (*)     missing \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "provided",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/polyfill\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"ext-fake\": \"1.2.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^1.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/polyfill/.keep": "",
+    "vendor/acme/wants-fake/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "ext-fake 1.2.0   success provided by acme/polyfill \nphp      8.5.4   success                           \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "provided-failed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/polyfill\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"ext-fake\": \"1.2.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake2\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^2.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/polyfill/.keep": "",
+    "vendor/acme/wants-fake/.keep": "",
+    "vendor/acme/wants-fake2/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "ext-fake 1.2.0 acme/wants-fake2 requires ext-fake ([>= 2.0.0.0-dev < 3.0.0.0-dev]) acme/wants-fake2 requires ext-fake (^2.0) failed provided by acme/polyfill \nphp      8.5.4                                                                                                               success                          \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "replaced",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/replacer\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"replace\": {\n                \"ext-other-fake\": \"3.0.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-other\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-other-fake\": \"^3.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/replacer/.keep": "",
+    "vendor/acme/wants-other/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "ext-other-fake 3.0.0   success provided by acme/replacer \nphp            8.5.4   success                           \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "provided-and-real",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/mbstring-polyfill\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"ext-mbstring\": \"*\"\n            }\n        },\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/mbstring-polyfill/.keep": "",
+    "vendor/acme/ok/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "ext-json     8.5.4   success                                    \next-mbstring *       success provided by acme/mbstring-polyfill \nlib-pcre     10.49   success                                    \nphp          8.5.4   success                                    \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "root-only",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"ext-json\": \"*\"\n    },\n    \"require-dev\": {\n        \"ext-nope\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/plain\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/plain/.keep": ""
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-json 8.5.4                                                                                                   success \next-nope n/a   acme/app requires (for development) ext-nope (*) acme/app requires (for development) ext-nope (*) missing \nphp      8.5.4                                                                                                   success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "root-only-no-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"ext-json\": \"*\"\n    },\n    \"require-dev\": {\n        \"ext-nope\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/plain\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/plain/.keep": ""
+   },
+   "args": [
+    "--no-dev"
+   ],
+   "exit": 0,
+   "stdout": "ext-json 8.5.4   success \nphp      8.5.4   success \n",
+   "stderr": "Checking non-dev platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "dev-packages",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": [\n        \"acme/dev\"\n    ]\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/dev/.keep": ""
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                               success \next-mbstring 8.5.4                                                               success \next-nope     n/a   acme/dev requires ext-nope (*) acme/dev requires ext-nope (*) missing \nlib-pcre     10.49                                                               success \nphp          8.5.4                                                               success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "dev-packages-no-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": [\n        \"acme/dev\"\n    ]\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/dev/.keep": ""
+   },
+   "args": [
+    "--no-dev"
+   ],
+   "exit": 0,
+   "stdout": "ext-json     8.5.4   success \next-mbstring 8.5.4   success \nlib-pcre     10.49   success \nphp          8.5.4   success \n",
+   "stderr": "Checking non-dev platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "names-and-case",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\",\n        \"ext-PDO\": \"*\",\n        \"ext-zend-opcache\": \"*\",\n        \"ext-Zend-OPcache\": \"*\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/plain\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/plain/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "ext-pdo          8.5.4   success \next-zend-opcache 8.5.4   success \nphp              8.5.4   success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "config-platform-ignored",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"platform\": {\n            \"php\": \"7.0.0\",\n            \"ext-nope\": \"1.0\"\n        }\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/missing\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\",\n                \"lib-nope\": \"^1.0\",\n                \"php-zts\": \"*\",\n                \"php-debug\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/missing/.keep": ""
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                                                                       success \next-mbstring 8.5.4                                                                                                       success \next-nope     n/a   acme/missing requires ext-nope (*)                              acme/missing requires ext-nope (*)    missing \nlib-nope     n/a   acme/missing requires lib-nope ([>= 1.0.0.0-dev < 2.0.0.0-dev]) acme/missing requires lib-nope (^1.0) missing \nlib-pcre     10.49                                                                                                       success \nphp          8.5.4                                                                                                       success \nphp-debug    n/a   acme/missing requires php-debug (*)                             acme/missing requires php-debug (*)   missing \nphp-zts      n/a   acme/missing requires php-zts (*)                               acme/missing requires php-zts (*)     missing \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "vendor-dir-config",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"vendor-dir\": \"lib\"\n    }\n}\n",
+    "lib/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "lib/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "lock",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ]\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": ""
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 2,
+   "stdout": "ext-nope n/a   acme/dev requires ext-nope (*)        acme/dev requires ext-nope (*) missing \nphp      8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0)   failed  \n",
+   "stderr": "Checking platform requirements using the lock file\n"
+  },
+  {
+   "name": "lock-no-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [
+    "--lock",
+    "--no-dev"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking non-dev platform requirements using the lock file\n"
+  },
+  {
+   "name": "no-vendor",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-json     8.5.4                                                               success \next-mbstring 8.5.4                                                               success \next-nope     n/a   acme/dev requires ext-nope (*) acme/dev requires ext-nope (*) missing \nlib-pcre     10.49                                                               success \nphp          8.5.4                                                               success \n",
+   "stderr": "No vendor dir present, checking platform requirements from the lock file\n"
+  },
+  {
+   "name": "no-vendor-no-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ],\n    \"packages-dev\": [\n        {\n            \"name\": \"acme/dev\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [
+    "--no-dev"
+   ],
+   "exit": 0,
+   "stdout": "ext-json     8.5.4   success \next-mbstring 8.5.4   success \nlib-pcre     10.49   success \nphp          8.5.4   success \n",
+   "stderr": "No vendor dir present, checking non-dev platform requirements from the lock file\n"
+  },
+  {
+   "name": "empty-vendor",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"packages-dev\": []\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "No vendor dir present, checking platform requirements from the lock file\n"
+  },
+  {
+   "name": "no-vendor-no-lock",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "No lockfile found. Unable to read locked packages"
+   ]
+  },
+  {
+   "name": "lock-without-packages-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [
+    "--lock"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The lock file does not contain require-dev information, run install with the --no-dev option or delete it and run composer update to generate a new lock file."
+   ]
+  },
+  {
+   "name": "lock-without-packages-dev-no-dev",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "composer.lock": "{\n    \"content-hash\": \"x\",\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        }\n    ]\n}\n"
+   },
+   "args": [
+    "--lock",
+    "--no-dev"
+   ],
+   "exit": 0,
+   "stdout": "ext-json     8.5.4   success \next-mbstring 8.5.4   success \nlib-pcre     10.49   success \nphp          8.5.4   success \n",
+   "stderr": "Checking non-dev platform requirements using the lock file\n"
+  },
+  {
+   "name": "json-success",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/api\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-ctype\": \"*\",\n                \"composer-plugin-api\": \"^2.0\",\n                \"composer-runtime-api\": \"^2.2\",\n                \"composer\": \"^2.0\",\n                \"php-64bit\": \"*\",\n                \"php-ipv6\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/api/.keep": ""
+   },
+   "args": [
+    "--format=json"
+   ],
+   "exit": 0,
+   "stdout": "[\n    {\n        \"name\": \"composer\",\n        \"version\": \"2.11.2\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"composer-plugin-api\",\n        \"version\": \"2.11.0\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"composer-runtime-api\",\n        \"version\": \"2.2.2\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"ext-ctype\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"ext-json\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"ext-mbstring\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"lib-pcre\",\n        \"version\": \"10.49\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"php\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"php-64bit\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"php-ipv6\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    }\n]\n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "json-all",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        },\n        {\n            \"name\": \"acme/missing\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-nope\": \"*\",\n                \"lib-nope\": \"^1.0\",\n                \"php-zts\": \"*\",\n                \"php-debug\": \"*\"\n            }\n        },\n        {\n            \"name\": \"acme/polyfill\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"ext-fake\": \"1.2.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/wants-fake2\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"ext-fake\": \"^2.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": "",
+    "vendor/acme/old/.keep": "",
+    "vendor/acme/missing/.keep": "",
+    "vendor/acme/polyfill/.keep": "",
+    "vendor/acme/wants-fake/.keep": "",
+    "vendor/acme/wants-fake2/.keep": ""
+   },
+   "args": [
+    "--format",
+    "json"
+   ],
+   "exit": 2,
+   "stdout": "[\n    {\n        \"name\": \"ext-fake\",\n        \"version\": \"1.2.0\",\n        \"status\": \"failed\",\n        \"failed_requirement\": {\n            \"source\": \"acme/wants-fake2\",\n            \"type\": \"requires\",\n            \"target\": \"ext-fake\",\n            \"constraint\": \"^2.0\"\n        },\n        \"provider\": \"provided by acme/polyfill\"\n    },\n    {\n        \"name\": \"ext-json\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"ext-mbstring\",\n        \"version\": \"8.5.4\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"ext-nope\",\n        \"version\": \"n/a\",\n        \"status\": \"missing\",\n        \"failed_requirement\": {\n            \"source\": \"acme/missing\",\n            \"type\": \"requires\",\n            \"target\": \"ext-nope\",\n            \"constraint\": \"*\"\n        },\n        \"provider\": null\n    },\n    {\n        \"name\": \"lib-nope\",\n        \"version\": \"n/a\",\n        \"status\": \"missing\",\n        \"failed_requirement\": {\n            \"source\": \"acme/missing\",\n            \"type\": \"requires\",\n            \"target\": \"lib-nope\",\n            \"constraint\": \"^1.0\"\n        },\n        \"provider\": null\n    },\n    {\n        \"name\": \"lib-pcre\",\n        \"version\": \"10.49\",\n        \"status\": \"success\",\n        \"failed_requirement\": null,\n        \"provider\": null\n    },\n    {\n        \"name\": \"php\",\n        \"version\": \"8.5.4\",\n        \"status\": \"failed\",\n        \"failed_requirement\": {\n            \"source\": \"acme/old\",\n            \"type\": \"requires\",\n            \"target\": \"php\",\n            \"constraint\": \"<8.0\"\n        },\n        \"provider\": null\n    },\n    {\n        \"name\": \"php-debug\",\n        \"version\": \"n/a\",\n        \"status\": \"missing\",\n        \"failed_requirement\": {\n            \"source\": \"acme/missing\",\n            \"type\": \"requires\",\n            \"target\": \"php-debug\",\n            \"constraint\": \"*\"\n        },\n        \"provider\": null\n    },\n    {\n        \"name\": \"php-zts\",\n        \"version\": \"n/a\",\n        \"status\": \"missing\",\n        \"failed_requirement\": {\n            \"source\": \"acme/missing\",\n            \"type\": \"requires\",\n            \"target\": \"php-zts\",\n            \"constraint\": \"*\"\n        },\n        \"provider\": null\n    }\n]\n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "json-short",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "-f",
+    "json"
+   ],
+   "exit": 1,
+   "stdout": "[\n    {\n        \"name\": \"php\",\n        \"version\": \"8.5.4\",\n        \"status\": \"failed\",\n        \"failed_requirement\": {\n            \"source\": \"acme/old\",\n            \"type\": \"requires\",\n            \"target\": \"php\",\n            \"constraint\": \"<8.0\"\n        },\n        \"provider\": null\n    }\n]\n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "json-empty",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/plain\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/plain/.keep": ""
+   },
+   "args": [
+    "--format=json"
+   ],
+   "exit": 0,
+   "stdout": "[]\n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "format-text",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--format=text"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "format-invalid",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--format=xml"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "no-composer-json",
+   "files": {},
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Composer could not find a composer.json file in {dir}",
+    "To initialize a project, please create a composer.json file. See https://getcomposer.org/basic-usage"
+   ]
+  },
+  {
+   "name": "package-directory-missing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/ok\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \">=8.0\",\n                \"ext-json\": \"*\",\n                \"ext-mbstring\": \"*\",\n                \"lib-pcre\": \">=8\",\n                \"acme/other\": \"^1.0\"\n            }\n        },\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/ok/.keep": ""
+   },
+   "args": [],
+   "exit": 0,
+   "stdout": "ext-json     8.5.4   success \next-mbstring 8.5.4   success \nlib-pcre     10.49   success \nphp          8.5.4   success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "metapackage",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/meta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"metapackage\",\n            \"require\": {\n                \"ext-nope\": \"*\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n"
+   },
+   "args": [],
+   "exit": 2,
+   "stdout": "ext-nope n/a   acme/meta requires ext-nope (*) acme/meta requires ext-nope (*) missing \nphp      8.5.4                                                                 success \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  }
+ ]
+}

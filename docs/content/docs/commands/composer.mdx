@@ -51,7 +51,7 @@ For `check-platform-reqs`:
 | `-f`, `--format=<format>` | `text` (the default) or `json`. Another value is `text`, as in Composer. |
 | `--no-plugins` | Load no plugins: each package counts where Composer's own installer puts it, in `vendor/`. |
 | `-q`, `--quiet` | Print nothing, the JSON included. The exit code still tells. |
-| `--ansi`, `--no-ansi` | Colour the output, or don't. By default each of stdout and stderr is coloured on a terminal. |
+| `--ansi`, `--no-ansi` | Colour the output, or don't; `--ansi` wins when both are given. By default each of stdout and stderr is coloured on a terminal. |
 | `-v`, `-vv`, `-vvv` | Taken, as in Composer, but Pun prints no debug output. |
 | `--no-scripts`, `--no-cache` | Taken, as in Composer. This command runs no scripts and uses no cache. |
 
@@ -77,6 +77,8 @@ For `check-platform-reqs`:
 ## Limitations
 
 - Only `dump-autoload` and `check-platform-reqs` exist. Any other command exits 2.
+- `check-platform-reqs` prints only the first line of Composer's message for a composer.json, composer.lock or installed.json that isn't valid JSON, without the description of the error. It doesn't check composer.json against Composer's schema, apart from it being an object.
+- Only `-d` and `-n` work before the command's name; put the other options after it.
 
 ## Exit codes
 

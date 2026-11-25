@@ -1075,6 +1075,88 @@
    ]
   },
   {
+   "name": "composer-json-null",
+   "files": {
+    "composer.json": "null\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - NULL value found, but an object is required"
+   ]
+  },
+  {
+   "name": "composer-json-true",
+   "files": {
+    "composer.json": "true\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - Boolean value found, but an object is required"
+   ]
+  },
+  {
+   "name": "composer-json-integer",
+   "files": {
+    "composer.json": "5\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - Integer value found, but an object is required"
+   ]
+  },
+  {
+   "name": "composer-json-double",
+   "files": {
+    "composer.json": "1.5\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - Double value found, but an object is required"
+   ]
+  },
+  {
+   "name": "composer-json-string",
+   "files": {
+    "composer.json": "\"x\"\n"
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "\"./composer.json\" does not match the expected JSON schema:",
+    " - String value found, but an object is required"
+   ]
+  },
+  {
+   "name": "installed-packages-object",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": {\n        \"old\": {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    },\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
+   "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
    "name": "composer-json-schema",
    "files": {
     "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": 5\n    }\n}\n"
@@ -1413,6 +1495,21 @@
    "exit": 1,
    "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) failed \n",
    "stderr": "Checking platform requirements for packages in the vendor dir\n"
+  },
+  {
+   "name": "global-ansi-and-no-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/old\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"php\": \"<8.0\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/old/.keep": ""
+   },
+   "args": [
+    "--no-ansi",
+    "--ansi"
+   ],
+   "exit": 1,
+   "stdout": "php 8.5.4 acme/old requires php (< 8.0.0.0-dev) acme/old requires php (<8.0) \u001b[37;41mfailed\u001b[39;49m \n",
+   "stderr": "\u001b[32mChecking platform requirements for packages in the vendor dir\u001b[39m\n"
   },
   {
    "name": "global-no-scripts",

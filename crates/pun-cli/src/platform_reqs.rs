@@ -30,8 +30,8 @@ pub(crate) struct PlatformReqsArgs {
     /// Composer's verbosity (-v, -vv, -vvv); Pun prints no debug output.
     #[arg(short = 'v', long, action = clap::ArgAction::Count)]
     verbose: u8,
-    /// Colour the output.
-    #[arg(long, conflicts_with = "no_ansi")]
+    /// Colour the output (it wins over `--no-ansi`, as in Composer).
+    #[arg(long)]
     ansi: bool,
     /// Don't colour the output.
     #[arg(long)]
@@ -48,7 +48,8 @@ pub(crate) struct PlatformReqsArgs {
 }
 
 impl PlatformReqsArgs {
-    /// Whether to colour what goes to stdout and to stderr: `--ansi`, `--no-ansi`, else each a terminal's.
+    /// Whether to colour what goes to stdout and to stderr: `--ansi`, else not with `--no-ansi`, else each a
+    /// terminal's.
     fn colors(&self) -> (bool, bool) {
         if self.ansi || self.no_ansi {
             return (self.ansi, self.ansi);

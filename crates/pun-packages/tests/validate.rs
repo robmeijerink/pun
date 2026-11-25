@@ -66,12 +66,36 @@ fn composer_findings(stderr: &str) -> Vec<String> {
     findings
 }
 
+/// The case's working directory (`-d`, relative to the project) and composer.json (its argument, or ./composer.json).
+fn options<'a>(args: &[&'a str]) -> (&'a str, &'a str) {
+    let mut working_dir = ".";
+    let mut file = "./composer.json";
+    let mut words = args.iter();
+    while let Some(word) = words.next() {
+        match *word {
+            "-d" | "--working-dir" => working_dir = words.next().copied().unwrap_or("."),
+            w if !w.starts_with('-') => file = w,
+            _ => {}
+        }
+    }
+    (working_dir, file)
+}
+
+/// The project's directory, or its `-d` directory.
+fn within(dir: &Path, working_dir: &str) -> std::path::PathBuf {
+    if working_dir == "." {
+        dir.to_path_buf()
+    } else {
+        dir.join(working_dir)
+    }
+}
+
 /// The packages `--with-dependencies` checks: those of vendor/composer/installed.json but metapackages, with a
-/// `vendor/<name>/composer.json`.
-fn dependencies(case: &Value) -> Vec<String> {
+/// `vendor/<name>/composer.json`; `prefix` is the working directory's path in the case's files.
+fn dependencies(case: &Value, prefix: &str) -> Vec<String> {
     let files = case["files"].as_object().unwrap();
     let Some(installed) = files
-        .get("vendor/composer/installed.json")
+        .get(&format!("{prefix}vendor/composer/installed.json"))
         .and_then(Value::as_str)
     else {
         return vec![];
@@ -80,7 +104,7 @@ fn dependencies(case: &Value) -> Vec<String> {
     (installed["packages"].as_array().unwrap().iter())
         .filter(|p| p["type"] != "metapackage")
         .map(|p| p["name"].as_str().unwrap().to_string())
-        .filter(|name| files.contains_key(&format!("vendor/{name}/composer.json")))
+        .filter(|name| files.contains_key(&format!("{prefix}vendor/{name}/composer.json")))
         .collect()
 }
 
@@ -91,11 +115,13 @@ fn library_findings(dir: &Path, case: &Value, args: &[&str]) -> Vec<String> {
         constraints: !args.contains(&"--no-check-all"),
         version: !args.contains(&"--no-check-version"),
     };
-    let file = args
-        .iter()
-        .find(|a| !a.starts_with('-'))
-        .copied()
-        .unwrap_or("./composer.json");
+    let (working_dir, file) = options(args);
+    let dir = within(dir, working_dir);
+    let prefix = if working_dir == "." {
+        String::new()
+    } else {
+        format!("{working_dir}/")
+    };
     let mut all = vec![];
     let mut add = |f: Findings, publish: bool| {
         all.extend(f.errors);
@@ -109,7 +135,7 @@ fn library_findings(dir: &Path, case: &Value, args: &[&str]) -> Vec<String> {
         !args.contains(&"--no-check-publish"),
     );
     if args.contains(&"-A") || args.contains(&"--with-dependencies") {
-        for name in dependencies(case) {
+        for name in dependencies(case, &prefix) {
             let path = dir.join("vendor").join(&name).join("composer.json");
             add(
                 validate(&path, &path.to_string_lossy(), checks),
@@ -154,7 +180,8 @@ fn findings_and_run_errors_match_composer() {
             .iter()
             .map(|a| a.as_str().unwrap())
             .collect();
-        if DIFFERENT.contains(&name) || case["exit"] == 3 {
+        // A missing file (exit 3) and a missing `-d` directory are pun-cli's to report.
+        if DIFFERENT.contains(&name) || case["exit"] == 3 || name == "working-dir-missing" {
             continue;
         }
         let dir =
@@ -162,12 +189,8 @@ fn findings_and_run_errors_match_composer() {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         write(&dir, case);
-        let file = args
-            .iter()
-            .find(|a| !a.starts_with('-'))
-            .copied()
-            .unwrap_or("./composer.json");
-        let loaded = load(&dir, file);
+        let (working_dir, file) = options(&args);
+        let loaded = load(&within(&dir, working_dir), file);
         if let Some(message) = case.get("message").and_then(Value::as_array) {
             let got = loaded.unwrap_or_default();
             let in_order = (message.iter().filter_map(Value::as_str))

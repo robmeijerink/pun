@@ -214,6 +214,9 @@ CASES = [
     ('with-dependencies-vendor-path', {'composer.json': j(BASE), 'vendor/composer/installed.json': j({'packages': [{'name': 'acme/dep', 'version': '1.0.0', 'type': 'library', 'install-path': '../elsewhere/dep'}, {'name': 'acme/meta', 'version': '1.0.0', 'type': 'metapackage'}, {'name': 'acme/gone', 'version': '1.0.0', 'type': 'library'}], 'dev': True, 'dev-package-names': []}), 'vendor/elsewhere/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'version': '1.0.0'}), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'keywords': ['bad!']})}, ['-A']),
     # A dependency isn't loaded as the root is, so its report gets this far with a name the schema refuses.
     ('with-dependencies-uppercase-name', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'Acme/FooBAR-BazQux', 'description': 'd', 'license': 'MIT'})}, ['-A']),
+    # `-d`: Composer changes to the directory, so a dependency's path is absolute and physical.
+    ('with-dependencies-working-dir', {'sub/composer.json': j(BASE), 'sub/vendor/composer/installed.json': j(INSTALLED), 'sub/vendor/acme/dep/composer.json': '{\n    "name": "acme/dep",\n    "description": "d",\n    "license": "MIT",\n    "license": "MIT"\n}\n'}, ['-d', 'sub', '-A']),
+    ('working-dir-missing', {'composer.json': j(BASE)}, ['-d', 'nope']),
     ('with-dependencies-strict', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'require': {'acme/x': '*'}})}, ['-A', '--strict']),
 ]
 

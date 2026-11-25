@@ -41,8 +41,14 @@ pub(crate) struct ValidateArgs {
 }
 
 pub(crate) fn run(a: &ValidateArgs) -> Result<Exit> {
+    // Composer changes to `-d` and works from `getcwd()`: the physical, absolute path a dependency's file is named by.
     let base = match &a.working_dir {
-        Some(d) => d.clone(),
+        Some(d) => d.canonicalize().map_err(|_| {
+            anyhow::anyhow!(
+                "Invalid working directory specified, {} does not exist.",
+                d.display()
+            )
+        })?,
         None => std::env::current_dir()?,
     };
     // `Factory::getComposerFile`.

@@ -1981,6 +1981,38 @@
   "stderr": "acme/dep is invalid, the following errors/warnings were found:\n# General errors\n- name : Does not match the regex pattern ^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$\n- name : Acme/FooBAR-BazQux is invalid, it should not contain uppercase characters. We suggest using acme/foo-bar-baz-qux instead.\n# Publish errors\n- Name \"Acme/FooBAR-BazQux\" does not match the best practice (e.g. lower-cased/with-dashes). We suggest using \"acme/foo-bar-baz-qux\" instead. As such you will not be able to submit it to Packagist.\n"
  },
  {
+  "name": "with-dependencies-working-dir",
+  "files": {
+   "sub/composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",
+   "sub/vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/dep\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"install-path\": \"../acme/dep\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+   "sub/vendor/acme/dep/composer.json": "{\n    \"name\": \"acme/dep\",\n    \"description\": \"d\",\n    \"license\": \"MIT\",\n    \"license\": \"MIT\"\n}\n"
+  },
+  "args": [
+   "-d",
+   "sub",
+   "-A"
+  ],
+  "exit": 0,
+  "stdout": "./composer.json is valid\n",
+  "stderr": "acme/dep is valid, but with a few warnings\n# General warnings\n- Key license is a duplicate in {dir}/sub/vendor/acme/dep/composer.json at line 5\n"
+ },
+ {
+  "name": "working-dir-missing",
+  "files": {
+   "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n"
+  },
+  "args": [
+   "-d",
+   "nope"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "\nIn Application.php line 573:\n                                                             \n  Invalid working directory specified, nope does not exist.  \n                                                             \n\n",
+  "message": [
+   "Invalid working directory specified, nope does not exist."
+  ]
+ },
+ {
   "name": "with-dependencies-strict",
   "files": {
    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"An app\",\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.3\"\n    }\n}\n",

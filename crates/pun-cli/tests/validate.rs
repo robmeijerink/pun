@@ -104,6 +104,14 @@ fn validate(case: &Value) -> Outcome {
         .current_dir(&dir)
         .env("PUN_AGENT", "0")
         .env("HOME", &dir)
+        .envs(
+            (case
+                .get("env")
+                .and_then(Value::as_object)
+                .into_iter()
+                .flatten())
+            .map(|(k, v)| (k, v.as_str().unwrap())),
+        )
         .output()
         .unwrap();
     // The fixture writes the project's directory as `{dir}`.

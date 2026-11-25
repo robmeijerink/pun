@@ -69,7 +69,9 @@ For `validate`:
 ## Limitations
 
 - Only `dump-autoload` and `validate` exist. Any other command exits 2.
-- `validate` reads `time` in the forms Composer documents (`YYYY-MM-DD`, `YYYY-MM-DD HH:MM:SS`) and ISO 8601's, and reports no error for any other value. Composer reports a value PHP's `DateTime` can't parse.
+- `validate` reads `time` in the forms Composer documents (`YYYY-MM-DD`, `YYYY-MM-DD HH:MM:SS`) and ISO 8601's, and reports no error for any other value or for an impossible date in those forms (`2020-13-01`). Composer reports a value PHP's `DateTime` can't parse.
+- When a JSON parse error's excerpt cuts a multibyte character in two, `validate` prints `�` where Composer prints the partial byte.
+- `validate` sends no `command` event to Composer plugins, so a plugin can't change its exit code.
 - Where Composer itself crashes on a value of the wrong type (a number as a constraint, a list mixing licenses and numbers), `validate` reports what Composer reports without the crash.
 
 ## Exit codes

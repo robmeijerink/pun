@@ -558,3 +558,19 @@ pub fn parse_url(url: &str) -> Option<UrlParts> {
     parts.host = text(s, p);
     Some(parts)
 }
+
+/// PHP's `preg_quote` with no delimiter.
+pub fn preg_quote(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        if ".\\+*?[^]$(){}=!<>|:-#/".contains(c) {
+            out.push('\\');
+        }
+        if c == '\0' {
+            out.push_str("\\000");
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}

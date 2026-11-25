@@ -51,7 +51,8 @@ pub fn validate(file: &Path, display: &str, checks: Checks) -> Findings {
     }
     let manifest = data.as_object().cloned().unwrap_or_default();
     let warnings = &mut findings.warnings;
-    if data.is_object()
+    // `is_array($manifest)`: a list as well as an object.
+    if (data.is_object() || data.is_array())
         && let Some((key, line)) = first_duplicate_key(&text)
     {
         warnings.push(format!(
@@ -414,6 +415,11 @@ pub fn load_root(manifest: &Map<String, Value>) -> Result<()> {
     }
     for link in ["require", "require-dev"] {
         let targets = manifest.get(link).and_then(Value::as_object);
+        for (target, constraint) in targets.into_iter().flatten() {
+            if let Some(constraint) = constraint.as_str() {
+                aliases(&target.to_lowercase(), constraint)?;
+            }
+        }
         if name.is_some() && targets.is_some_and(|t| t.keys().any(|k| k.to_lowercase() == source)) {
             bail!(
                 "Root package '{source}' cannot require itself in its composer.json\nDid you accidentally name your root package after an external package?"
@@ -434,6 +440,48 @@ pub fn load_root(manifest: &Map<String, Value>) -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// `RootPackageLoader::extractAliases` for one requirement: both sides of an `X as Y` must be exact versions.
+fn aliases(target: &str, constraint: &str) -> Result<()> {
+    static ALIAS: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?:^|\| *|, *)([^,\s#|]+)(?:#[^ ]+)? +as +([^,\s|]+)(?:$| *\|| *,)")
+            .expect("valid")
+    });
+    match ALIAS.captures(constraint.as_bytes())? {
+        Some(caps) => {
+            for i in [1, 2] {
+                let version =
+                    String::from_utf8_lossy(caps.get(i).expect("a side").as_bytes()).into_owned();
+                normalize_in(&version, constraint)?;
+            }
+            Ok(())
+        }
+        None if constraint.contains(" as ") => bail!(
+            "Invalid alias definition in \"{target}\": \"{constraint}\". Aliases should be in the form \"exact-version as other-exact-version\"."
+        ),
+        None => Ok(()),
+    }
+}
+
+/// `VersionParser::normalize($version, $fullVersion)`: its error names the alias side that isn't an exact version.
+fn normalize_in(version: &str, full: &str) -> Result<String> {
+    crate::version::normalize(version).or_else(|_| {
+        let version = version.trim();
+        let quoted = crate::php::preg_quote(version);
+        let stability = "(?:@(?:stable|RC|beta|alpha|dev))?";
+        let matches = |pattern: String| Regex::new(&pattern).is_ok_and(|re| re.is_match(full.as_bytes()).unwrap_or(false));
+        let extra = if matches(format!(" +as +{quoted}{stability}$")) {
+            format!(" in \"{full}\", the alias must be an exact version")
+        } else if matches(format!("^{quoted}{stability} +as +")) {
+            format!(
+                " in \"{full}\", the alias source must be an exact version, if it is a branch name you should prefix it with dev-"
+            )
+        } else {
+            String::new()
+        };
+        bail!("Invalid version string \"{version}\"{extra}")
+    })
 }
 
 /// The composer.json at `file` (`display` as the user named it) as Composer loads the root package: valid JSON that the
@@ -457,10 +505,42 @@ fn read_text(file: &Path, display: &str) -> Result<(Value, String)> {
     Ok((data, String::from_utf8_lossy(&bytes).into_owned()))
 }
 
+/// PHP's `json_decode` with its default depth: JSON nested in fewer than 512 arrays and objects.
+fn json_decode(bytes: &[u8]) -> Option<Value> {
+    use serde::Deserialize;
+    if nesting(bytes) >= 512 {
+        return None;
+    }
+    let mut decoder = serde_json::Deserializer::from_slice(bytes);
+    decoder.disable_recursion_limit();
+    let data = Value::deserialize(&mut decoder).ok()?;
+    decoder.end().ok()?;
+    Some(data)
+}
+
+/// How deep arrays and objects nest in `bytes`, strings skipped.
+fn nesting(bytes: &[u8]) -> usize {
+    let (mut depth, mut deepest, mut string, mut escaped) = (0usize, 0, false, false);
+    for &b in bytes {
+        match (string, escaped, b) {
+            (true, true, _) => escaped = false,
+            (true, false, b'\\') => escaped = true,
+            (true, false, b'"') | (false, _, b'"') => string = !string,
+            (false, _, b'[' | b'{') => {
+                depth += 1;
+                deepest = deepest.max(depth);
+            }
+            (false, _, b']' | b'}') => depth = depth.saturating_sub(1),
+            _ => {}
+        }
+    }
+    deepest
+}
+
 /// `JsonFile::parseJson`: the JSON, else jsonlint's first error, else (`json_decode` refusing what jsonlint takes) the
 /// UTF-8 error, else null as `json_decode` gives it.
 fn parse_json(bytes: &[u8], display: &str) -> Result<Value> {
-    if let Ok(data) = serde_json::from_slice(bytes) {
+    if let Some(data) = json_decode(bytes) {
         return Ok(data);
     }
     match jsonlint::lint(bytes) {
@@ -482,11 +562,11 @@ pub fn lock_errors(
     lock_text: &[u8],
     lock_display: &str,
 ) -> Result<Vec<String>> {
-    // `Locker::isLocked`: a lock that reads as anything but an object has no `packages`.
+    // `Locker::isLocked`: `isset($data['packages'])`, so a lock that isn't an object, or whose packages are null, isn't one.
     let Value::Object(mut lock) = parse_json(lock_text, lock_display)? else {
         return Ok(vec![]);
     };
-    if !lock.contains_key("packages") {
+    if lock.get("packages").is_none_or(Value::is_null) {
         return Ok(vec![]);
     }
     let text = |key: &str| {
@@ -503,7 +583,7 @@ pub fn lock_errors(
     if !fresh {
         errors.push("- The lock file is not up to date with the latest changes in composer.json, it is recommended that you run `composer update` or `composer update <package name>`.".to_string());
     }
-    if !lock.contains_key("packages-dev") {
+    if lock.get("packages-dev").is_none_or(Value::is_null) {
         bail!(
             "The lock file does not contain require-dev information, run install with the --no-dev option or delete it and run composer update to generate a new lock file."
         );

@@ -107,6 +107,10 @@ CASES = [
     ('schema-funding', {'composer.json': j(base(funding=[{'type': 'github'}, {'url': 'not a uri'}, 5]))}, []),
     ('schema-archive', {'composer.json': j(base(archive={'exclude': 'x', 'name': 5}))}, []),
     ('schema-strict-several', {'composer.json': j({'name': 'acme/app', 'extra-root': 1, 'license': 'MIT', 'other': 2})}, []),
+    ('schema-minimum', {'composer.json': j(base(type='php-ext', php_ext={'priority': 5}))}, []),
+    ('schema-maximum-numeric-string', {'composer.json': j(base(type='php-ext', php_ext={'priority': '120'}))}, []),
+    ('schema-policy-period', {'composer.json': j(base(config={'policy': {'mine': {'cooldown': {'period': -1}}}}))}, []),
+    ('schema-null-values', {'composer.json': j(base(description=None, homepage=None, type='php-ext', php_ext={'build-path': 5}) | {'description': None})}, []),
     ('schema-dependency-errors', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 5, 'require': [], 'extra': 'x'})}, ['-A']),
     ('parse-error-unterminated-string', {'composer.json': '{"name": "acme/app}\n'}, []),
     ('parse-error-invalid-escape', {'composer.json': '{"name": "acme\\x/app"}\n'}, []),
@@ -147,6 +151,13 @@ CASES = [
     ('parse-error-only-whitespace', {'composer.json': '  \n  \n'}, []),
     ('not-utf8', {'composer.json': {'hex': '7b226e616d65223a202261636d652fff61707022207d0a'}}, []),
     ('parse-error-dependency', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': '{"name": "acme/dep",}\n'}, ['-A']),
+    ('parse-error-unterminated-at-end', {'composer.json': '{"name": "'}, []),
+    ('lone-surrogate', {'composer.json': '{"name": "acme/app", "description": "\\ud800", "license": "MIT"}\n'}, []),
+    ('deep-nesting', {'composer.json': '{"name": "acme/app", "description": "d", "license": "MIT", "extra": ' + '{"a": ' * 140 + '1' + '}' * 140 + '}\n'}, []),
+    # PHP's json_decode takes 511 nested arrays and objects and refuses 512, the root object counting.
+    ('nesting-511', {'composer.json': '{"name": "acme/app", "description": "d", "license": "MIT", "extra": ' + '[' * 510 + '1' + ']' * 510 + '}\n'}, []),
+    ('nesting-512', {'composer.json': '{"name": "acme/app", "description": "d", "license": "MIT", "extra": ' + '[' * 511 + '1' + ']' * 511 + '}\n'}, []),
+    ('composer-env', {'custom.json': j(base(license=None))}, [], {'env': {'COMPOSER': 'custom.json'}}),
     ('duplicate-key-nested', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "require": {\n        "php": "^8.3",\n        "php": "^8.4"\n    }\n}\n'}, []),
     ('duplicate-key', {'composer.json': '{\n    "name": "acme/app",\n    "description": "An app",\n    "license": "MIT",\n    "license": "MIT"\n}\n'}, []),
     ('license-proprietary', {'composer.json': j(base(license='proprietary'))}, []),
@@ -185,6 +196,13 @@ CASES = [
     ('link-self-replace', {'composer.json': j(base(replace={'acme/app': '1.0'}))}, []),
     ('link-uppercase-name', {'composer.json': j(base(require={'php': '^8.3', 'Acme/A': '^1.0'}))}, []),
     ('link-reserved-name-in-replace', {'composer.json': j(base(replace={'acme/con': '1.0'}))}, []),
+    # RootPackageLoader::extractAliases: each side of "X as Y" in require and require-dev must be an exact version.
+    ('alias-target-invalid', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': '1.0 as foo'}))}, []),
+    ('alias-source-range', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': '>=1.0 as 2.0'}))}, []),
+    ('alias-source-branch', {'composer.json': j(base(require_dev={'acme/a': 'main as 1.0'}))}, []),
+    ('alias-valid', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': 'dev-main as 1.0.x-dev', 'acme/b': '1.0 as 2.0'}))}, []),
+    ('alias-in-or', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': '^2.0 || 1.0 as 1.5'}))}, []),
+    ('alias-with-reference', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': 'dev-main#abc123 as 1.0'}))}, []),
     ('link-impossible', {'composer.json': j(base(require={'php': '^8.3', 'acme/a': '>2.0 <1.0'}))}, []),
     ('link-conflict-replaced', {'composer.json': j(base(replace={'acme/a': '1.0'}, conflict={'acme/a': '<1.0'}))}, []),
     ('autoload-psr4-separator', {'composer.json': j(base(autoload={'psr-4': {'Acme': 'src/'}}))}, []),
@@ -204,6 +222,10 @@ CASES = [
     # An old lock with only `hash`, the md5 of composer.json's text; a lock without `packages` isn't one.
     ('lock-legacy-hash-fresh', {'composer.json': j(BASE), 'composer.lock': j({'hash': __import__('hashlib').md5(j(BASE).encode()).hexdigest(), 'packages': [], 'packages-dev': []})}, []),
     ('lock-legacy-hash-stale', {'composer.json': j(BASE), 'composer.lock': j({'hash': 'abc', 'packages': [], 'packages-dev': []})}, []),
+    # Locker reads `packages` and `packages-dev` with isset(): null is absent.
+    ('lock-packages-null', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'x', 'packages': None})}, []),
+    ('lock-packages-dev-null', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'x', 'packages': [], 'packages-dev': None})}, []),
+    ('lock-not-object', {'composer.json': j(BASE), 'composer.lock': '[]\n'}, []),
     ('lock-without-packages', {'composer.json': j(BASE), 'composer.lock': j({'content-hash': 'abc'})}, []),
     ('lock-invalid-json', {'composer.json': j(BASE), 'composer.lock': '{"content-hash": \n'}, []),
     ('lock-missing-requirement', {'composer.json': j(LOCKED)}, [], {'lock': True, 'drop_locked': 'acme/lib'}),
@@ -217,13 +239,18 @@ CASES = [
     # `-d`: Composer changes to the directory, so a dependency's path is absolute and physical.
     ('with-dependencies-working-dir', {'sub/composer.json': j(BASE), 'sub/vendor/composer/installed.json': j(INSTALLED), 'sub/vendor/acme/dep/composer.json': '{\n    "name": "acme/dep",\n    "description": "d",\n    "license": "MIT",\n    "license": "MIT"\n}\n'}, ['-d', 'sub', '-A']),
     ('working-dir-missing', {'composer.json': j(BASE)}, ['-d', 'nope']),
+    # The local repository holds an aliased package and its alias, which validate checks once each.
+    ('with-dependencies-branch-alias', {'composer.json': j(BASE), 'vendor/composer/installed.json': j({'packages': [{'name': 'acme/dep', 'version': 'dev-master', 'version_normalized': 'dev-master', 'type': 'library', 'extra': {'branch-alias': {'dev-master': '1.x-dev'}}}], 'dev': True, 'dev-package-names': []}), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'keywords': ['bad!']})}, ['-A']),
+    ('with-dependencies-default-branch', {'composer.json': j(BASE), 'vendor/composer/installed.json': j({'packages': [{'name': 'acme/dep', 'version': 'dev-main', 'version_normalized': 'dev-main', 'type': 'library', 'default-branch': True}, {'name': 'acme/other', 'version': 'dev-1.x', 'version_normalized': '1.9999999.9999999.9999999-dev', 'type': 'library', 'default-branch': True}], 'dev': True, 'dev-package-names': []}), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT'}), 'vendor/acme/other/composer.json': j({'name': 'acme/other', 'description': 'd', 'license': 'MIT'})}, ['-A']),
+    ('with-dependencies-list-duplicate-key', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': '[{"a": 1, "a": 2}]\n'}, ['-A']),
     ('with-dependencies-strict', {'composer.json': j(BASE), 'vendor/composer/installed.json': j(INSTALLED), 'vendor/acme/dep/composer.json': j({'name': 'acme/dep', 'description': 'd', 'license': 'MIT', 'require': {'acme/x': '*'}})}, ['-A', '--strict']),
 ]
 
 
-def composer(cwd, args, home):
+def composer(cwd, args, home, extra_env=None):
     env = {'PATH': os.environ['PATH'], 'HOME': home, 'COMPOSER_HOME': os.path.join(home, '.composer'),
-           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500'}
+           'COMPOSER_CACHE_DIR': os.path.join(home, '.cache'), 'COMPOSER_ROOT_VERSION': '1.0.0', 'COLUMNS': '500',
+           **(extra_env or {})}
     return subprocess.run(['php', PHAR, '--no-interaction', *args], cwd=cwd, env=env, capture_output=True, text=True)
 
 
@@ -271,10 +298,12 @@ def record(name, files, args, options):
             files['composer.lock'] = json.dumps(lock, indent=4) + '\n'
             files.update(options.get('after_lock', {}))
             write(work, files)
-        r = composer(work, ['validate', *args], home)
+        r = composer(work, ['validate', *args], home, options.get('env'))
         # The project's own directory, which a dependency's path starts with, as `{dir}`.
         here = lambda text: text.replace(os.path.realpath(work), '{dir}')
         case = {'name': name, 'files': files, 'args': args, 'exit': r.returncode, 'stdout': here(r.stdout), 'stderr': here(r.stderr)}
+        if options.get('env'):
+            case['env'] = options['env']
         if 'Exception trace:' in r.stderr:
             # Composer itself crashed (a PHP TypeError and the like): tests/validate.rs says what Pun does instead.
             # Its first line, without where it was called from, and no trace: those name local paths.

@@ -66,10 +66,13 @@ fn composer_findings(stderr: &str) -> Vec<String> {
     findings
 }
 
-/// The case's working directory (`-d`, relative to the project) and composer.json (its argument, or ./composer.json).
-fn options<'a>(args: &[&'a str]) -> (&'a str, &'a str) {
+/// The case's working directory (`-d`, relative to the project) and composer.json (its argument, else `COMPOSER`, else
+/// ./composer.json).
+fn options<'a>(case: &'a Value, args: &[&'a str]) -> (&'a str, &'a str) {
     let mut working_dir = ".";
-    let mut file = "./composer.json";
+    let mut file = case["env"]["COMPOSER"]
+        .as_str()
+        .unwrap_or("./composer.json");
     let mut words = args.iter();
     while let Some(word) = words.next() {
         match *word {
@@ -115,7 +118,7 @@ fn library_findings(dir: &Path, case: &Value, args: &[&str]) -> Vec<String> {
         constraints: !args.contains(&"--no-check-all"),
         version: !args.contains(&"--no-check-version"),
     };
-    let (working_dir, file) = options(args);
+    let (working_dir, file) = options(case, args);
     let dir = within(dir, working_dir);
     let prefix = if working_dir == "." {
         String::new()
@@ -135,8 +138,24 @@ fn library_findings(dir: &Path, case: &Value, args: &[&str]) -> Vec<String> {
         !args.contains(&"--no-check-publish"),
     );
     if args.contains(&"-A") || args.contains(&"--with-dependencies") {
+        // Composer checks a branch-aliased package once more for its alias: as often as it heads a result.
+        let output = format!(
+            "{}{}",
+            case["stdout"].as_str().unwrap(),
+            case["stderr"].as_str().unwrap()
+        );
         for name in dependencies(case, &prefix) {
+            let times = output
+                .lines()
+                .filter(|l| l.starts_with(&format!("{name} is ")))
+                .count();
             let path = dir.join("vendor").join(&name).join("composer.json");
+            for _ in 1..times {
+                add(
+                    validate(&path, &path.to_string_lossy(), checks),
+                    !args.contains(&"--no-check-publish"),
+                );
+            }
             add(
                 validate(&path, &path.to_string_lossy(), checks),
                 !args.contains(&"--no-check-publish"),
@@ -189,7 +208,7 @@ fn findings_and_run_errors_match_composer() {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         write(&dir, case);
-        let (working_dir, file) = options(&args);
+        let (working_dir, file) = options(case, &args);
         let loaded = load(&within(&dir, working_dir), file);
         if let Some(message) = case.get("message").and_then(Value::as_array) {
             let got = loaded.unwrap_or_default();

@@ -65,7 +65,7 @@ impl Lexer<'_> {
     /// `Lexer::lex`: the next token, past whitespace; comments are an error, as `ALLOW_COMMENTS` is off.
     fn lex(&mut self) -> Result<i32, String> {
         loop {
-            match self.next()? {
+            match self.next() {
                 SKIP_WHITESPACE | BREAK_LINE => {}
                 COMMENT | OPEN_COMMENT => {
                     return Err(format!(
@@ -86,52 +86,43 @@ impl Lexer<'_> {
         }
     }
 
-    /// `Lexer::next`: the first rule that matches at the offset, and the token its action gives.
-    fn next(&mut self) -> Result<i32, String> {
+    /// `Lexer::next`: the first rule that matches at the offset, and the token its action gives. One always does: `$`
+    /// at the end, a line break, and `.` for any other byte, so its "Unrecognized text" error never comes.
+    fn next(&mut self) -> i32 {
         if self.done {
-            return Ok(EOF);
+            return EOF;
         }
         if self.offset == self.input.len() {
             self.done = true;
         }
         self.matched.clear();
-        for (rule, re) in RULES.iter().enumerate() {
-            let Ok(Some(m)) = re.find_at(self.input, self.offset) else {
-                continue;
-            };
-            let text = &self.input[m.start()..m.end()];
-            self.yylineno += substr_count(text, b"\n");
-            self.matched.extend_from_slice(text);
-            self.offset += text.len();
-            return Ok(match rule {
-                0 => BREAK_LINE,
-                1 => SKIP_WHITESPACE,
-                2 => 6,
-                3 => 4,
-                4 => 17,
-                5 => 18,
-                6 => 23,
-                7 => 24,
-                8 => 22,
-                9 => 21,
-                10 => 10,
-                11 => 11,
-                12 => 8,
-                13 => 14,
-                14 => COMMENT,
-                15 => OPEN_COMMENT,
-                16 => CLOSE_COMMENT,
-                _ => INVALID,
-            });
+        let (rule, m) = (RULES.iter().enumerate())
+            .find_map(|(rule, re)| Some((rule, re.find_at(self.input, self.offset).ok()??)))
+            .expect("`$`, a line break or `.` matches at any offset");
+        let text = &self.input[m.start()..m.end()];
+        self.yylineno += substr_count(text, b"\n");
+        self.matched.extend_from_slice(text);
+        self.offset += text.len();
+        match rule {
+            0 => BREAK_LINE,
+            1 => SKIP_WHITESPACE,
+            2 => 6,
+            3 => 4,
+            4 => 17,
+            5 => 18,
+            6 => 23,
+            7 => 24,
+            8 => 22,
+            9 => 21,
+            10 => 10,
+            11 => 11,
+            12 => 8,
+            13 => 14,
+            14 => COMMENT,
+            15 => OPEN_COMMENT,
+            16 => CLOSE_COMMENT,
+            _ => INVALID,
         }
-        if self.offset == self.input.len() {
-            return Ok(EOF);
-        }
-        Err(format!(
-            "Lexical error on line {}. Unrecognized text.\n{}",
-            self.yylineno + 1,
-            self.show_position()
-        ))
     }
 
     /// `Lexer::showPosition`: up to 20 bytes before the token, it and what follows, with a caret under its start.
@@ -485,9 +476,12 @@ fn parse(input: &[u8]) -> Result<(), String> {
                 stack.truncate(stack.len() - 2 * len);
                 let below = *stack.last().expect("a state");
                 let lhs_usize = usize::try_from(lhs).expect("a nonterminal");
-                let Some(Goto(next)) = action(below, lhs) else {
-                    return Err("Parsing halted.".into());
-                };
+                let next = (TABLE[below].iter())
+                    .find_map(|(s, a)| match a {
+                        Goto(next) if *s == lhs => Some(*next),
+                        _ => None,
+                    })
+                    .expect("jsonlint's table goes to a state after each reduction");
                 stack.push(lhs_usize);
                 stack.push(next);
             }

@@ -70,14 +70,40 @@ fn php_string(v: &Value) -> String {
     }
 }
 
-/// `var_export()` of a scalar, as `config.platform`'s message shows it.
+/// `var_export()` of a decoded value, as `config.platform`'s message shows it: an array one entry a line, its keys as
+/// PHP keeps them (a numeric string becomes an integer key).
 fn var_export(v: &Value) -> String {
+    let mut out = String::new();
+    export(&mut out, v, 0);
+    out
+}
+
+fn export(out: &mut String, v: &Value, level: usize) {
     match v {
-        Value::Null => "NULL".into(),
-        Value::Bool(b) => b.to_string(),
-        Value::String(s) => crate::php::export_str(s),
-        Value::Number(n) => n.to_string(),
-        Value::Array(_) | Value::Object(_) => "array (\n)".into(),
+        Value::Null => out.push_str("NULL"),
+        Value::Bool(b) => out.push_str(&b.to_string()),
+        Value::String(s) => out.push_str(&crate::php::export_str(s)),
+        Value::Number(n) => out.push_str(&n.to_string()),
+        Value::Array(_) | Value::Object(_) => {
+            out.push_str("array (\n");
+            let pad = "  ".repeat(level + 1);
+            for (key, item) in entries(v) {
+                out.push_str(&pad);
+                match key.parse::<i64>() {
+                    Ok(i) if i.to_string() == key => out.push_str(&key),
+                    _ => out.push_str(&crate::php::export_str(&key)),
+                }
+                out.push_str(" => ");
+                if is_array(&item) {
+                    out.push('\n');
+                    out.push_str(&pad);
+                }
+                export(out, &item, level + 1);
+                out.push_str(",\n");
+            }
+            out.push_str(&"  ".repeat(level));
+            out.push(')');
+        }
     }
 }
 
@@ -406,8 +432,10 @@ impl Loader {
     }
 
     fn run(&mut self, constraints: bool) {
+        // The naming check reads the config as given (`$config`), not the copy `validateString` may have unset it from.
+        let name = self.get("name").and_then(Value::as_str).map(String::from);
         self.validate_string("name", true);
-        if let Some(name) = self.get("name").and_then(Value::as_str).map(String::from)
+        if let Some(name) = name
             && let Some(error) = package_naming_error(&name, false)
         {
             self.error(format!("name : {error}"));
@@ -996,14 +1024,8 @@ impl Loader {
                         "{link}.{package} : invalid key, package names must be strings containing only [A-Za-z0-9_./-]"
                     ));
                 }
-                let Some(text) = constraint.as_str() else {
-                    self.error(format!(
-                        "{link}.{package} : invalid value, must be a string containing a version constraint"
-                    ));
-                    self.remove_entries(link, &[package.to_string()]);
-                    continue;
-                };
-                if text != "self.version" {
+                // A constraint that isn't a string goes on to the conflict check, as in the PHP.
+                if let Some(text) = constraint.as_str().filter(|t| *t != "self.version") {
                     let parsed = match constraint::parse(text) {
                         Ok(parsed) => parsed,
                         Err(e) => {
@@ -1036,6 +1058,11 @@ impl Loader {
                             "{link}.{package} : this version constraint cannot possibly match anything ({text})"
                         ));
                     }
+                } else if !constraint.is_string() {
+                    self.error(format!(
+                        "{link}.{package} : invalid value, must be a string containing a version constraint"
+                    ));
+                    self.remove_entries(link, &[package.to_string()]);
                 }
                 if link == "conflict"
                     && let (Some(replace), Some(conflict)) = (
@@ -1289,4 +1316,64 @@ fn release_timestamp(time: &str) -> Option<i64> {
         seconds -= sign * (hours * 3600 + minutes * 60);
     }
     Some(seconds)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Composer 2.11.2's `ValidatingArrayLoader` on configs that reach each check (tests/fixtures/loader.json, from
+    /// scripts/export-loader-cases.php).
+    #[test]
+    fn loads_as_composer_does() {
+        let cases: Vec<Value> =
+            serde_json::from_str(include_str!("../../tests/fixtures/loader.json")).unwrap();
+        let mut wrong = vec![];
+        for case in &cases {
+            let config: Map<String, Value> =
+                serde_json::from_str(case["config"].as_str().unwrap()).unwrap();
+            let loaded = load(config, case["constraints"].as_bool().unwrap());
+            let strings = |v: &Value| -> Vec<String> {
+                (v.as_array().unwrap().iter())
+                    .map(|s| s.as_str().unwrap().to_string())
+                    .collect()
+            };
+            let (errors, warnings) = (strings(&case["errors"]), strings(&case["warnings"]));
+            if loaded.errors != errors || loaded.warnings != warnings {
+                wrong.push(format!(
+                    "=== {}\nwant errors {errors:#?}\nwant warnings {warnings:#?}\ngot errors {:#?}\ngot warnings {:#?}",
+                    case["name"], loaded.errors, loaded.warnings
+                ));
+            }
+        }
+        assert!(
+            wrong.is_empty(),
+            "{} of {} differ:\n{}",
+            wrong.len(),
+            cases.len(),
+            wrong.join("\n")
+        );
+    }
+
+    /// Pun's choice for `time` (context/PLAN.md §3, docs/content/docs/commands/composer.mdx): a value outside the forms
+    /// it reads is no error, where Composer reports what PHP's `DateTime` says, and with no release date the licenses
+    /// are checked.
+    #[test]
+    fn time_outside_the_read_forms_is_no_error() {
+        let invalid_license = "License \"Not-A-License\" is not a valid SPDX license identifier, see https://spdx.org/licenses/ if you use an open license.\nIf the software is closed-source, you may use \"proprietary\" as license.";
+        for time in [
+            "2001-13-01",
+            "2001-01-32",
+            "yesterday",
+            "2001-01-01 25:00:00 nonsense",
+        ] {
+            let config = serde_json::json!({"name": "acme/pkg", "version": "1.0.0", "time": time, "license": "Not-A-License"});
+            let loaded = load(config.as_object().unwrap().clone(), true);
+            assert_eq!(
+                (loaded.errors, loaded.warnings),
+                (Vec::<String>::new(), vec![invalid_license.to_string()]),
+                "{time}"
+            );
+        }
+    }
 }

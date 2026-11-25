@@ -117,13 +117,21 @@ pub(crate) fn run(a: &ValidateArgs) -> Result<Exit> {
             if package.kind() == Some("metapackage") || !dir.is_dir() || !file.exists() {
                 continue;
             }
-            let report = Report {
-                name: package.pretty_name(),
-                findings: validate(&file, &file.to_string_lossy(), checks),
-                check_publish: !a.no_check_publish,
-                lock: None,
+            // The local repository holds a branch-aliased package and its alias, both at this path: checked once each.
+            let times = if pun_packages::version::branch_alias(&package.0).is_some() {
+                2
+            } else {
+                1
             };
-            exit = exit.max(report.print(a.strict));
+            for _ in 0..times {
+                let report = Report {
+                    name: package.pretty_name(),
+                    findings: validate(&file, &file.to_string_lossy(), checks),
+                    check_publish: !a.no_check_publish,
+                    lock: None,
+                };
+                exit = exit.max(report.print(a.strict));
+            }
         }
     }
     Ok(match exit {

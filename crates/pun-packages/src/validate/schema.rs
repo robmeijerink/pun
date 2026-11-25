@@ -1,7 +1,9 @@
 //! Composer 2.11.2's JSON schema check (`JsonFile::validateJsonSchema`) with justinrainbow/json-schema 6.14's draft-04
 //! constraints, as far as `assets/composer-schema.json` uses them: `$ref`, `type`, `required`, `not`, `allOf`, `anyOf`,
-//! `oneOf`, `properties`, `patternProperties`, `additionalProperties`, `items`, `minItems`, `pattern`, `minimum`,
-//! `enum`, and the `uri` and `email` formats. The order of the errors is the library's, merges and all.
+//! `oneOf`, `properties`, `patternProperties`, `additionalProperties`, `minProperties`, `maxProperties`, `items` (one
+//! schema for every item), `minItems`, `pattern`, `minimum`, `maximum`, `enum` (of strings and booleans), and the `uri`
+//! and `email` formats. The order of the errors is the library's, merges and all. The constraints the schema doesn't
+//! use (string lengths, `maxItems`, tuples, `number`, `const`, `dependencies`) are left out.
 
 use crate::php::{is_email_unicode, json_compact};
 use pcre2::bytes::{Regex, RegexBuilder};
@@ -107,13 +109,11 @@ fn gettype(v: &Value) -> &'static str {
     }
 }
 
-/// A message parameter as `BaseConstraint::addError` formats it: a scalar as PHP prints it, anything else as JSON.
+/// A message parameter as `BaseConstraint::addError` formats it: a number as PHP prints it, a list as JSON.
 fn param(v: &Value) -> String {
     match v {
-        Value::String(s) => s.clone(),
-        Value::Bool(b) => b.to_string(),
         Value::Number(n) => n.to_string(),
-        Value::Null | Value::Array(_) | Value::Object(_) => json_compact(v),
+        _ => json_compact(v),
     }
 }
 
@@ -150,54 +150,28 @@ fn property_path(path: &[String]) -> String {
 }
 
 /// `SchemaStorage::resolveRefSchema`: a schema with a `$ref` is the schema it points at, its other keywords unread.
+/// Every `$ref` of Composer's schema is a pointer into it (`#/definitions/...`).
 fn resolve(mut schema: &Value) -> &Value {
-    for _ in 0..64 {
-        let Some(reference) = schema.get("$ref").and_then(Value::as_str) else {
-            break;
-        };
-        let Some(pointer) = reference.split_once('#').map(|(_, p)| p) else {
-            break;
-        };
-        match SCHEMA.pointer(pointer) {
-            Some(target) => schema = target,
-            None => break,
-        }
+    while let Some(reference) = schema.get("$ref").and_then(Value::as_str) {
+        let pointer = reference.trim_start_matches('#');
+        schema = SCHEMA
+            .pointer(pointer)
+            .expect("Composer's schema resolves its own pointers");
     }
     schema
 }
 
-/// `jsonPatternToPhpRegex`: the pattern as a UTF-8 PCRE.
-fn json_pattern(pattern: &str) -> Option<Regex> {
-    RegexBuilder::new().utf(true).build(pattern).ok()
+/// `jsonPatternToPhpRegex`: the pattern as a UTF-8 PCRE; every pattern of Composer's schema compiles.
+fn json_pattern(pattern: &str) -> Regex {
+    RegexBuilder::new()
+        .utf(true)
+        .build(pattern)
+        .expect("Composer's schema pattern")
 }
 
-/// PHP truthiness of a schema keyword's value.
+/// PHP truthiness of the keyword values Composer's schema has: schemas (objects) and booleans.
 fn truthy(v: &Value) -> bool {
-    match v {
-        Value::Null => false,
-        Value::Bool(b) => *b,
-        Value::Number(n) => n.as_f64() != Some(0.0),
-        Value::String(s) => !s.is_empty() && s != "0",
-        Value::Array(a) => !a.is_empty(),
-        Value::Object(_) => true,
-    }
-}
-
-/// `DeepComparer::isEqual`.
-fn deep_equal(a: &Value, b: &Value) -> bool {
-    match (a, b) {
-        (Value::Null, Value::Null) => true,
-        (Value::Number(x), Value::Number(y)) => x.as_f64() == y.as_f64(),
-        (Value::Array(x), Value::Array(y)) => {
-            x.len() == y.len() && x.iter().zip(y).all(|(p, q)| deep_equal(p, q))
-        }
-        (Value::Object(x), Value::Object(y)) => {
-            x.len() == y.len()
-                && x.iter()
-                    .all(|(k, v)| y.get(k).is_some_and(|w| deep_equal(v, w)))
-        }
-        _ => a == b,
-    }
+    !matches!(v, Value::Null | Value::Bool(false))
 }
 
 /// json-schema's `UriValidator::isValid`, the `uri` format.
@@ -404,28 +378,26 @@ impl Checker {
         }
     }
 
-    /// `TypeConstraint::check`.
+    /// `TypeConstraint::check`, for the types Composer's schema names.
     fn check_type(&mut self, value: &Value, schema: &Value, path: &[String]) {
-        let wording = |t: &str| match t {
-            "integer" => "an integer",
-            "number" => "a number",
-            "boolean" => "a boolean",
-            "object" => "an object",
-            "array" => "an array",
-            "string" => "a string",
-            "null" => "a null",
-            _ => "",
+        /// A type's name, its wording in the message, and the check.
+        type Type = (&'static str, &'static str, fn(&Value) -> bool);
+        const TYPES: [Type; 6] = [
+            ("integer", "an integer", is_int),
+            ("boolean", "a boolean", Value::is_boolean),
+            ("object", "an object", Value::is_object),
+            ("array", "an array", Value::is_array),
+            ("string", "a string", Value::is_string),
+            ("null", "a null", Value::is_null),
+        ];
+        let lookup = |t: &str| {
+            TYPES
+                .iter()
+                .find(|(name, ..)| *name == t)
+                .expect("a type of Composer's schema")
         };
-        let matches = |t: &str| match t {
-            "object" => value.is_object(),
-            "array" => value.is_array(),
-            "integer" => is_int(value),
-            "number" => value.is_number(),
-            "boolean" => value.is_boolean(),
-            "string" => value.is_string(),
-            "null" => value.is_null(),
-            _ => true,
-        };
+        let wording = |t: &str| lookup(t).1;
+        let matches = |t: &str| (lookup(t).2)(value);
         let (valid, expected) = match schema.get("type") {
             Some(Value::String(t)) => (matches(t), vec![wording(t)]),
             Some(Value::Array(types)) => {
@@ -470,28 +442,10 @@ impl Checker {
                 format!("There must be a minimum of {min} items in the array, {count} found"),
             );
         }
-        if let Some(max) = schema.get("maxItems").and_then(Value::as_u64)
-            && (count as u64) > max
-        {
-            self.error(
-                path,
-                format!("There must be a maximum of {max} items in the array, {count} found"),
-            );
-        }
-        match schema.get("items") {
-            Some(item) if item.is_object() => {
-                for (k, v) in items.iter().enumerate() {
-                    self.undefined(Some(v), item, path, Some(&k.to_string()));
-                }
+        if let Some(item) = schema.get("items") {
+            for (k, v) in items.iter().enumerate() {
+                self.undefined(Some(v), item, path, Some(&k.to_string()));
             }
-            Some(Value::Array(tuple)) => {
-                for (k, v) in items.iter().enumerate() {
-                    if let Some(item) = tuple.get(k) {
-                        self.undefined(Some(v), item, path, Some(&k.to_string()));
-                    }
-                }
-            }
-            _ => {}
         }
     }
 
@@ -502,15 +456,10 @@ impl Checker {
         let mut matched: Vec<&str> = vec![];
         if let Some(Value::Object(patterns)) = schema.get("patternProperties") {
             for (pattern, sub) in patterns {
-                let Some(regex) = json_pattern(pattern) else {
-                    self.error(path, format!("The pattern {pattern} is invalid"));
-                    continue;
-                };
+                let regex = json_pattern(pattern);
                 for (name, v) in object {
                     if regex.is_match(name.as_bytes()).unwrap_or(false) {
                         matched.push(name);
-                        let empty = Value::Object(Map::new());
-                        let sub = if truthy(sub) { sub } else { &empty };
                         self.undefined(Some(v), sub, path, Some(name));
                     }
                 }
@@ -574,21 +523,12 @@ impl Checker {
         }
     }
 
-    /// `StringConstraint::check`: lengths, `pattern`, `format`.
+    /// `StringConstraint::check`: `pattern`, `format`.
     fn string(&mut self, s: &str, schema: &Value, path: &[String]) {
-        let length = s.chars().count() as u64;
-        if let Some(max) = schema.get("maxLength").and_then(Value::as_u64)
-            && length > max
-        {
-            self.error(path, format!("Must be at most {max} characters long"));
-        }
-        if let Some(min) = schema.get("minLength").and_then(Value::as_u64)
-            && length < min
-        {
-            self.error(path, format!("Must be at least {min} characters long"));
-        }
         if let Some(pattern) = schema.get("pattern").and_then(Value::as_str)
-            && !json_pattern(pattern).is_some_and(|re| re.is_match(s.as_bytes()).unwrap_or(false))
+            && !json_pattern(pattern)
+                .is_match(s.as_bytes())
+                .unwrap_or(false)
         {
             self.error(path, format!("Does not match the regex pattern {pattern}"));
         }
@@ -628,20 +568,33 @@ impl Checker {
         }
     }
 
-    /// `EnumConstraint::check`.
+    /// `EnumConstraint::check`, for enums of strings and booleans: a value of the same type and equal.
     fn check_enum(&mut self, value: &Value, allowed: &[Value], path: &[String]) {
-        for option in allowed {
-            if gettype(value) == gettype(option) && deep_equal(value, option) {
-                return;
-            }
-            if is_numeric(value) && is_numeric(option) && as_f64(value) == as_f64(option) {
-                return;
-            }
+        if allowed.contains(value) {
+            return;
         }
         let list = Value::Array(allowed.to_vec());
         self.error(
             path,
             format!("Does not have a value in the enumeration {}", param(&list)),
         );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// json-schema's own `UriValidator::isValid` answers (`uri` in tests/fixtures/php-filters.json, from
+    /// scripts/export-php-filters.php).
+    #[test]
+    fn uris_as_json_schema_validates_them() {
+        let fixture: Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/php-filters.json")).unwrap();
+        let wrong: Vec<String> = (fixture["uri"].as_object().unwrap().iter())
+            .filter(|(uri, valid)| is_uri(uri) != valid.as_bool().unwrap())
+            .map(|(uri, valid)| format!("{uri:?}: json-schema says {valid}"))
+            .collect();
+        assert!(wrong.is_empty(), "{}", wrong.join("\n"));
     }
 }

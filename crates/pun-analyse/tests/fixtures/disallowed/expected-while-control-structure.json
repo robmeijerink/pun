@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 26,
+   "identifier": "disallowed.while",
+   "message": "Using the while control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 36,
+   "identifier": "disallowed.while",
+   "message": "Using the while control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

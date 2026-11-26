@@ -37,6 +37,7 @@ use strings::{class_basename, plural_studly, singular, studly};
 
 const MODEL: &str = "Illuminate\\Database\\Eloquent\\Model";
 const ATTRIBUTE: &str = "Illuminate\\Database\\Eloquent\\Casts\\Attribute";
+const TABLE_ATTRIBUTE: &str = "Illuminate\\Database\\Eloquent\\Attributes\\Table";
 const CARBON_IMMUTABLE: &str = "Carbon\\CarbonImmutable";
 const PROXY: &str = "Illuminate\\Support\\HigherOrderCollectionProxy";
 
@@ -265,6 +266,66 @@ impl<'ast, 'arena> MutWalker<'ast, 'arena, ()> for Collector<'_, '_, 'arena> {
                     }
                 }
                 _ => {}
+            }
+        }
+        // Laravel 13's `#[Table]` (Model::initializeModelAttributes()): its name, key, key type, incrementing and
+        // timestamps apply where the class itself doesn't declare the property; a parent's attribute is the parent's
+        // source in the chain `model()` walks
+        for attribute in class
+            .attribute_lists
+            .iter()
+            .flat_map(|list| list.attributes.iter())
+        {
+            if !self
+                .names
+                .get(&attribute.name.span())
+                .eq_ignore_ascii_case(TABLE_ATTRIBUTE.as_bytes())
+            {
+                continue;
+            }
+            let parameters = ["name", "key", "keyType", "incrementing", "timestamps"];
+            for (i, argument) in attribute
+                .argument_list
+                .iter()
+                .flat_map(|a| a.arguments.iter())
+                .enumerate()
+            {
+                let (parameter, value) = match argument {
+                    PartialArgument::Positional(a) => (parameters.get(i).copied(), a.value),
+                    PartialArgument::Named(a) => (
+                        parameters
+                            .iter()
+                            .copied()
+                            .find(|p| p.as_bytes() == a.name.value),
+                        a.value,
+                    ),
+                    _ => continue,
+                };
+                let bool = match value {
+                    Expression::Literal(Literal::True(_)) => Some(true),
+                    Expression::Literal(Literal::False(_)) => Some(false),
+                    _ => None,
+                };
+                match parameter {
+                    Some("name") if model.table.is_none() => {
+                        model.table = constant_string(self.names, value);
+                    }
+                    // `key: false` is a model without a primary key, which doesn't increment
+                    Some("key") if bool == Some(false) => {
+                        model.incrementing = model.incrementing.or(Some(false));
+                    }
+                    Some("key") if model.primary_key.is_none() => {
+                        model.primary_key = constant_string(self.names, value);
+                    }
+                    Some("keyType") if model.key_type.is_none() => {
+                        model.key_type = constant_string(self.names, value);
+                    }
+                    Some("incrementing") if model.incrementing.is_none() => {
+                        model.incrementing = bool;
+                    }
+                    Some("timestamps") if model.timestamps.is_none() => model.timestamps = bool,
+                    _ => {}
+                }
             }
         }
         self.scan
@@ -960,12 +1021,24 @@ impl ExpressionHook for ModelAttributes {
         let Some(object_type) = context.get_expression_type(object) else {
             return Ok(());
         };
+        // MutatingScope::getInstancePropertyReflection() reads `->` on the receiver's members that have the
+        // property, so a nullable receiver's `null` adds nothing; only a nullsafe fetch's `null` stays
+        let object_type = if nullsafe || object_type.has_nullsafe_null() || object_type.is_null() {
+            object_type.clone()
+        } else {
+            object_type.remove_null()
+        };
         let name = String::from_utf8_lossy(property.value);
         let dollar = format!("${name}");
         let mut types = Vec::new();
+        let (mut short_circuits, mut properties, mut non_nullable) = (false, 0, 0);
         for atomic in object_type.types.iter() {
             let ty = match atomic {
-                TAtomic::Null if nullsafe => get_null(),
+                TAtomic::Null if nullsafe => {
+                    short_circuits = true;
+                    types.push(get_null());
+                    continue;
+                }
                 TAtomic::Object(TObject::Named(n))
                     if n.name.as_bytes().eq_ignore_ascii_case(PROXY.as_bytes()) =>
                 {
@@ -1033,9 +1106,11 @@ impl ExpressionHook for ModelAttributes {
                 }
                 _ => return Ok(()),
             };
+            properties += 1;
+            non_nullable += usize::from(!ty.is_nullable());
             types.push(ty);
         }
-        let ty = match types.len() {
+        let mut ty = match types.len() {
             0 => return Ok(()),
             1 => types.pop().unwrap_or_else(get_mixed),
             _ => TUnion::from_vec(
@@ -1045,6 +1120,12 @@ impl ExpressionHook for ModelAttributes {
                     .collect(),
             ),
         };
+        // The `null` of a nullsafe fetch on a null receiver short-circuits the rest of the chain, as
+        // analyze_property_access() marks it, so `$a?->relation->method()` stays nullable
+        // (NullsafeShortCircuitingHelper)
+        if short_circuits && properties > 0 && non_nullable == properties {
+            ty.set_nullsafe_null(true);
+        }
         context.set_expression_type(expr, ty);
         Ok(())
     }

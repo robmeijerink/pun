@@ -1,0 +1,1 @@
+{"name": "pun/vendor-mixins", "version": "1.0.0", "autoload": {"psr-4": {"PunVendorMixins\\": "src/"}}, "extra": {"laravel": {"providers": ["PunVendorMixins\\MixinsServiceProvider"]}}}

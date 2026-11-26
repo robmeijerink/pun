@@ -977,3 +977,260 @@ fn quiet_prints_nothing() {
     }
     assert_eq!(read(&d, "a.php"), "<?php\n$n = false;\n");
 }
+
+/// `pun lint --generate-baseline` records each problem `@pun-ignore` leaves (native ones by message, token rules once
+/// per file), and `[lint] baseline` then hides as many of each as it lists: a new one fails the run, a gone one is a
+/// note, and `--fix` still fixes what the baseline hides.
+#[test]
+fn lint_baseline_hides_the_problems_it_lists() {
+    let toml = "[format]\npreset = \"empty\"\n\n[lint.rules]\n\"style/no-alias-function\" = \"error\"\n\"security/no-eval\" = \"error\"\n";
+    let code = "<?php\n$n = sizeof($a);\neval('1;');\neval('2;');\neval('3;'); // @pun-ignore lint/security/no-eval\n";
+    let d = project(
+        "lint",
+        "baseline",
+        &[("pun.toml", toml), ("src/a.php", code)],
+    );
+    assert_eq!(plain(&d, &[], &[]).1, Some(1));
+    let (out, status) = plain(&d, &["--generate-baseline", "--color=never"], &[]);
+    assert_eq!(status, Some(0), "{out}");
+    assert!(
+        out.contains("Baseline generated with 3 problems in pun-lint-baseline.toml; add `baseline = \"pun-lint-baseline.toml\"` under [lint] in pun.toml to use it"),
+        "{out}"
+    );
+    let baseline = read(&d, "pun-lint-baseline.toml");
+    assert!(
+        baseline.starts_with("# Pun's lint baseline: problems `pun lint` doesn't report. Regenerate it with\n# `pun lint --generate-baseline`.\n\nvariant = \"loose\"\n"),
+        "{baseline}"
+    );
+    assert!(
+        baseline.contains("[[issues]]\nfile = \"src/a.php\"\ncode = \"lint/security/no-eval\"\nmessage = \"Unsafe use of `eval` construct.\"\ncount = 2\n"),
+        "{baseline}"
+    );
+    assert!(
+        baseline.contains("[[issues]]\nfile = \"src/a.php\"\ncode = \"lint/style/no-alias-function\"\nmessage = \"the rule's fix changes this file\"\ncount = 1\n"),
+        "{baseline}"
+    );
+    // Not configured yet: the run still fails.
+    assert_eq!(plain(&d, &[], &[]).1, Some(1));
+    let configured = toml.replace(
+        "[lint.rules]\n",
+        "[lint]\nbaseline = \"pun-lint-baseline.toml\"\n\n[lint.rules]\n",
+    );
+    std::fs::write(d.join("pun.toml"), &configured).unwrap();
+    let (lines, summary, status) = agent(&d, &["lint"]);
+    assert_eq!((lines, status), (vec![], Some(0)), "{summary}");
+    assert_eq!(plain(&d, &["--format=json"], &[]).1, Some(0));
+
+    // A third `eval` is one more than the entry counts.
+    std::fs::write(
+        d.join("src/a.php"),
+        code.replace("// @pun-ignore lint/security/no-eval", ""),
+    )
+    .unwrap();
+    let (lines, _, status) = agent(&d, &["lint"]);
+    assert_eq!(
+        lines,
+        ["src/a.php:5:1 lint/security/no-eval Unsafe use of `eval` construct."]
+    );
+    assert_eq!(status, Some(1));
+
+    // `--fix` applies the fix the baseline hides.
+    std::fs::write(d.join("src/a.php"), code).unwrap();
+    assert_eq!(plain(&d, &["--fix"], &[]).1, Some(0));
+    assert!(read(&d, "src/a.php").contains("$n = count($a);"));
+
+    // The fix and two removed `eval`s leave three entries unmatched.
+    std::fs::write(d.join("src/a.php"), "<?php\n$n = count($a);\n").unwrap();
+    let (out, status) = plain(&d, &["--color=never"], &[]);
+    assert!(
+        out.contains("! 3 baseline entries no longer match: run `pun lint --generate-baseline` to drop them\n"),
+        "{out}"
+    );
+    assert_eq!(status, Some(0));
+    let (_, summary, _) = agent(&d, &["lint"]);
+    assert_eq!(
+        summary,
+        "pun lint: pass, 3 baseline entries no longer matched"
+    );
+
+    // The configured file is the default; a file named on the command line wins.
+    let (out, status) = plain(&d, &["--generate-baseline", "--color=never"], &[]);
+    assert_eq!(status, Some(0));
+    assert!(
+        out.contains("Baseline generated with 0 problems in pun-lint-baseline.toml ("),
+        "{out}"
+    );
+    assert_eq!(
+        plain(&d, &["--generate-baseline", "other.toml"], &[]).1,
+        Some(0)
+    );
+    assert!(read(&d, "other.toml").contains("variant = \"loose\""));
+}
+
+/// A dry run's diff leaves out the token rules the baseline hides, and a file only those rules change has no diff;
+/// `--generate-baseline` says that token-rule entries count files, and that it wrote nothing when a file failed.
+#[test]
+fn lint_baseline_dry_run_diff_and_notes() {
+    let toml = "[format]\npreset = \"empty\"\n\n[lint]\nbaseline = \"pun-lint-baseline.toml\"\n\n[lint.rules]\n\"style/no-alias-function\" = \"error\"\n";
+    let d = project(
+        "lint",
+        "baseline-diff",
+        &[
+            ("pun.toml", toml),
+            ("a.php", "<?php\n$n = sizeof($a);\n$s = implode($a, ',');\n"),
+            ("b.php", "<?php\n$s = join($b, ',');\n"),
+        ],
+    );
+    let note = "2 entries for PHP-CS-Fixer rules: each counts a file, not its problems, so a new problem in a listed file stays hidden";
+    let (out, status) = plain(&d, &["--generate-baseline", "--color=never"], &[]);
+    assert_eq!(status, Some(0), "{out}");
+    assert!(out.contains(&format!("\n  {note}\n")), "{out}");
+    let (_, summary, status) = agent(&d, &["lint", "--generate-baseline"]);
+    assert_eq!(status, Some(0));
+    assert_eq!(
+        summary,
+        format!("pun lint: ok, baseline pun-lint-baseline.toml written with 2 problems, {note}")
+    );
+
+    // `implode()`'s argument order is the only change left in a.php; b.php's `join()` becomes `implode()` only
+    // through the hidden rule, so the separator rule has nothing to change there.
+    std::fs::write(
+        d.join("pun.toml"),
+        format!("{toml}\"style/require-implode-separator\" = \"error\"\n"),
+    )
+    .unwrap();
+    let (out, status) = plain(&d, &["-v", "--color=never"], &[]);
+    assert_eq!(status, Some(1), "{out}");
+    assert!(out.contains("+$s = implode(',', $a);"), "{out}");
+    assert!(!out.contains("count("), "{out}");
+    assert!(!out.contains("$b"), "{out}");
+
+    // a.php no longer matches its entry.
+    std::fs::write(d.join("a.php"), "<?php\n").unwrap();
+    let (_, summary, status) = agent(&d, &["lint"]);
+    assert_eq!(
+        (summary.as_str(), status),
+        (
+            "pun lint: pass, 1 baseline entry no longer matched",
+            Some(0)
+        )
+    );
+
+    // A file that fails leaves the baseline as it was.
+    let before = read(&d, "pun-lint-baseline.toml");
+    std::fs::write(d.join("c.php"), "<?php\n$x = ;\n").unwrap();
+    let out = clean_env(&mut Command::new(PUN), &["PATH", "HOME"])
+        .current_dir(&d)
+        .env("PUN_AGENT", "0")
+        .args(["lint", "--generate-baseline", "--color=never"])
+        .output()
+        .unwrap();
+    let err = String::from_utf8(out.stderr).unwrap();
+    assert!(
+        err.contains("! No baseline written: 1 file failed; fix it and run `pun lint --generate-baseline` again\n"),
+        "{err}"
+    );
+    assert_ne!(out.status.code(), Some(0));
+    assert_eq!(read(&d, "pun-lint-baseline.toml"), before);
+    let _ = std::fs::remove_dir_all(&d);
+}
+
+/// A lint baseline that doesn't parse, or a `[lint] baseline` outside the project, stops the run (exit 2).
+#[test]
+fn lint_baseline_errors() {
+    let configured = "[format]\npreset = \"empty\"\n\n[lint]\nbaseline = \"pun-lint-baseline.toml\"\n\n[lint.rules]\n\"security/no-eval\" = \"error\"\n";
+    let d = project(
+        "lint",
+        "baseline-errors",
+        &[
+            ("pun.toml", configured),
+            ("a.php", "<?php\n"),
+            ("pun-lint-baseline.toml", "variant = \"strict\"\n"),
+        ],
+    );
+    let out = clean_env(&mut Command::new(PUN), &["PATH", "HOME"])
+        .current_dir(&d)
+        .env("PUN_AGENT", "0")
+        .args(["lint", "--color=never"])
+        .output()
+        .unwrap();
+    let err = String::from_utf8(out.stderr).unwrap();
+    assert_eq!(out.status.code(), Some(2), "{err}");
+    assert!(
+        err.contains("run `pun lint --generate-baseline` to write it again"),
+        "{err}"
+    );
+
+    std::fs::write(
+        d.join("pun.toml"),
+        configured.replace("pun-lint-baseline.toml", "../outside.toml"),
+    )
+    .unwrap();
+    let out = clean_env(&mut Command::new(PUN), &["PATH", "HOME"])
+        .current_dir(&d)
+        .env("PUN_AGENT", "0")
+        .arg("lint")
+        .output()
+        .unwrap();
+    let err = String::from_utf8(out.stderr).unwrap();
+    assert_eq!(out.status.code(), Some(2), "{err}");
+    assert!(
+        err.contains("[lint] baseline: \"../outside.toml\" is outside the project"),
+        "{err}"
+    );
+}
+
+/// `pun check` hides lint problems with the lint baseline and analyse errors with the analyse one, and its note
+/// counts the unmatched entries of both.
+#[test]
+fn check_applies_both_baselines() {
+    let toml = "[format]\npreset = \"empty\"\n\n[lint.rules]\n\"security/no-eval\" = \"error\"\n\n[analyse]\npaths = [\"src\"]\n";
+    let code = "<?php\neval('1;');\nundefined_fn();\n";
+    let d = project(
+        "lint",
+        "check-baselines",
+        &[("pun.toml", toml), ("src/a.php", code)],
+    );
+    let check = |args: &[&str]| {
+        let out = clean_env(&mut Command::new(PUN), &["PATH", "HOME"])
+            .current_dir(&d)
+            .env("PUN_AGENT", "0")
+            .args(args)
+            .output()
+            .unwrap();
+        (String::from_utf8(out.stdout).unwrap(), out.status.code())
+    };
+    assert_eq!(check(&["check"]).1, Some(1));
+    assert_eq!(check(&["lint", "--generate-baseline"]).1, Some(0));
+    assert_eq!(check(&["analyse", "--generate-baseline"]).1, Some(0));
+    let both = toml
+        .replace(
+            "[lint.rules]",
+            "[lint]\nbaseline = \"pun-lint-baseline.toml\"\n\n[lint.rules]",
+        )
+        .replace(
+            "[analyse]\n",
+            "[analyse]\nbaseline = \"pun-baseline.toml\"\n",
+        );
+    std::fs::write(d.join("pun.toml"), &both).unwrap();
+    let (out, status) = check(&["check", "--color=never"]);
+    assert_eq!(status, Some(0), "{out}");
+    // Only the lint baseline: the analyse error is still reported.
+    std::fs::write(
+        d.join("pun.toml"),
+        both.replace("baseline = \"pun-baseline.toml\"\n", ""),
+    )
+    .unwrap();
+    let (out, status) = check(&["check", "--color=never"]);
+    assert!(out.contains("undefined_fn not found"), "{out}");
+    assert!(!out.contains("no-eval"), "{out}");
+    assert_eq!(status, Some(1));
+    std::fs::write(d.join("pun.toml"), &both).unwrap();
+    std::fs::write(d.join("src/a.php"), "<?php\n").unwrap();
+    let (out, status) = check(&["check", "--color=never"]);
+    assert!(
+        out.contains("! 2 baseline entries no longer match: run `pun lint --generate-baseline` and `pun analyse --generate-baseline` to drop them\n"),
+        "{out}"
+    );
+    assert_eq!(status, Some(0));
+}

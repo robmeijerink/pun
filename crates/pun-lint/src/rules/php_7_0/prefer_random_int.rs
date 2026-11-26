@@ -1,10 +1,13 @@
-//! Rector 2.8.4's `RandomFunctionRector`.
+//! Rector 2.9.2's `RandomFunctionRector`.
 
-use mago_syntax::cst::{Argument, Expression, Literal, Node, NodeKind, UnaryPrefixOperator};
+use mago_codex::ttype::union::TUnion;
+use mago_syntax::cst::{Argument, Expression, Node, NodeKind};
 
 use crate::problem::{Edit, Safety, Span};
 use crate::rules::support::arguments::value;
 use crate::rules::support::expressions::{named, text};
+use crate::rules::support::side_effects::any_node;
+use crate::rules::types::facts::facts;
 use crate::syntax::{node_span, unparenthesize};
 use crate::{Context, Report, Rule};
 
@@ -33,7 +36,7 @@ impl Rule for PreferRandomInt {
     fn visit<'ast, 'arena>(
         &self,
         node: Node<'ast, 'arena>,
-        _ancestors: &[Node<'ast, 'arena>],
+        ancestors: &[Node<'ast, 'arena>],
         ctx: &Context<'_>,
         out: &mut Vec<Report>,
     ) {
@@ -51,7 +54,11 @@ impl Rule for PreferRandomInt {
             return;
         };
         let mut edits = vec![Edit::new(node_span(call.function), *new)];
+        // random_int() ignores the seed and throws on min > max, unlike rand().
         if *new == "random_int" {
+            if seeded(ancestors) {
+                return;
+            }
             match arguments {
                 [] => edits.push(Edit::new(
                     Span::new(
@@ -61,9 +68,15 @@ impl Rule for PreferRandomInt {
                     "(0, mt_getrandmax())",
                 )),
                 [min, max] => {
-                    if let (Some(low), Some(high)) = (int(value(min)), int(value(max)))
-                        && low > high
-                    {
+                    let facts = facts(ctx);
+                    let int = |e: &Expression<'_>| {
+                        (facts.full_type(node_span(unparenthesize(e))))
+                            .and_then(TUnion::get_single_literal_int_value)
+                    };
+                    let (Some(low), Some(high)) = (int(value(min)), int(value(max))) else {
+                        return;
+                    };
+                    if low > high {
                         edits.push(Edit::new(node_span(min), text(ctx, max)));
                         edits.push(Edit::new(node_span(max), text(ctx, min)));
                     }
@@ -80,13 +93,12 @@ impl Rule for PreferRandomInt {
     }
 }
 
-/// `valueResolver->getValue()` when it is an `int`: an integer literal, negated or not.
-fn int(expr: &Expression<'_>) -> Option<i128> {
-    match unparenthesize(expr) {
-        Expression::Literal(Literal::Integer(i)) => i.value.map(i128::from),
-        Expression::UnaryPrefix(u) if matches!(u.operator, UnaryPrefixOperator::Negation(_)) => {
-            int(u.operand).map(|v| -v)
-        }
-        _ => None,
-    }
+/// `isSeededFile()`: the file calls `srand()` or `mt_srand()`.
+fn seeded(ancestors: &[Node<'_, '_>]) -> bool {
+    ancestors.first().is_some_and(|program| {
+        any_node(
+            *program,
+            &|n| matches!(n, Node::FunctionCall(c) if named(c, "srand") || named(c, "mt_srand")),
+        )
+    })
 }

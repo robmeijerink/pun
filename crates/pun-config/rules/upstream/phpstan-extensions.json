@@ -1254,5 +1254,752 @@
   "package": "phpstan/phpstan-strict-rules",
   "registered_in": "rules.neon conditionalTags",
   "version": "2.0.12"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EchoCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.echo"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EmptyCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.empty"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EvalCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.eval"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\ExitDieCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.die",
+   "disallowed.exit"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\FunctionCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.function",
+   "disallowed.method"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\FunctionFirstClassCallables",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.function"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\IssetCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.isset"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\MethodCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.function",
+   "disallowed.method"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedMethodCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\MethodFirstClassCallables",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.method"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedMethodCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\NewCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.function",
+   "disallowed.method",
+   "disallowed.new"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedMethodCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\PrintCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.print"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\ShellExecCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.backtick"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\StaticCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.function",
+   "disallowed.method"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedStaticCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\StaticFirstClassCallables",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.method"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedStaticCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\UnsetCalls",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.unset"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedFunctionCalls",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\BreakControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.break"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ContinueControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.continue"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\DeclareControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.declare"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\DoWhileControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.doWhile"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ElseControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.else"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ElseIfControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.elseIf"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ForControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.for"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ForeachControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.foreach"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\GotoControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.goto"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\IfControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.if"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\MatchControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.match"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\RequireIncludeControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.include",
+   "disallowed.includeOnce",
+   "disallowed.require",
+   "disallowed.requireOnce"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ReturnControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.return"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\SwitchControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.switch"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\WhileControlStructure",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.while"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedControlStructures",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Keywords\\GlobalKeyword",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.global"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedKeywords",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\AttributeUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.attribute"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedAttributes",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\ClassConstantUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.classConstant"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedConstants, disallowedEnums (registered twice)",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\ConstantUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.constant"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedConstants",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\InstancePropertyUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.property"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedProperties",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\NamespaceFirstClassCallableUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.class",
+   "disallowed.enum",
+   "disallowed.interface",
+   "disallowed.trait"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedNamespaces, disallowedClasses (registered twice)",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\NamespaceUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.namespace",
+   "disallowed.class",
+   "disallowed.enum",
+   "disallowed.interface",
+   "disallowed.trait"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedNamespaces, disallowedClasses (registered twice)",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\StaticPropertyUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.property"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedProperties",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md",
+  "fqcn": "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\VariableUsages",
+  "gated_by": null,
+  "identifiers": [
+   "disallowed.variable"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "spaze/phpstan-disallowed-calls",
+  "registered_in": "extension.neon services tags phpstan.rules.rule; reads disallowedSuperglobals",
+  "version": "4.15.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/TomasVotruba/type-coverage/blob/2.5.1/README.md",
+  "fqcn": "TomasVotruba\\TypeCoverage\\Rules\\ReturnTypeCoverageRule",
+  "gated_by": null,
+  "identifiers": [
+   "typeCoverage.returnTypeCoverage"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "tomasvotruba/type-coverage",
+  "registered_in": "config/extension.neon rules (fed by the matching phpstan.collector service)",
+  "version": "2.5.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/TomasVotruba/type-coverage/blob/2.5.1/README.md",
+  "fqcn": "TomasVotruba\\TypeCoverage\\Rules\\ParamTypeCoverageRule",
+  "gated_by": null,
+  "identifiers": [
+   "typeCoverage.paramTypeCoverage"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "tomasvotruba/type-coverage",
+  "registered_in": "config/extension.neon rules (fed by the matching phpstan.collector service)",
+  "version": "2.5.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/TomasVotruba/type-coverage/blob/2.5.1/README.md",
+  "fqcn": "TomasVotruba\\TypeCoverage\\Rules\\PropertyTypeCoverageRule",
+  "gated_by": null,
+  "identifiers": [
+   "typeCoverage.propertyTypeCoverage"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "tomasvotruba/type-coverage",
+  "registered_in": "config/extension.neon rules (fed by the matching phpstan.collector service)",
+  "version": "2.5.1"
+ },
+ {
+  "deprecated": false,
+  "deprecation_evidence": null,
+  "docs_url": "https://github.com/TomasVotruba/type-coverage/blob/2.5.1/README.md",
+  "fqcn": "TomasVotruba\\TypeCoverage\\Rules\\ConstantTypeCoverageRule",
+  "gated_by": null,
+  "identifiers": [
+   "typeCoverage.constantTypeCoverage"
+  ],
+  "in_scope": true,
+  "kind": "phpstan-rule",
+  "level": null,
+  "out_of_scope_reason": null,
+  "package": "tomasvotruba/type-coverage",
+  "registered_in": "config/extension.neon rules (fed by the matching phpstan.collector service)",
+  "version": "2.5.1"
  }
 ]

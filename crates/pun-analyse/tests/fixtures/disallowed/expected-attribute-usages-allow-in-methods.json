@@ -1,0 +1,61 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 26,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\SomeAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 36,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\SomeAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 42,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\SomeAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 48,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 57,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\SomeAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 57,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 69,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\AnotherAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeMethods.php",
+   "line": 95,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute AttributeMethods\\FuncAttribute is forbidden.",
+   "tip": null
+  }
+ ]
+}

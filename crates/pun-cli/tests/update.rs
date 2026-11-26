@@ -873,12 +873,27 @@ fn composer_dump_autoload_and_unknown_commands() {
     let (out, err, code) = pun(&d, &["install"]);
     assert_eq!(code, Some(0), "{out}{err}");
     std::fs::remove_file(d.join("vendor/composer/autoload_classmap.php")).unwrap();
-    let (out, err, code) = pun(&d, &["composer", "dumpautoload", "-a", "--no-dev"]);
+    // Composer's global `-d`, before the command and after it, from a directory outside the project.
+    let (elsewhere, dir) = (std::env::temp_dir(), d.to_str().unwrap());
+    let (out, err, code) = pun(
+        &elsewhere,
+        &["composer", "-d", dir, "dumpautoload", "-a", "--no-dev"],
+    );
     assert_eq!(code, Some(0), "{out}{err}");
     assert!(err.contains(" + autoloader: 3 classes\n"), "{err}");
     assert!(d.join("vendor/composer/autoload_classmap.php").exists());
     std::fs::remove_dir_all(d.join("packages/lib")).unwrap();
-    let (out, err, code) = pun(&d, &["composer", "dump-autoload", "--dev", "--no-scripts"]);
+    let (out, err, code) = pun(
+        &elsewhere,
+        &[
+            "composer",
+            "dump-autoload",
+            "--dev",
+            "--no-scripts",
+            "--working-dir",
+            dir,
+        ],
+    );
     assert_eq!(code, Some(1), "{out}{err}");
     assert!(err.contains("Not all dependencies are installed"), "{err}");
     let (_, err, code) = pun(&d, &["composer", "show", "--all"]);

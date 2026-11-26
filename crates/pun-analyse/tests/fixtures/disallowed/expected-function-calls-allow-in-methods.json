@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Royale.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling sha1() is forbidden.",
+   "tip": null
+  }
+ ]
+}

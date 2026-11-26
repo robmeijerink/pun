@@ -1,5 +1,5 @@
 //! Rector's own fixtures for the PHP 8.3 rules that rewrite a call or a `json_decode()` check, laid out as
-//! tests/rector.rs describes: Fixture/ copied verbatim from rector-src 2.8.4 (rules-tests/Php83/...), Oracle/ with
+//! tests/rector.rs describes: Fixture/ copied verbatim from rector-src 2.9.2 (rules-tests/Php83/...), Oracle/ with
 //! what Rector 2.8.4 (`.oracle/rector-bin`, the rule alone, `withPhpVersion(80300)`) wrote, and Pun/ for the cases
 //! where Pun keeps the meaning but not Rector's bytes (expected derived by hand).
 

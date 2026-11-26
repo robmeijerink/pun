@@ -1,0 +1,33 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 16,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese!",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 19,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese!",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 23,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese!",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 26,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese!",
+   "tip": null
+  }
+ ]
+}

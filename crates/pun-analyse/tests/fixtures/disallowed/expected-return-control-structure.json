@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 13,
+   "identifier": "disallowed.return",
+   "message": "Using the return control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

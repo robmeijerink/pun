@@ -57,6 +57,8 @@ impl Rule for NoBooleanLiteralCompare {
             source[s.start..s.end].to_string()
         };
         let replacement = match (identical, truth(other)) {
+            // Rector 2.9.2: `$value = $value !== false` would become a self-assign.
+            (true, Some(true)) | (false, Some(false)) if self_assign(ancestors, value) => return,
             (true, Some(true)) | (false, Some(false)) => text(value),
             (true, Some(false)) => match unparenthesize(value) {
                 Expression::UnaryPrefix(u) if matches!(u.operator, UnaryPrefixOperator::Not(_)) => {
@@ -89,6 +91,18 @@ impl Rule for NoBooleanLiteralCompare {
             }),
         });
     }
+}
+
+/// The comparison is the value of `$x = ...` and `value` is that `$x` (Rector's `IS_ASSIGN_VAR_IN_COMPARISON`).
+fn self_assign(ancestors: &[Node<'_, '_>], value: &Expression<'_>) -> bool {
+    let Expression::Variable(Variable::Direct(compared)) = unparenthesize(value) else {
+        return false;
+    };
+    matches!(
+        ancestors.iter().rev().find(|a| !matches!(a, Node::Expression(_) | Node::Parenthesized(_))),
+        Some(Node::Assignment(assign)) if matches!(assign.operator, AssignmentOperator::Assign(_))
+            && matches!(assign.lhs, Expression::Variable(Variable::Direct(var)) if var.name == compared.name)
+    )
 }
 
 pub(crate) fn truth(expr: &Expression<'_>) -> Option<bool> {

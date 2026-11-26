@@ -109,14 +109,14 @@ class B
 
 class C
 {
-    private function one(int $a)
+    private function one(int $a, int $b)
     {
         echo $a;
     }
 
     public function run($x)
     {
-        $this->one(1);
+        $this->one(1, 2);
         $x->one(1, 2);
         $f = [$this, 'one'];
     }

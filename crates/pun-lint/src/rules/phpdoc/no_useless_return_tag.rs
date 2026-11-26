@@ -68,7 +68,15 @@ impl Rule for NoUselessReturnTag {
 }
 
 fn is_dead(tag: &TypeTag, return_type: &Hint<'_>, scope: &TypeScope<'_, '_, '_, '_>) -> bool {
-    if tag.has_description || matches!(tag.ty, DocNode::Generic { .. }) {
+    // Rector 2.9.2 keeps a conditional return type.
+    if tag.has_description
+        || matches!(
+            tag.ty,
+            DocNode::Generic { .. }
+                | DocNode::Conditional { .. }
+                | DocNode::ConditionalForParameter { .. }
+        )
+    {
         return false;
     }
     let doc_type = scope.map_doc(&tag.ty);

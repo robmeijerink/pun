@@ -1,0 +1,68 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling exec() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling passthru() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling proc_open() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling shell_exec() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 9,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 9,
+   "identifier": "disallowed.backtick",
+   "message": "Using the backtick operator (`...`) is forbidden because shell_exec() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling system() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling pcntl_exec() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/executionCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling popen() is forbidden.",
+   "tip": null
+  }
+ ]
+}

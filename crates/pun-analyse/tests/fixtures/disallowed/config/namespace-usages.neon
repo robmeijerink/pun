@@ -1,0 +1,63 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/namespaceUsages.php"
+		- "../src/disallowed-allow/namespaceUsages.php"
+		- "../src/Bar.php"
+	disallowedNamespaces:
+		-
+			"namespace": "Framew*rk\\Some*"
+			"message": "no framework some"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": "Work more on your frames"
+		-
+			"namespace": 
+				- "Inheritance\\Base"
+				- "Inheritance\\Sub"
+			"message": "no inheritance sub base"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"namespace": "Waldo\\Quux\\Blade"
+			"message": "no blade"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": 
+				- "Dexempo"
+				- "Vederex"
+		-
+			"class": "Waldo\\Foo\\bar"
+			"message": "no FooBar"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+				- "src/Bar.php"
+		-
+			"namespace": "Traits\\TestTrait"
+			"message": "no TestTrait"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"namespace": "ZipArchive"
+			"message": "use clippy instead of zippy"
+			"disallowIn": 
+				- "src/disallowed/*.php"
+		-
+			"namespace": "DateTimeZone"
+			"allowInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"
+			"allowInUse": true
+		-
+			"namespace": "DateTimeImmutable"
+			"allowExceptInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"

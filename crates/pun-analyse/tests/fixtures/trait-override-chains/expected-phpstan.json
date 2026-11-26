@@ -1,0 +1,23 @@
+{
+ "level": 6,
+ "errors": [
+  {
+   "line": 48,
+   "identifier": "missingType.parameter",
+   "message": "Method TraitOverrideChain\\Plain::untyped() has parameter $event with no type specified.",
+   "tip": null
+  },
+  {
+   "line": 34,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: string",
+   "tip": null
+  },
+  {
+   "line": 35,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: bool",
+   "tip": null
+  }
+ ]
+}

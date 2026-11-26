@@ -1,0 +1,42 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/propertyUsages.php"
+		- "../src/disallowed-allow/propertyUsages.php"
+	disallowedProperties:
+		-
+			"property": "Fiction\\Pulp\\Royale::$whopper"
+			"message": "not sold here"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "DateInterval::d"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowInMethods": 
+				- "\\ClassWithProperties::okHere()"
+		-
+			"property": "\\Inheritance\\Base::property"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "Traits\\YetAnotherTrait::$public*Property"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "\\Traits\\YetAnotherTrait::$protectedTraitProperty"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "\\ClassWithProperties::$privateProperty"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

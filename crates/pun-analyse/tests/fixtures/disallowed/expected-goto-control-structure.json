@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 116,
+   "identifier": "disallowed.goto",
+   "message": "Using the goto control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

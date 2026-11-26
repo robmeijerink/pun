@@ -251,14 +251,19 @@ fn top_preset(
     Ok(Some(p))
 }
 
-/// `[analyse] baseline` and its directory must stay inside the project.
-fn baseline_inside(root: &Path, at: &impl std::fmt::Display, baseline: Option<&str>) -> Result<()> {
+/// `[lint] baseline` and `[analyse] baseline`, and their directories, must stay inside the project.
+fn baseline_inside(
+    root: &Path,
+    at: &impl std::fmt::Display,
+    section: &str,
+    baseline: Option<&str>,
+) -> Result<()> {
     let escapes = |b: &&str| {
         let dir = Path::new(b).parent().unwrap_or(Path::new(""));
         !inside(root, b) || !inside(root, &dir.to_string_lossy())
     };
     if let Some(b) = baseline.filter(escapes) {
-        bail!("{at}: [analyse] baseline: \"{b}\" is outside the project");
+        bail!("{at}: [{section}] baseline: \"{b}\" is outside the project");
     }
     Ok(())
 }
@@ -325,7 +330,8 @@ fn parse(
     let phpstan_lint = analyse.phpstan_lint(path)?;
     let lint = schema::lint(path, lint, &files, &gates, &phpstan_lint)?;
     let analyse = schema::analyse(path, analyse, &files, &gates)?;
-    baseline_inside(root, &at, analyse.baseline.as_deref())?;
+    baseline_inside(root, &at, "lint", lint.baseline.as_deref())?;
+    baseline_inside(root, &at, "analyse", analyse.baseline.as_deref())?;
     let laravel = gates.switches.get(extensions::LARAVEL.id) == Some(&extensions::Switch::On);
     let preset = format_preset(
         opts.preset.as_deref().or(f.preset.as_deref()),
@@ -625,6 +631,7 @@ impl Config {
                 ecosystems: &self.lint.ecosystems,
                 rules: lint,
                 overrides,
+                baseline: self.lint.baseline.as_deref(),
             },
             analyse: ShownAnalyse {
                 preset: &a.preset,
@@ -679,6 +686,8 @@ struct ShownLint<'a> {
     ecosystems: &'a [&'static extensions::ExtensionMeta],
     rules: Map<String, Value>,
     overrides: Vec<ShownOverride<'a>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    baseline: Option<&'a str>,
 }
 
 #[derive(Serialize)]

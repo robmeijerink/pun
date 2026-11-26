@@ -1,0 +1,23 @@
+{
+    "test": "Type/PunNullsafeRelationsTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-nullsafe-relations.php",
+            "declares": [
+                "punnullsaferelations\\field",
+                "punnullsaferelations\\sheet",
+                "punnullsaferelations\\variant"
+            ],
+            "asserts": [
+                34,
+                35,
+                36,
+                37
+            ],
+            "errors": []
+        }
+    ]
+}

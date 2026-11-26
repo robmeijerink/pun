@@ -1,0 +1,12 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Pun]
+    tmpDir: /tmp/pun-type-coverage-oracle-pun
+    type_coverage:
+        return_type: 10
+        return: 100
+        param: 99.5
+        property_type: 0
+        constant_type: 99

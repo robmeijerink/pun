@@ -1,0 +1,8 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Rules/PropertyTypeCoverageRule]
+    tmpDir: /tmp/pun-type-coverage-oracle-property
+    type_coverage:
+        property_type: 80

@@ -1,0 +1,89 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 82,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 83,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 30,
+   "identifier": "disallowed.die",
+   "message": "Calling die() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 33,
+   "identifier": "disallowed.die",
+   "message": "Calling die() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 36,
+   "identifier": "disallowed.exit",
+   "message": "Calling exit() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 39,
+   "identifier": "disallowed.exit",
+   "message": "Calling exit() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  }
+ ]
+}

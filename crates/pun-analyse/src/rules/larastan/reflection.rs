@@ -203,6 +203,20 @@ impl ClassReflectionExtension for Larastan {
                 Reflected::EloquentBuilder(None),
             ));
         }
+        // AuthsMethodsExtension: the auth contracts have the methods of the first auth model (of every guard's
+        // provider in config/auth.php) that declares one, each in a StaticMethodReflection
+        if [
+            "Illuminate\\Contracts\\Auth\\Authenticatable",
+            "Illuminate\\Contracts\\Auth\\CanResetPassword",
+            "Illuminate\\Contracts\\Auth\\Access\\Authorizable",
+        ]
+        .contains(&original.as_str())
+        {
+            return (self.app.auth_models(None).into_iter())
+                .map(|model| Type::Object(model, vec![], false))
+                .find(|model| c.has_method(model, name).yes())
+                .map(|model| MethodAnswer::Forward(model, Reflected::StaticDeclared));
+        }
         // A contract that is its key's first alias (`'queue.connection' => [Queue::class]`) resolves to itself.
         // Larastan's container builds a concrete class there; forwarding to the contract would never end.
         if k.kind.is_interface()

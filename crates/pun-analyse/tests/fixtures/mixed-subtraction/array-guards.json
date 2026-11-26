@@ -1,11 +1,11 @@
 {
   "totals": {
     "errors": 0,
-    "file_errors": 24
+    "file_errors": 42
   },
   "files": {
     "array-guards.php": {
-      "errors": 24,
+      "errors": 42,
       "messages": [
         {
           "message": "Dumped type: array<mixed, mixed>",
@@ -148,6 +148,114 @@
         {
           "message": "Dumped type: mixed",
           "line": 137,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 182,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 184,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 186,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 188,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 190,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 192,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 194,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 196,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 198,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 200,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 202,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 204,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 206,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 208,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 210,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 212,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed",
+          "line": 223,
+          "ignorable": false,
+          "identifier": "phpstan.dumpType"
+        },
+        {
+          "message": "Dumped type: mixed~MixedAccessoryJoins\\Excluded",
+          "line": 234,
           "ignorable": false,
           "identifier": "phpstan.dumpType"
         }

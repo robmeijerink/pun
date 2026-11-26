@@ -55,9 +55,11 @@ impl Rule for NoOutOfRangeChr {
             return;
         }
         let inner = node_span(unparenthesize(first));
+        // `%` keeps the dividend's sign, so Rector 2.9.2 adds 256 back to a negative remainder.
+        let wrap = if v % 256 < 0 { " + 256" } else { "" };
         let edits = vec![Edit::new(
             inner,
-            format!("{} % 256", &ctx.source[inner.start..inner.end]),
+            format!("{} % 256{wrap}", &ctx.source[inner.start..inner.end]),
         )];
         out.push(Report {
             span: node_span(first),

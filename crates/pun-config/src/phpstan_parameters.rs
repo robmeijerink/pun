@@ -62,8 +62,8 @@ impl Analyse {
         u8::try_from(rules.chain(switches).max().unwrap_or(0)).expect("PHPStan levels are 0 to 10")
     }
 
-    /// `stubFiles`, `scanFiles`, `scanDirectories` and `bootstrapFiles`, as absolute paths: a `scan` entry that is a
-    /// directory is a scanned directory, any other a scanned file.
+    /// `stubFiles`, `scanFiles`, `scanDirectories` and `bootstrapFiles`, as absolute paths, and what the extensions'
+    /// neon files add: a `scan` entry that is a directory is a scanned directory, any other a scanned file.
     fn file_parameters(&self, root: &Path, p: &mut Array) {
         let (dirs, files): (Vec<_>, Vec<_>) = (self.scan.iter())
             .map(|s| absolute(root, s))
@@ -81,6 +81,14 @@ impl Analyse {
         ] {
             let paths = paths.into_iter().map(Value::str);
             p.set(Key::from(name), Value::Array(Array::list(paths)));
+        }
+        // phpstan-mockery's extension.neon sets `mockery.convertUnionToIntersectionType: true`
+        if self.ecosystems.contains(&&crate::extensions::MOCKERY) {
+            set(
+                p,
+                "mockery.convertUnionToIntersectionType",
+                Value::Bool(true),
+            );
         }
     }
 
@@ -176,6 +184,7 @@ impl Analyse {
             Key::from("deprecationRulesInstalled"),
             Value::Bool(installed("phpstan-deprecation-rules")),
         );
+        type_coverage_parameters(&mut p, &on);
         for (name, e) in mapping::section(&["phpstan-parameters"]).table() {
             let (Some(option), Some(rules)) = (
                 e.get("option").and_then(toml::Value::as_str),
@@ -191,6 +200,17 @@ impl Analyse {
             }
         }
         p
+    }
+}
+
+/// tomasvotruba/type-coverage's extension.neon defaults, for the kinds whose rule is on (their `min` options
+/// replace them).
+fn type_coverage_parameters(p: &mut Array, on: &HashSet<&str>) {
+    for kind in ["return", "param", "property", "constant"] {
+        if on.contains(format!("analyse/type-coverage/{kind}").as_str()) {
+            set(p, &format!("type_coverage.{kind}_type"), Value::Int(99));
+            set(p, "type_coverage.measure", Value::Bool(false));
+        }
     }
 }
 
@@ -255,6 +275,23 @@ const LIST_PARAMETERS: [&str; 7] = [
     "noUnnecessaryCollectionCallExcept",
 ];
 
+/// phpstan-disallowed-calls' parameters, which take a list of entries (tables). pun.toml writes the entries' keys
+/// kebab-case (`allow-in`), which go back to camelCase (`allowIn`) for the rules.
+const ENTRY_PARAMETERS: [&str; 12] = [
+    "disallowedAttributes",
+    "disallowedClasses",
+    "disallowedConstants",
+    "disallowedControlStructures",
+    "disallowedEnums",
+    "disallowedFunctionCalls",
+    "disallowedKeywords",
+    "disallowedMethodCalls",
+    "disallowedNamespaces",
+    "disallowedProperties",
+    "disallowedStaticCalls",
+    "disallowedSuperglobals",
+];
+
 /// Checks the option table of analyse rule `id`: each key is the option of a PHPStan parameter the rule reads
 /// (`[phpstan-parameters]`), and its value is what the parameter takes. The error follows the rule's name.
 pub(crate) fn check_options(
@@ -280,10 +317,15 @@ pub(crate) fn check_options(
                 ),
             });
         };
-        let (ok, expected) = if LIST_PARAMETERS.contains(name) {
+        let (ok, expected) = if name.starts_with("type_coverage.") && *k == "min" {
+            (v.is_number(), "a number")
+        } else if LIST_PARAMETERS.contains(name) {
             let strings =
                 (v.as_array()).is_some_and(|a| a.iter().all(serde_json::Value::is_string));
             (strings, "a list of strings")
+        } else if ENTRY_PARAMETERS.contains(name) {
+            let tables = (v.as_array()).is_some_and(|a| a.iter().all(serde_json::Value::is_object));
+            (tables, "a list of tables")
         } else {
             (v.is_boolean(), "true or false")
         };
@@ -298,8 +340,33 @@ fn json(v: &serde_json::Value) -> Value {
     match v {
         serde_json::Value::String(s) => Value::str(s.as_str()),
         serde_json::Value::Array(a) => Value::Array(Array::list(a.iter().map(json))),
+        serde_json::Value::Object(o) => {
+            let mut a = Array::new();
+            for (k, v) in o {
+                a.set(Key::from_string(camel(k)), json(v));
+            }
+            Value::Array(a)
+        }
+        serde_json::Value::Number(n) => {
+            (n.as_i64()).map_or_else(|| Value::Float(n.as_f64().unwrap_or_default()), Value::Int)
+        }
         v => v.as_bool().map_or(Value::Null, Value::Bool),
     }
+}
+
+/// `allow-in` as `allowIn`.
+fn camel(key: &str) -> String {
+    let mut out = String::new();
+    let mut upper = false;
+    for c in key.chars() {
+        if c == '-' {
+            upper = true;
+        } else {
+            out.push(if upper { c.to_ascii_uppercase() } else { c });
+            upper = false;
+        }
+    }
+    out
 }
 
 fn get<'a>(p: &'a Array, dotted: &str) -> Option<&'a Value> {

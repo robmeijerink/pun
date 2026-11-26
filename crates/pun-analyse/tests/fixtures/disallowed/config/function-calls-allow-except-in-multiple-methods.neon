@@ -1,0 +1,13 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/RoyaleMultiple.php"
+	disallowedFunctionCalls:
+		-
+			"function": "crc32()"
+			"allowExceptInMethods": 
+				- "\\Fiction\\Pulp\\RoyaleMultiple::methodA()"
+				- "\\Fiction\\Pulp\\RoyaleMultiple::methodB()"

@@ -17,5 +17,5 @@ class Open
 
 function run(object $o, Open $open)
 {
-    return !($o ?: $open) instanceof \Open;
+    return !($o ?: $open) instanceof Open;
 }

@@ -1,0 +1,79 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/staticCalls.php"
+		- "../src/disallowed-allow/staticCalls.php"
+	disallowedStaticCalls:
+		-
+			"method": "Fiction\\Pulp\\Royale::withCheese()"
+			"message": "a Quarter Pounder with Cheese?"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": []
+		-
+			"method": "\\Fiction\\Pulp\\*::withBad*()"
+			"message": "a Quarter Pounder with Cheese?"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": []
+		-
+			"method": "Fiction\\Pulp\\Royale::WithoutCheese()"
+			"message": "a Quarter Pounder without Cheese!"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": 
+				"1": 1
+				"2": 2
+				"3": 3
+			"allowParamsAnywhere": 
+				"1": 1
+				"2": 2
+				"3": 4
+		-
+			"method": "Inheritance\\Base::w*f*r()"
+			"message": "method Base::woofer() is dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Interfaces\\BaseInterface::y*()"
+			"message": "method BaseInterface::y() is dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Traits\\TestTrait::z()"
+			"message": "method TestTrait::z() is dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Traits\\AnotherTestClass::zz()"
+			"message": "method AnotherTestClass::zz() is dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "PhpOption\\Option::*()"
+			"message": "do not use PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "PhpOption\\Some::create()"
+			"message": "do not use PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "PhpOption\\None::*()"
+			"message": "do not use PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

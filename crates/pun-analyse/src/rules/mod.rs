@@ -26,11 +26,13 @@ mod declaration_purity;
 mod declarations;
 mod declared;
 mod deprecations;
+mod disallowed;
 mod doc;
 mod driver;
 mod dynamic_fetch;
 mod enum_methods;
 mod enums;
+mod exception_codes;
 mod facts;
 mod flip_intersect;
 mod function_callable;
@@ -80,6 +82,7 @@ mod strict;
 mod syntax;
 mod through_static;
 mod type_aliases;
+mod type_coverage;
 mod types;
 mod unset;
 mod unused_trait;
@@ -112,6 +115,7 @@ use statements::{Frame, FrameKind};
 pub(crate) use dead_code::conditions_in_traits;
 pub(crate) use dead_code::impure_points;
 pub(crate) use dead_code::{dependency_keys, key_symbol};
+pub use disallowed::Disallowed;
 pub(crate) use driver::Switches;
 pub(crate) use driver::{Checks, Natives, check_file};
 pub(crate) use facts::Comments;
@@ -123,6 +127,8 @@ pub use larastan::{Larastan, LarastanSwitches};
 pub(crate) use named_argument::is_call_record as is_named_argument_call;
 pub(crate) use named_argument::resolve as renamed_named_arguments;
 pub(crate) use reflection::builtins;
+pub use type_coverage::TypeCoverage;
+pub(crate) use type_coverage::finish as type_coverage_finish;
 pub(crate) use unused_trait::unused_traits;
 
 pub(crate) fn reports(identifier: &str) -> bool {
@@ -149,6 +155,7 @@ pub(crate) fn reports(identifier: &str) -> bool {
         || date_interval::IDENTIFIERS.contains(&identifier)
         || date_time::IDENTIFIERS.contains(&identifier)
         || by_ref_foreach::IDENTIFIERS.contains(&identifier)
+        || disallowed::IDENTIFIERS.contains(&identifier)
 }
 
 pub(crate) const DISCOVERING_SYMBOLS_TIP: &str =
@@ -275,6 +282,7 @@ pub(crate) struct Checker<'a, 'arena> {
     level: u8,
     switches: driver::Switches,
     larastan: Option<&'a Larastan>,
+    type_coverage: Option<&'a TypeCoverage>,
     larastan_state: larastan::State,
     internal: Option<&'a internal::Names>,
     unreachable: dead_code::UnreachableStatements,
@@ -288,6 +296,7 @@ pub(crate) struct Checker<'a, 'arena> {
     toggled: &'a driver::Toggled,
     by_ref_foreach: by_ref_foreach::Entries,
     method_rules: crate::MethodRules,
+    disallowed: Option<&'a disallowed::Disallowed>,
     errors: Vec<Error>,
 }
 

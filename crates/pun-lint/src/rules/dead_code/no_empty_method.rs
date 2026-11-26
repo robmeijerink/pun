@@ -57,7 +57,14 @@ impl Rule for NoEmptyMethod {
                 if !method.attribute_lists.is_empty() {
                     continue;
                 }
-                if !class.is_final && !is_magic(method.name.value) && !is_private(method) {
+                // Rector 2.9.2: an anonymous class can't be extended, and a child class can call
+                // parent::__construct(), so a non-private constructor stays in an extendable class.
+                let constructor = method.name.value.eq_ignore_ascii_case(b"__construct");
+                if !class.is_final
+                    && !class.is_anonymous
+                    && (!is_magic(method.name.value) || constructor)
+                    && !is_private(method)
+                {
                     continue;
                 }
                 if should_skip(ctx, ancestors, &facts, &class, method, index) {

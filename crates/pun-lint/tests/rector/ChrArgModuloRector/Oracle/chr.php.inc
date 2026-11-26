@@ -24,7 +24,7 @@ function f(int $i)
 -----
 <?php
 
-echo chr(-1 % 256);
+echo chr(-1 % 256 + 256);
 echo chr(256 % 256);
 echo chr(PHP_INT_MAX);
 echo chr($x);
@@ -43,5 +43,5 @@ echo chr();
 function f(int $i)
 {
     $j = -5;
-    return chr($j % 256) . chr($i);
+    return chr($j % 256 + 256) . chr($i);
 }

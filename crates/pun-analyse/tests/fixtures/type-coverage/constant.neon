@@ -1,0 +1,8 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Rules/ConstantTypeCoverageRule]
+    tmpDir: /tmp/pun-type-coverage-oracle-constant
+    type_coverage:
+        constant_type: 80

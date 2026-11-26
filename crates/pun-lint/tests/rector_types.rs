@@ -1,9 +1,13 @@
-//! Rector's own fixtures for the ported `types` rules, copied verbatim from rector-src 2.8.4 (`.oracle/rector`,
+//! Rector's own fixtures for the ported `types` rules, copied verbatim from rector-src 2.9.2 (`.oracle/rector`,
 //! rules-tests/...) into tests/rector/<Rector class>/Fixture, with the classes they use in Source/. Oracle/ holds extra
 //! inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the rule alone, `phpVersion(80400)`) wrote for them; Pun/
 //! holds the cases where Pun keeps the meaning but not Rector's bytes, its expected output derived by hand. Each one
 //! must pass as `format(pun lint --fix) == format(expected)` with format being the laravel preset, and the text edits
 //! must give the expected bytes before format too.
+//!
+//! InlineIsAInstanceOfRector/Pun/short_ternary.php.inc and assign_operand.php.inc: since 2.9.2 keeps the class name as
+//! written, Rector prints the new `instanceof` without the parentheses its left side needs (`!$o ?: $open instanceof
+//! Open`, `$o = new Open() instanceof Open`), which changes what the code does; Pun keeps them.
 //!
 //! ReturnTypeFromStrictNativeCallRector/Pun/unreachable_call.php.inc and ReturnTypeFromStrictTernaryRector/Pun/
 //! ternary_unreached.php.inc: Rector types a `return strlen($s)` or `return $x ? 1 : 2` after an `exit` with the

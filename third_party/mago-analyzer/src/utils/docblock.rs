@@ -17,6 +17,7 @@ use mago_codex::ttype::union::TUnion;
 use mago_codex::ttype::union::populate_union_type;
 use mago_phpdoc_syntax::cst::Element;
 use mago_phpdoc_syntax::cst::TagValue;
+use mago_phpdoc_syntax::cst::r#type::Type as PhpDocType;
 use mago_reporting::Annotation;
 use mago_reporting::Issue;
 use mago_span::HasSpan;
@@ -228,6 +229,14 @@ where
                 )
             }) {
                 Ok(mut variable_type) => {
+                    if let Some(resolve) = context.settings.phpdoc_union_resolver
+                        && let PhpDocType::Union(union) = var_tag.r#type
+                        && !matches!(union.left, PhpDocType::Union(_))
+                        && !matches!(union.right, PhpDocType::Union(_))
+                        && let Some(resolved) = (resolve.0)(context.codebase, &variable_type)
+                    {
+                        variable_type = resolved;
+                    }
                     populate_union_type(
                         &mut variable_type,
                         &context.codebase.symbols,

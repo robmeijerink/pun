@@ -1,0 +1,72 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/constantUsages.php"
+		- "../src/disallowed-allow/constantUsages.php"
+		- "../src/Constants.php"
+	disallowedConstants:
+		-
+			"constant": 
+				- "FILTER_FLAG_NO_PRIV_RANGE"
+				- "FILTER_FLAG_NO_RES_RANGE"
+			"message": "the cake is a lie"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": 
+				- "No priv"
+				- "No res"
+		-
+			"constant": "\\FILTER_FLAG_NO_PRIV_RANGE"
+			"message": "the cake is a lie"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": "Use https://github.com/mlocati/ip-lib instead"
+		-
+			"constant": "PHP_EOL"
+			"allowExceptIn": 
+				- "src/disallowed/*.php"
+		-
+			"constant": "FILTER_FLAG_EMAIL_UNICODE"
+			"allowInInstanceOf": 
+				- "\\Constants\\Constants"
+		-
+			"constant": "FILTER_FLAG_ENCODE_HIGH"
+			"allowExceptInInstanceOf": 
+				- "\\Constants\\Constants"
+		-
+			"constant": "FILTER_FLAG_ALLOW_HEX"
+			"allowInMethods": 
+				- "\\Constants\\ChildConstants::leMethod()"
+		-
+			"constant": "FILTER_FLAG_NO_ENCODE_QUOTES"
+			"disallowInMethods": 
+				- "\\Constants\\ChildConstants::leMethod()"
+		-
+			"constant": "FILTER_FLAG_ALLOW_OCTAL"
+			"allowInMethodsWithAttributes": 
+				- "\\Attributes\\AttributeClass"
+		-
+			"constant": "FILTER_FLAG_ALLOW_FRACTION"
+			"allowExceptInMethodsWithAttributes": 
+				- "\\Attributes\\AttributeColumn2"
+		-
+			"constant": "FILTER_FLAG_ENCODE_AMP"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\AttributeClass"
+		-
+			"constant": "FILTER_FLAG_ENCODE_LOW"
+			"allowExceptInClassWithAttributes": 
+				- "\\Attributes\\AttributeColumn2"
+		-
+			"constant": "FILTER_FLAG_IPV4"
+			"allowInClassWithMethodAttributes": 
+				- "AttributeClass2"
+		-
+			"constant": "FILTER_FLAG_IPV6"
+			"allowExceptInClassWithMethodAttributes": 
+				- "Attributes\\AttributeColumn3"

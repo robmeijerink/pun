@@ -1,0 +1,28 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCallsClassPatternParams.php"
+	disallowedFunctionCalls:
+		-
+			"function": "\\Foo\\Bar\\Waldo\\classPatternAllowed()"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"name": "param"
+					"classPattern": "Date*"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\classPatternDisallowed()"
+			"allowExceptParamsAnywhere": 
+				-
+					"position": 1
+					"classPattern": "Date*"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\classPatternPrecedence()"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"classPattern": "Date*"
+					"typeString": "Exception"

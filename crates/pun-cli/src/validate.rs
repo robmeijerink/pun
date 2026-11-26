@@ -4,7 +4,7 @@ use crate::Exit;
 use anyhow::Result;
 use pun_packages::validate::{Checks, Findings, load_root, lock_errors, read, validate};
 use serde_json::Value;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 #[derive(clap::Args)]
 #[expect(
@@ -35,14 +35,12 @@ pub(crate) struct ValidateArgs {
     /// Exit 1 for warnings too.
     #[arg(long)]
     strict: bool,
-    /// Run in this directory instead of the current one.
-    #[arg(short = 'd', long, value_name = "DIR")]
-    working_dir: Option<PathBuf>,
 }
 
-pub(crate) fn run(a: &ValidateArgs) -> Result<Exit> {
+/// `pun composer validate`, in `-d`'s directory (one of `pun composer`'s global options) when it is given.
+pub(crate) fn run(a: &ValidateArgs, globals: &crate::composer::Globals) -> Result<Exit> {
     // Composer changes to `-d` and works from `getcwd()`: the physical, absolute path a dependency's file is named by.
-    let base = match &a.working_dir {
+    let base = match &globals.working_dir {
         Some(d) => d.canonicalize().map_err(|_| {
             anyhow::anyhow!(
                 "Invalid working directory specified, {} does not exist.",

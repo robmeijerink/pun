@@ -1,0 +1,59 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/constantUsages.php"
+		- "../src/disallowed-allow/constantUsages.php"
+		- "../src/disallowed/constantDynamicUsages.php"
+		- "../src/disallowed-allow/constantDynamicUsages.php"
+	disallowedConstants:
+		-
+			"class": "\\Inheritance\\Base"
+			"constant": "BELONG"
+			"message": "belong to us"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"class": "Inheritance\\Base"
+			"constant": "BELONG"
+			"message": "belong to us"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"class": "\\Inheritance\\Sub"
+			"constant": "BELONG"
+			"message": "belong to us"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"class": "Waldo\\Quux\\Blade"
+			"constant": 
+				- "RUNNER"
+				- "WESLEY"
+			"message": "not a replicant"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"class": "Waldo\\Quux\\Blade"
+			"constant": "DECKARD"
+			"message": "maybe a replicant"
+		-
+			"class": "Waldo\\Quux\\Blade"
+			"constant": "DECKARD"
+			"message": "maybe a replicant"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"class": "PhpOption\\Option"
+			"constant": "NAME"
+			"message": "no PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

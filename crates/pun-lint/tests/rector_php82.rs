@@ -1,4 +1,4 @@
-//! Rector 2.8.4's own fixtures for the `php-8.2` rules, copied verbatim from rector-src (rules-tests/Php82/...) into
+//! Rector 2.9.2's own fixtures for the `php-8.2` rules, copied verbatim from rector-src (rules-tests/Php82/...) into
 //! tests/rector/<Rector class>/Fixture with their Source/ classes. Oracle/ holds extra inputs with what Rector 2.8.4
 //! (`.oracle/rector-bin`, the rule alone, `withPhpVersion(80400)`) wrote for them; Pun/ holds the cases where Pun keeps
 //! the meaning where Rector does not, each with its reason in the file. Each rule also runs on every node of its

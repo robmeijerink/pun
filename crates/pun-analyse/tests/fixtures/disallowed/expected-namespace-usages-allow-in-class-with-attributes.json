@@ -1,0 +1,390 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/AttributeClass.php",
+   "line": 7,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Waldo\\Foo\\Bar is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 11,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute2 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 15,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute4 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 28,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute3 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 32,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 36,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 37,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 45,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute4 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 50,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 59,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 63,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 75,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 80,
+   "identifier": "disallowed.class",
+   "message": "Class Constructor\\ClassWithConstructor is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 85,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute8 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 95,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 101,
+   "identifier": "disallowed.class",
+   "message": "Class Constructor\\ClassWithoutConstructor is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 105,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute6 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 111,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute8 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 117,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 117,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute9 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 123,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 123,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 136,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 136,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 143,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 143,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 145,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 145,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 150,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute11 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 150,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 151,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 151,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 151,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 151,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 155,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 156,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 157,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 157,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 159,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 159,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 189,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 17,
+   "identifier": "return.missing",
+   "message": "Function Foo\\Bar\\Waldo\\foo() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 21,
+   "identifier": "return.missing",
+   "message": "Function Foo\\Bar\\Waldo\\bar() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 25,
+   "identifier": "return.missing",
+   "message": "Function Foo\\Bar\\Waldo\\baz() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 29,
+   "identifier": "return.missing",
+   "message": "Function Foo\\Bar\\Waldo\\waldo() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 100,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 100,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 107,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute11 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 107,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 108,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 108,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 108,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 108,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 110,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\None is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Functions.php",
+   "line": 111,
+   "identifier": "disallowed.class",
+   "message": "Class PhpOption\\Some is forbidden.",
+   "tip": null
+  }
+ ]
+}

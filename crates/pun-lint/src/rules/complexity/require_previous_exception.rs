@@ -154,17 +154,12 @@ fn refactor(
     }
     let code_name = named.then(|| "code".to_string());
     if args.len() < 2 {
-        args.push(new_arg(code_name.clone(), format!("{var}->getCode()")));
+        args.push(new_arg(code_name, format!("{var}->getCode()")));
         changed = true;
     }
     if args[1].name.as_deref() == Some("previous") {
-        if has_code_parameter && !has_code_argument {
-            let previous = std::mem::replace(
-                &mut args[1],
-                new_arg(code_name, format!("{var}->getCode()")),
-            );
-            args.push(previous);
-        } else {
+        // Rector 2.9.2: previous is already passed, code is omitted on purpose.
+        if !changed {
             return None;
         }
     } else if has_parameter("previous") && !has_argument(&args, "previous") {

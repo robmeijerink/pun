@@ -1,0 +1,103 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Superglobals.php",
+   "line": 31,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class AttributeClass2 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 45,
+   "identifier": "disallowed.variable",
+   "message": "Using $GLOBALS is forbidden, the cake is a lie.",
+   "tip": "So long and thanks for all the tips"
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 46,
+   "identifier": "disallowed.variable",
+   "message": "Using $_SERVER is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 47,
+   "identifier": "disallowed.variable",
+   "message": "Using $_GET is forbidden, the cake is a lie.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 48,
+   "identifier": "disallowed.variable",
+   "message": "Using $_POST is forbidden, the cake is a lie.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 49,
+   "identifier": "disallowed.variable",
+   "message": "Using $_FILES is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 50,
+   "identifier": "disallowed.variable",
+   "message": "Using $_COOKIE is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 51,
+   "identifier": "disallowed.variable",
+   "message": "Using $_SESSION is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Superglobals.php",
+   "line": 52,
+   "identifier": "disallowed.variable",
+   "message": "Using $_ENV is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/superglobalUsages.php",
+   "line": 8,
+   "identifier": "disallowed.variable",
+   "message": "Using $GLOBALS is forbidden, the cake is a lie.",
+   "tip": "So long and thanks for all the tips"
+  },
+  {
+   "file": "src/disallowed/superglobalUsages.php",
+   "line": 9,
+   "identifier": "disallowed.variable",
+   "message": "Using $_GET is forbidden, the cake is a lie.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/superglobalUsages.php",
+   "line": 12,
+   "identifier": "disallowed.variable",
+   "message": "Using $_GET is forbidden, the cake is a lie.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/superglobalUsages.php",
+   "line": 13,
+   "identifier": "disallowed.variable",
+   "message": "Using $_POST is forbidden, the cake is a lie.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/superglobalUsages.php",
+   "line": 26,
+   "identifier": "disallowed.variable",
+   "message": "Using $_REQUEST is forbidden, so $_GET or $_POST?",
+   "tip": "\u2022 Choose one\n\u2022 Or the other"
+  }
+ ]
+}

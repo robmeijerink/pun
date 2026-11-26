@@ -1,0 +1,16 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/controlStructures.php"
+		- "../src/disallowed-allow/controlStructures.php"
+	disallowedControlStructures:
+		-
+			"controlStructure": "if"
+			"message": "what if?"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": "So long and thanks for all the ifs"

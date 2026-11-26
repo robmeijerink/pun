@@ -1,0 +1,29 @@
+{
+    "test": "Type/PunPackageViewsTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-package-views.php",
+            "declares": [
+                "punpackageviews\\views"
+            ],
+            "asserts": [],
+            "errors": [
+                {
+                    "line": 19,
+                    "identifier": "argument.type",
+                    "message": "Parameter #1 $view of function view expects view-string|null, string given.",
+                    "tip": null
+                },
+                {
+                    "line": 24,
+                    "identifier": "argument.type",
+                    "message": "Parameter #1 $view of function view expects view-string|null, string given.",
+                    "tip": null
+                }
+            ]
+        }
+    ]
+}

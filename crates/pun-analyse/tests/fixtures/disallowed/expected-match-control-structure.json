@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 112,
+   "identifier": "disallowed.match",
+   "message": "Using the match control structure is forbidden.",
+   "tip": "\u2022 Mix\n\u2022 Match"
+  }
+ ]
+}

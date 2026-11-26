@@ -216,6 +216,7 @@ class C implements ArrayAccess
     {
         $a[0];
         $c[0];
+        clone $h;
     }
 }
 

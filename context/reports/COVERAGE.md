@@ -277,6 +277,10 @@ Uncovered lines:
 - `crates/pun-analyse/src/rules/return_types.rs:1316-1318` the same for the Closure method return provider.
 - `crates/pun-analyse/src/rules/larastan/relations.rs:168` a relation method declared by one of PHP's own classes: a model extends Eloquent's Model, which extends none of them.
 - `crates/pun-analyse/src/laravel/mod.rs:761-768` `Provider::meta()` of the model-attribute hook: `PluginRegistry` never reads it for a registered expression hook, and the hook struct is private.
+- `crates/pun-analyse/src/mockery.rs:200-202` `Provider::meta()` of the `Mockery::mock()` return provider: `PluginRegistry` reads `meta()` only for its own library plugins.
+- `crates/pun-analyse/src/mockery.rs:311-313` the same for the `allows()`/`expects()` return provider.
+- `crates/pun-analyse/src/mockery.rs:339` the `allows()`/`expects()` provider's receiver that is no object: only a static call `MockInterface::allows()` has one, and Pun's analyser stops that call to an instance method as `*ERROR*` before it asks providers (tests/fixtures/mockery/gaps.txt, Intersections.php:44).
+- `crates/pun-analyse/src/mockery.rs:427` the empty `AnalyseExtension::load()`: Pun calls `load()` only on Larastan.
 - `crates/pun-analyse/src/rules/infer.rs:584-588` the same for the definedness hook.
 - `crates/pun-analyse/src/rules/larastan/forwards.rs:1373-1375` the same for the `builder-of` call hook.
 - `crates/pun-analyse/src/rules/regex_shapes/mod.rs:39-41` `Provider::meta()` of the preg_replace_callback() closure-type provider: read only for library plugins.

@@ -1,0 +1,103 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipAgainKnownParamType.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipCallableParam.php",
+   "line": 12,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipKnownParamType.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipParentMethodOverride.php",
+   "line": 12,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipParentMethodOverrideParent.php",
+   "line": 12,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipParentMethodOverrideParent.php",
+   "line": 12,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/SkipVariadic.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/UnknownParamType.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/UnknownParamType.php",
+   "line": 9,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/UnknownParamType.php",
+   "line": 13,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 10 possible return types, only 2 - 20.0 % actually have it. Add more return types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Fixture/UnknownParamType.php",
+   "line": 13,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Source/TraitWithArrowFunctionsOnOneLine.php",
+   "line": 15,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Source/TraitWithArrowFunctionsOnOneLine.php",
+   "line": 15,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ParamTypeCoverageRule/Source/TraitWithMissingParamType.php",
+   "line": 9,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 13 possible param types, only 7 - 53.8 % actually have it. Add more param types to get over 80 %",
+   "tip": null
+  }
+ ]
+}

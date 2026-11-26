@@ -1,0 +1,14 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/Enums.php"
+	disallowedNamespaces:
+		-
+			"class": "Enums\\Enum"
+		-
+			"namespace": "Enums\\BackedEnum"
+		-
+			"class": "DateTimeImmutable"

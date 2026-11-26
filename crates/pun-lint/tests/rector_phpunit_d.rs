@@ -1,5 +1,5 @@
 //! rector-phpunit's own fixtures for its rules in no set (and `AddSeeTestAnnotationRector`, only in rector-preset),
-//! copied verbatim from rectorphp/rector-phpunit at 22c6dae (rules-tests/...) into tests/rector/<Rector class>/Fixture
+//! copied verbatim from rectorphp/rector-phpunit at d0b6caa (rules-tests/...) into tests/rector/<Rector class>/Fixture
 //! (and its Source/), run as `rector_phpunit.rs` runs its fixtures. Oracle/ holds extra inputs with what Rector 2.8.4
 //! and that rector-phpunit (`.oracle/rector-ecosystem`, the rule alone, `phpVersion(80400)`) wrote for them.
 //! The oracle ran with tests/phpunit-stubs loaded by a bootstrap autoloader; AddSeeTestAnnotationRector's oracle also

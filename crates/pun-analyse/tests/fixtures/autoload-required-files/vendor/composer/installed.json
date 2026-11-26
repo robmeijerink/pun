@@ -1,0 +1,14 @@
+{
+  "packages": [
+    {
+      "name": "acme/helpers",
+      "version": "dev-main",
+      "install-path": "../acme/helpers",
+      "autoload": {
+        "files": [
+          "src/Autoload.php"
+        ]
+      }
+    }
+  ]
+}

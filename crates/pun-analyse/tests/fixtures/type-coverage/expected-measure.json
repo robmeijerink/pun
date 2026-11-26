@@ -1,0 +1,47 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Pun/Edges.php",
+   "line": 189,
+   "identifier": "ignore.unmatchedIdentifier",
+   "message": "No error with identifier typeCoverage.returnTypeCoverage is reported on line 189.",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 193,
+   "identifier": "ignore.unmatchedLine",
+   "message": "No error to ignore is reported on line 193.",
+   "tip": null
+  },
+  {
+   "file": "N/A",
+   "line": -1,
+   "identifier": null,
+   "message": "Class constant type coverage is 22.2 % out of 9 possible",
+   "tip": null
+  },
+  {
+   "file": "N/A",
+   "line": -1,
+   "identifier": null,
+   "message": "Param type coverage is 17.3 % out of 23 possible",
+   "tip": null
+  },
+  {
+   "file": "N/A",
+   "line": -1,
+   "identifier": null,
+   "message": "Property type coverage is 33.3 % out of 9 possible",
+   "tip": null
+  },
+  {
+   "file": "N/A",
+   "line": -1,
+   "identifier": null,
+   "message": "Return type coverage is 4.7 % out of 21 possible",
+   "tip": null
+  }
+ ]
+}

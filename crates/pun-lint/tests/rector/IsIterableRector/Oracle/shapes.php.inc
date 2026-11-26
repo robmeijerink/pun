@@ -17,5 +17,5 @@ function go($foo)
 {
     $a = is_iterable($foo);
     $b = is_array($foo) || $foo instanceof Traversable;
-    $c = is_iterable($foo->items());
+    $c = is_array($foo->items()) || $foo->items() instanceof \Traversable;
 }

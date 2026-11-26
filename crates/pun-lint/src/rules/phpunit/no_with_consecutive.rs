@@ -486,10 +486,16 @@ impl Rule for NoWithConsecutive {
         } else {
             // 3. rename and replace withConsecutive()
             let mut uses = Vec::new();
+            // rector-phpunit (2.9.2's bundle) also reads the `willReturnOnConsecutiveCalls()` arguments
             let args: Vec<Node<'_, '_>> = with_consecutive
                 .argument_list
                 .arguments
                 .iter()
+                .chain(
+                    on_consecutive_calls
+                        .iter()
+                        .flat_map(|m| m.argument_list.arguments.iter()),
+                )
                 .map(Node::Argument)
                 .collect();
             let returned_node = match &returned {

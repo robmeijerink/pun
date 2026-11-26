@@ -1,0 +1,145 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() (as foo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() (as foo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() (as foo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 29,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 35,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsNamedParams.php",
+   "line": 37,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() (as foo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 19,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() (as bar()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 20,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() (as bar()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 21,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() (as bar()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 29,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 30,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 32,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() (as baz()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 35,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 37,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsNamedParams.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\waldo() (as waldo()) is forbidden.",
+   "tip": null
+  }
+ ]
+}

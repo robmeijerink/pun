@@ -1,4 +1,4 @@
-//! Rector 2.8.4's own fixtures for its datetime-to-carbon rules, copied verbatim from rector-src's rules-tests at 2.8.4
+//! Rector 2.9.2's own fixtures for its datetime-to-carbon rules, copied verbatim from rector-src's rules-tests at 2.9.2
 //! (Carbon/Rector/...) into tests/rector/<Rector class>/Fixture. Oracle/ holds extra inputs with what Rector 2.8.4
 //! (`.oracle/rector-bin`, the rule alone, `phpVersion(80400)`) wrote for them. `lint/style/prefer-carbon` is both
 //! `DateTimeInstanceToCarbonRector` and `DateTimeMethodCallToCarbonRector`, so it runs on the fixtures of both.

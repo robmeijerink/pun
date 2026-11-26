@@ -9,7 +9,7 @@ $a = !(include 'a.php') ? false : true;
 <?php
 
 $a = (bool) ($b = foo());
-$a = !(bool) ($b = foo());
-$a = !(bool) (fn () => 1);
-$a = !(bool) (print 1);
+$a = !($b = foo());
+$a = !(fn () => 1);
+$a = !(print 1);
 $a = (bool) (include 'a.php');

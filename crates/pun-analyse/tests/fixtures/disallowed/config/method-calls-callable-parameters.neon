@@ -1,0 +1,46 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/callableParameters.php"
+		- "../src/disallowed-allow/callableParameters.php"
+	disallowedFunctionCalls:
+		-
+			"function": "var_dump()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+	disallowedMethodCalls:
+		-
+			"method": "Callbacks::call()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "CallbacksInterface::interfaceCall()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "CallbacksTrait::traitCall()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+	disallowedStaticCalls:
+		-
+			"method": "Callbacks::staticCall()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "CallbacksInterface::interfaceStaticCall()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "CallbacksTrait::traitStaticCall()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

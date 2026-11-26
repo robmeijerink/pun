@@ -29,10 +29,13 @@ pun extension list --format json
 - If a package is in `composer.lock` but its extension is off, shows the line to add.
 
 ```text
-laravel  on   Laravel's rules and Larastan's analysis: on in pun.toml
-pest     off  Rules for Pest tests: pestphp/pest v4.1.0 is locked; turn it on with pest = "on" in [extensions]
-phpunit  off  Rules for PHPUnit tests: not in pun.toml
-carbon   off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
+laravel           on   Laravel's rules and Larastan's analysis: on in pun.toml
+pest              off  Rules for Pest tests: pestphp/pest v4.1.0 is locked; turn it on with pest = "on" in [extensions]
+phpunit           off  Rules for PHPUnit tests: not in pun.toml
+carbon            off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
+mockery           off  phpstan-mockery's mock types in analyse: not in pun.toml
+disallowed-calls  off  The calls and uses your config forbids, in analyse: not in pun.toml
+type-coverage     off  Minimum shares of declared types, in analyse: not in pun.toml
 ```
 
 | Extension | Adds |
@@ -41,6 +44,9 @@ carbon   off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
 | `pest` | Pest lint rules. |
 | `phpunit` | PHPUnit lint rules. |
 | `carbon` | Carbon's PHPStan extension in analyse. Each class that implements `CarbonInterface` gets the macros that `X::macro('name', ...)` calls register in the analysed, scanned, and bootstrap files. Pun reads these calls without running PHP. A macro that is registered at runtime in any other way, such as with a dynamic name, isn't found. |
+| `mockery` | phpstan-mockery's PHPStan extension in analyse. `Mockery::mock()`, `spy()` and `namedMock()` return `MockInterface` intersected with the classes their string arguments name, `allows()` and `expects()` on a mock of one class accept any method and return `Expectation`, and a PHPDoc `MockInterface\|Foo` reads as `MockInterface&Foo`. It adds no rules. |
+| `disallowed-calls` | spaze/phpstan-disallowed-calls' rules in analyse, in the `disallowed` group. Each rule reads its lists from its options, such as `calls` on `disallowed/function`, and reports nothing until a list has entries. |
+| `type-coverage` | tomasvotruba/type-coverage's four rules in analyse, in the `type-coverage` group: `analyse/type-coverage/return`, `param`, `property` and `constant`. Each reports every declaration without a native type when fewer than its `min` percent (default 99) of the project's declarations have one. `measure = true` reports the coverage instead. They report nothing when `pun analyse` gets paths other than the configured ones. The bundled rector/type-perfect rules aren't ported. |
 
 An extension is on only when [`[extensions]`](/docs/configuration/pun-toml#extensions) says `"on"`. `pun init` and `pun migrate` write that for you.
 

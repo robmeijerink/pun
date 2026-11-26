@@ -114,7 +114,7 @@ final class SomeTest extends TestCase
         $h = $this->createStub(\stdClass::class);
         (new Helper())->take($h);
         $$name = $this->createMock(\stdClass::class);
-        $i = $this->createStub(\stdClass::class);
+        $i = $this->createMock(\stdClass::class);
         $j = $this->createMock(\stdClass::class);
         $fn = function () use ($i) { $i->method('x'); };
         $arrow = fn () => $j->method('x');

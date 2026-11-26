@@ -982,10 +982,14 @@ where
         }
 
         // Check mixins.
-        if !class_metadata.mixins.is_empty() {
+        // Pun: a mixin with the class's own span is pun-analyse's forward of a Laravel contract to its concrete class
+        // or auth model (Larastan's ContractsMethodsExtension and AuthsMethodsExtension), which finds methods only
+        let mixins: Vec<_> =
+            class_metadata.mixins.iter().filter(|mixin| mixin.span != class_metadata.span).cloned().collect();
+        if !mixins.is_empty() {
             // Try to find property in mixin types
             if let Some(resolution) =
-                find_property_in_mixins(context.codebase, class_metadata, object, &class_metadata.mixins, prop_name)
+                find_property_in_mixins(context.codebase, class_metadata, object, &mixins, prop_name)
             {
                 if check_deprecation && !block_context.is_enclosing_scope_deprecated() {
                     report_deprecated_property(
@@ -1000,7 +1004,7 @@ where
                     get_resolved_declared_property(context.codebase, &resolution, prop_name, for_assignment);
 
                 if let Some((mixin_metadata, type_parameters)) =
-                    collect_mixin_types(context.codebase, class_metadata, object, &class_metadata.mixins)
+                    collect_mixin_types(context.codebase, class_metadata, object, &mixins)
                         .into_iter()
                         .find_map(|(mixin_name, mixin_object, _, _)| {
                             let mixin_metadata = context.codebase.get_class_like_by_name(mixin_name)?;

@@ -1,0 +1,96 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/constantDynamicUsages.php",
+   "line": 8,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::RUNNER is forbidden, not a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantDynamicUsages.php",
+   "line": 10,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::DECKARD is forbidden, maybe a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantDynamicUsages.php",
+   "line": 10,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::RUNNER is forbidden, not a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 11,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Inheritance\\Base::BELONG (as Inheritance\\Sub::BELONG) is forbidden, belong to us.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 12,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Inheritance\\Base::BELONG is forbidden, belong to us.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 13,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Inheritance\\Base::BELONG is forbidden, belong to us.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 14,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::RUNNER is forbidden, not a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 15,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::RUNNER is forbidden, not a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 19,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::DECKARD is forbidden, maybe a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 22,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::DECKARD is forbidden, maybe a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 23,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Waldo\\Quux\\Blade::WESLEY is forbidden, not a replicant.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 37,
+   "identifier": "disallowed.classConstant",
+   "message": "Using PhpOption\\Option::NAME (as PhpOption\\None::NAME) is forbidden, no PhpOption.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 44,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Inheritance\\Base::BELONG (as class@anonymous::BELONG) is forbidden, belong to us.",
+   "tip": null
+  }
+ ]
+}

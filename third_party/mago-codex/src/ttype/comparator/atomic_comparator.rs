@@ -893,6 +893,23 @@ pub(crate) fn can_be_identical(
         return true;
     }
 
+    // ObjectType::isSuperTypeOf(): an object with a subtraction overlaps another object unless
+    // that object lies wholly inside the subtraction (`File~RemoteDocument` may be a `Document`).
+    for (subtracted, other) in [(first_part, second_part), (second_part, first_part)] {
+        if let (TAtomic::Object(TObject::Named(object)), TAtomic::Object(TObject::Named(plain))) = (subtracted, other)
+            && let Some(excluded) = &object.subtracted_type
+            && !object.has_intersection_types()
+            && !plain.has_intersection_types()
+        {
+            let other = TUnion::from_atomic(other.clone());
+            if union_comparator::is_contained_by(codebase, &other, excluded, false, false, false, &mut ComparisonResult::new()) {
+                return false;
+            }
+            let base = TAtomic::Object(TObject::Named(object.clone().with_subtracted_type(None)));
+            return can_be_identical(codebase, &base, other.get_single(), inside_assertion, allow_type_coercion);
+        }
+    }
+
     let mut first_comparison_result = ComparisonResult::new();
     let mut second_comparison_result = ComparisonResult::new();
 

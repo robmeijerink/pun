@@ -11,6 +11,7 @@ use crate::ttype::atomic::object::TObject;
 use crate::ttype::atomic::scalar::TScalar;
 use crate::ttype::atomic::scalar::bool::TBool;
 use crate::ttype::atomic::scalar::int::TInteger;
+use crate::ttype::atomic::scalar::string::{TStringCasing, TStringLiteral};
 use crate::ttype::combiner::CombinerOptions;
 use crate::ttype::comparator::{ComparisonResult, atomic_comparator, union_comparator};
 use crate::ttype::union::TUnion;
@@ -153,8 +154,39 @@ pub(crate) fn remove(from: &TUnion, excluded: &TUnion, codebase: &CodebaseMetada
     }
 }
 
+/// Whether PHPStan represents this value as an `IntersectionType` without subtractable
+/// conjuncts: a generic array or string carrying an accessory (`non-empty-array`, `list`,
+/// `hasOffsetValue()`, `non-empty-string`, ...), as Pun's `rules/types/convert.rs` maps them.
+fn is_accessory_intersection(atomic: &TAtomic) -> bool {
+    match atomic {
+        TAtomic::Array(TArray::List(list)) => !(list.element_type.is_never() && list.known_elements.is_some()),
+        TAtomic::Array(TArray::Keyed(array)) => {
+            !array.is_constant_shape()
+                && (array.non_empty
+                    || array.known_items.iter().flat_map(|items| items.values()).any(|(optional, _)| !optional))
+        }
+        TAtomic::Scalar(TScalar::String(string)) => {
+            !matches!(string.literal, Some(TStringLiteral::Value(_)))
+                && (string.literal.is_some()
+                    || string.decimal_integer.is_some()
+                    || string.is_numeric
+                    || string.is_truthy
+                    || string.has_non_empty_accessory()
+                    || string.is_callable
+                    || string.casing != TStringCasing::Unspecified)
+        }
+        TAtomic::Scalar(TScalar::Numeric) => true,
+        _ => false,
+    }
+}
+
 /// Union removes only the newly included values from an exclusion; two exclusions intersect.
 pub(crate) fn union(excluded: &TUnion, other: &TUnion, codebase: &CodebaseMetadata) -> TMixed {
+    // TypeCombinator::intersectWithSubtractedType() keeps no exclusion against an
+    // IntersectionType without subtractable conjuncts: `mixed~X | non-empty-array` is mixed.
+    if other.types.iter().any(is_accessory_intersection) {
+        return TMixed::new();
+    }
     let mut excluded = excluded.clone();
     for atomic in other.types.iter().filter(|atomic| !atomic.is_never()) {
         if let TAtomic::Mixed(other) = atomic {

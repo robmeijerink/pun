@@ -1,5 +1,6 @@
-//! Rector 2.8.4's `ArrayKeysToArrayKeyFirstLastRector`.
+//! Rector 2.9.2's `ArrayKeysToArrayKeyFirstLastRector`.
 
+use mago_codex::ttype::atomic::TAtomic;
 use mago_syntax::cst::{Argument, Expression, Identifier, Node, NodeKind};
 
 use crate::problem::{Edit, Safety};
@@ -66,6 +67,19 @@ impl Rule for PreferArrayKeyFirstLast {
             return;
         };
         if skipped(array) {
+            return;
+        }
+        // Rector 2.9.2: on an empty array, `current()`/`reset()`/`end()` return false, while `array_key_first()` and
+        // `array_key_last()` return null (`isIterableAtLeastOnce()->yes()`).
+        let non_empty = crate::rules::types::facts::facts(ctx)
+            .full_type(node_span(crate::syntax::unparenthesize(value(array))))
+            .is_some_and(|t| {
+                !t.types.is_empty()
+                    && t.types
+                        .iter()
+                        .all(|a| matches!(a, TAtomic::Array(a) if a.is_non_empty()))
+            });
+        if !non_empty {
             return;
         }
         out.push(Report::fixed(

@@ -18,6 +18,7 @@ use mago_codex::identifier::function_like::FunctionLikeIdentifier;
 use mago_codex::metadata::CodebaseMetadata;
 use mago_codex::metadata::function_like::ReflectedSideEffects;
 use mago_codex::ttype::TType;
+use mago_codex::ttype::add_union_type;
 use mago_codex::ttype::atomic::TAtomic;
 use mago_codex::ttype::atomic::array::TArray;
 use mago_codex::ttype::atomic::array::key::ArrayKey;
@@ -28,12 +29,14 @@ use mago_codex::ttype::atomic::generic::TGenericParameter;
 use mago_codex::ttype::atomic::resource::TResource;
 use mago_codex::ttype::atomic::scalar::TScalar;
 use mago_codex::ttype::atomic::scalar::bool::TBool;
+use mago_codex::ttype::combiner::CombinerOptions;
 use mago_codex::ttype::comparator::ComparisonResult;
 use mago_codex::ttype::comparator::union_comparator::can_expression_types_be_identical;
 use mago_codex::ttype::comparator::union_comparator::is_contained_by;
 use mago_codex::ttype::expander::TypeExpansionOptions;
 use mago_codex::ttype::expander::expand_union;
 use mago_codex::ttype::get_array_parameters;
+use mago_codex::ttype::get_empty_keyed_array;
 use mago_codex::ttype::get_mixed;
 use mago_codex::ttype::get_never;
 use mago_codex::ttype::template::TemplateResult;
@@ -954,6 +957,29 @@ fn openssl_encrypt_tag(
     Some(TUnion::from_vec(types))
 }
 
+/// FuncCallScopeEffectsHelper::getArrayFunctionAppendingType(): `array_push()` and `array_unshift()` with only
+/// unpacked values that may be empty may add nothing, so a possibly empty array stays possibly empty. The stub's
+/// `@param-out` always makes it non-empty.
+fn appends_only_possibly_empty_values(invocation: &Invocation<'_, '_, '_>, artifacts: &AnalysisArtifacts, array_type: &TUnion) -> bool {
+    let is_appending = matches!(
+        invocation.target.get_function_like_identifier(),
+        Some(FunctionLikeIdentifier::Function(name))
+            if name.as_bytes().eq_ignore_ascii_case(b"array_push") || name.as_bytes().eq_ignore_ascii_case(b"array_unshift")
+    );
+    let values = invocation.arguments_source.get_arguments().into_iter().skip(1).collect::<Vec<_>>();
+
+    is_appending
+        && !values.is_empty()
+        && !array_type.types.iter().all(TAtomic::is_non_empty_array)
+        && values.iter().all(|argument| {
+            argument.is_unpacked()
+                && !argument
+                    .value()
+                    .and_then(|value| artifacts.get_expression_type(value))
+                    .is_some_and(|value_type| value_type.types.iter().all(TAtomic::is_non_empty_array))
+        })
+}
+
 /// Unpacking an array into by-reference parameters binds each of its values, so the out type replaces the values.
 fn with_unpacked_values(array_type: &TUnion, value_type: TUnion, codebase: &CodebaseMetadata) -> TUnion {
     let value_type = Arc::new(value_type);
@@ -1097,6 +1123,10 @@ where
             if invocation.arguments_source.get_argument(parameter_offset).is_some_and(|argument| argument.is_unpacked())
             {
                 new_type = with_unpacked_values(&argument_type, new_type, context.codebase);
+            }
+
+            if parameter_offset == 0 && appends_only_possibly_empty_values(invocation, artifacts, &argument_type) {
+                new_type = add_union_type(new_type, &get_empty_keyed_array(), context.codebase, CombinerOptions::default());
             }
 
             new_type.set_by_reference(true);

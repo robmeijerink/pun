@@ -3,7 +3,7 @@
 //! `assertMatchesRegularExpression()` or `assertDoesNotMatchRegularExpression()`.
 
 use crate::problem::Safety;
-use mago_syntax::cst::{Call, Expression, Literal, Node, NodeKind, Variable};
+use mago_syntax::cst::{Argument, Call, Expression, Literal, Node, NodeKind, Variable};
 
 use super::{AnyCall, NewArg, expr_text, is_test_case_call_named, rewrite_args};
 use crate::rules::support::class_members::walk;
@@ -61,7 +61,8 @@ impl Rule for PreferAssertMatchesRegularExpression {
             return;
         }
         let preg_args: Vec<_> = preg_match.argument_list.arguments.iter().collect();
-        if preg_args.len() < 2 {
+        // `hasMovablePregMatchArgs()`
+        if preg_args.len() < 2 || preg_args.iter().any(|a| a.is_unpacked()) {
             return;
         }
         // the matches stay in use after the assert
@@ -84,29 +85,42 @@ impl Rule for PreferAssertMatchesRegularExpression {
             return;
         };
         let positive = call.is_name(&["assertSame", "assertEquals"]);
-        let name = match (positive, condition) {
-            (true, 1) | (false, 0) => Some("assertMatchesRegularExpression"),
-            (true, 0) | (false, 1) => Some("assertDoesNotMatchRegularExpression"),
-            _ => None,
+        let name = if positive == (condition == 1) {
+            "assertMatchesRegularExpression"
+        } else {
+            "assertDoesNotMatchRegularExpression"
+        };
+        // a named argument keeps its name; preg_match() names it $subject, PHPUnit names it $string
+        let moved = |a: &Argument<'_>| {
+            let value = expr_text(ctx, a.value());
+            match a {
+                Argument::Named(n) if n.name.value.eq_ignore_ascii_case(b"subject") => {
+                    format!("string: {value}")
+                }
+                Argument::Named(n) => format!("{}: {value}", String::from_utf8_lossy(n.name.value)),
+                Argument::Positional(_) => value.to_string(),
+            }
         };
         let mut new = vec![
-            NewArg::New(expr_text(ctx, preg_args[0].value()).to_string()),
-            NewArg::New(expr_text(ctx, preg_args[1].value()).to_string()),
+            NewArg::New(moved(preg_args[0])),
+            NewArg::New(moved(preg_args[1])),
         ];
         new.extend((2..args.len()).map(NewArg::Old));
         out.push(Report::fixed(
             call.span,
             "Use `assertMatchesRegularExpression()` instead of asserting `preg_match()`'s result.",
             Safety::Unsafe,
-            rewrite_args(ctx, &call, name, &new),
+            rewrite_args(ctx, &call, Some(name), &new),
         ));
     }
 }
 
-/// `resolveOldCondition()`: an integer as it is, `true` 1, another constant 0. Rector fails on anything else.
+/// `resolveOldCondition()`: the integer 0 or 1, `true` 1, another constant 0; anything else is skipped.
 fn old_condition(expr: &Expression<'_>) -> Option<i64> {
     match unparenthesize(expr) {
-        Expression::Literal(Literal::Integer(i)) => i64::try_from(i.value?).ok(),
+        Expression::Literal(Literal::Integer(i)) => {
+            i64::try_from(i.value?).ok().filter(|v| *v == 0 || *v == 1)
+        }
         Expression::Literal(Literal::True(_)) => Some(1),
         Expression::Literal(Literal::False(_) | Literal::Null(_)) => Some(0),
         e @ Expression::ConstantAccess(_) => Some(i64::from(is_constant(e, "true"))),

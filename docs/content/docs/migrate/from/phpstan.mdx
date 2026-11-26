@@ -22,9 +22,13 @@ Run `pun migrate --from phpstan`. It follows the config's includes. That covers 
 | Changed rule parameters | Kebab-case options on each running rule that reads the parameter |
 | strict-rules or deprecation-rules includes | The matching Pun checks, when their parameter enables them |
 | nesbot/carbon's `extension.neon` | Built in: `carbon = "on"` in `[extensions]` when composer.lock locks `nesbot/carbon` |
+| phpstan-mockery's `extension.neon` | Built in: `mockery = "on"` in `[extensions]`. `mockery.convertUnionToIntersectionType: true` needs no line, as Pun always converts; `false` is reported as unsupported |
+| spaze/phpstan-disallowed-calls' or tomasvotruba/type-coverage's `extension.neon` | Built in: `disallowed-calls = "on"` or `type-coverage = "on"` in `[extensions]`. When phpstan.neon doesn't load the package but composer.lock locks it, the switch is `"off"`, because PHPStan doesn't run its rules |
+| `type_coverage` parameters | `min` on each `analyse/type-coverage/*` rule, from `return_type` or its alias `return`, which wins when set. `measure` goes on all four. The deprecated `declare` and `print_suggestions` are reported and skipped |
+| `disallowedFunctionCalls`, `disallowedMethodCalls` and the other `disallowed*` lists | The `calls`, `namespaces`, `constants` and other options of the `disallowed/*` rules, with kebab-case entry keys (`allow-in`). Bundled configs such as `disallowed-dangerous-calls.neon` are copied entry by entry. `allowIn`, `allowExceptIn`, `disallowIn` and `definedIn` paths become relative to the project root, so `filesRootDir` and `allowInRootDir` aren't copied. An `ignoreErrors` entry for an entry's `errorIdentifier` goes to that entry's rule |
 | A check that is a lint rule in Pun (`array.duplicateKey`) | The lint rule, on in `[[lint.overrides]]` for `paths` and off for `excludePaths`, unless another config turns it on everywhere. `pun analyse` also reports the check's errors under the lint rule's ID, because the lint rule sees no types and can miss some |
 | `@phpstan-ignore method.notFound` | `@pun-ignore analyse/undefined/method` |
-| Baselines | Not copied. Run `pun analyse --generate-baseline`. |
+| Baselines | Not copied. Run `pun analyse --generate-baseline`, and `pun lint --generate-baseline` for the checks that became lint rules. |
 | `bleedingEdge.neon` include | `[analyse] bleeding-edge = true`, and an `"on"` line for each rule it turns on |
 | `phpVersion: 80400`, or `{min, max}` | `[php] version = "8.4"`, from `min`. A different `max` is reported and skipped |
 | Custom extensions, `rules:` classes, services tagged `phpstan.*` | Reported and skipped, one line each |
@@ -48,3 +52,9 @@ The rule mapping lists PHPStan identifiers. An exact identifier wins over a patt
 ## Pun-only rules
 
 - [`lint/comments/no-unused-ignore`](/docs/rules/lint/comments/no-unused-ignore)
+- [`lint/refactor/replace-attribute-value-with-constant`](/docs/rules/lint/refactor/replace-attribute-value-with-constant)
+- [`lint/refactor/replace-function-with-constant`](/docs/rules/lint/refactor/replace-function-with-constant)
+- [`lint/refactor/rename-string`](/docs/rules/lint/refactor/rename-string)
+- [`lint/refactor/replace-static-with-new`](/docs/rules/lint/refactor/replace-static-with-new)
+- [`lint/refactor/wrap-return`](/docs/rules/lint/refactor/wrap-return)
+- [`lint/style/require-statement-padding`](/docs/rules/lint/style/require-statement-padding)

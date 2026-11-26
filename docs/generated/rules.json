@@ -17560,14 +17560,8 @@
       "enabled": [],
       "fix": "unsafe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "Rector\\Renaming\\Rector\\String_\\RenameStringRector",
-        "RenameString",
-        "RenameStringRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -17578,14 +17572,8 @@
       "enabled": [],
       "fix": "unsafe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "AttributeKeyToClassConstFetch",
-        "AttributeKeyToClassConstFetchRector",
-        "Rector\\Transform\\Rector\\Attribute\\AttributeKeyToClassConstFetchRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -17631,19 +17619,11 @@
       "command": "lint",
       "group": "refactor",
       "summary": "Changes use of function calls to use constants",
-      "enabled": [
-        "rector/coding-style"
-      ],
+      "enabled": [],
       "fix": "unsafe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "FuncCallToConstFetch",
-        "FuncCallToConstFetchRector",
-        "Rector\\Transform\\Rector\\FuncCall\\FuncCallToConstFetchRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -17765,14 +17745,8 @@
       "enabled": [],
       "fix": "unsafe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "Rector\\Transform\\Rector\\StaticCall\\StaticCallToNewRector",
-        "StaticCallToNew",
-        "StaticCallToNewRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -17783,14 +17757,8 @@
       "enabled": [],
       "fix": "unsafe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "Rector\\Transform\\Rector\\ClassMethod\\WrapReturnRector",
-        "WrapReturn",
-        "WrapReturnRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -19995,19 +19963,12 @@
       "group": "style",
       "summary": "Add empty new line after different-type statements to improve code readability",
       "enabled": [
-        "lint-strict",
-        "rector/coding-style"
+        "lint-strict"
       ],
       "fix": "safe",
       "ecosystem": "core",
-      "tools": [
-        "rector"
-      ],
-      "upstream": [
-        "NewlineAfterStatement",
-        "NewlineAfterStatementRector",
-        "Rector\\CodingStyle\\Rector\\Stmt\\NewlineAfterStatementRector"
-      ],
+      "tools": [],
+      "upstream": [],
       "ported": true
     },
     {
@@ -25581,6 +25542,345 @@
       "ported": true
     },
     {
+      "id": "analyse/disallowed/attribute",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports the attributes the config forbids (disallowedAttributes).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "AttributeUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\AttributeUsages",
+        "disallowed.attribute"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/constant",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports uses of the constants and enum cases the config forbids (disallowedConstants, disallowedEnums).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "ClassConstantUsages",
+        "ConstantUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\ClassConstantUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\ConstantUsages",
+        "disallowed.classConstant",
+        "disallowed.constant"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/control-structure",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports the control structures the config forbids (disallowedControlStructures).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "BreakControlStructure",
+        "ContinueControlStructure",
+        "DeclareControlStructure",
+        "DoWhileControlStructure",
+        "ElseControlStructure",
+        "ElseIfControlStructure",
+        "ForControlStructure",
+        "ForeachControlStructure",
+        "GotoControlStructure",
+        "IfControlStructure",
+        "MatchControlStructure",
+        "RequireIncludeControlStructure",
+        "ReturnControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\BreakControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ContinueControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\DeclareControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\DoWhileControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ElseControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ElseIfControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ForControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ForeachControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\GotoControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\IfControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\MatchControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\RequireIncludeControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\ReturnControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\SwitchControlStructure",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\ControlStructures\\WhileControlStructure",
+        "SwitchControlStructure",
+        "WhileControlStructure",
+        "disallowed.break",
+        "disallowed.continue",
+        "disallowed.declare",
+        "disallowed.doWhile",
+        "disallowed.else",
+        "disallowed.elseIf",
+        "disallowed.for",
+        "disallowed.foreach",
+        "disallowed.goto",
+        "disallowed.if",
+        "disallowed.include",
+        "disallowed.includeOnce",
+        "disallowed.match",
+        "disallowed.require",
+        "disallowed.requireOnce",
+        "disallowed.return",
+        "disallowed.switch",
+        "disallowed.while"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/function",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports calls of the functions and language constructs the config forbids (disallowedFunctionCalls).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "EchoCalls",
+        "EmptyCalls",
+        "EvalCalls",
+        "ExitDieCalls",
+        "FunctionCalls",
+        "FunctionFirstClassCallables",
+        "IssetCalls",
+        "PrintCalls",
+        "ShellExecCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EchoCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EmptyCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\EvalCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\ExitDieCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\FunctionCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\FunctionFirstClassCallables",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\IssetCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\PrintCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\ShellExecCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\UnsetCalls",
+        "UnsetCalls",
+        "disallowed.backtick",
+        "disallowed.die",
+        "disallowed.echo",
+        "disallowed.empty",
+        "disallowed.eval",
+        "disallowed.exit",
+        "disallowed.function",
+        "disallowed.isset",
+        "disallowed.print",
+        "disallowed.unset"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/keyword",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports the keywords the config forbids (disallowedKeywords).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "GlobalKeyword",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Keywords\\GlobalKeyword",
+        "disallowed.global"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/method",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports calls of the methods and constructors the config forbids (disallowedMethodCalls).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "MethodCalls",
+        "MethodFirstClassCallables",
+        "NewCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\MethodCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\MethodFirstClassCallables",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\NewCalls",
+        "disallowed.method",
+        "disallowed.new"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/namespace",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports uses of the namespaces and classes the config forbids (disallowedNamespaces, disallowedClasses).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "NamespaceFirstClassCallableUsages",
+        "NamespaceUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\NamespaceFirstClassCallableUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\NamespaceUsages",
+        "disallowed.class",
+        "disallowed.enum",
+        "disallowed.interface",
+        "disallowed.namespace",
+        "disallowed.trait"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/property",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports uses of the properties the config forbids (disallowedProperties).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "InstancePropertyUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\InstancePropertyUsages",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\StaticPropertyUsages",
+        "StaticPropertyUsages",
+        "disallowed.property"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/static-method",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports calls of the static methods the config forbids (disallowedStaticCalls).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\StaticCalls",
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Calls\\StaticFirstClassCallables",
+        "StaticCalls",
+        "StaticFirstClassCallables"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/disallowed/superglobal",
+      "command": "analyse",
+      "group": "disallowed",
+      "summary": "Reports uses of the superglobals the config forbids (disallowedSuperglobals).",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "phpstan-disallowed-calls"
+      ],
+      "upstream": [
+        "Spaze\\PHPStan\\Rules\\Disallowed\\Usages\\VariableUsages",
+        "VariableUsages",
+        "disallowed.variable"
+      ],
+      "ported": true
+    },
+    {
       "id": "analyse/functions/closure-uses-this",
       "command": "analyse",
       "group": "functions",
@@ -27713,6 +28013,106 @@
       "upstream": [
         "DateTimeInstantiationRule",
         "PHPStan\\Rules\\DateTimeInstantiationRule"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/type-coverage/constant",
+      "command": "analyse",
+      "group": "type-coverage",
+      "summary": "Each constant declaration without a native type, while fewer than min percent (default 99) of the project's constant declarations have one; measure = true reports the coverage instead.",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "type-coverage"
+      ],
+      "upstream": [
+        "ConstantTypeCoverageRule",
+        "TomasVotruba\\TypeCoverage\\Rules\\ConstantTypeCoverageRule",
+        "typeCoverage.constantTypeCoverage"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/type-coverage/param",
+      "command": "analyse",
+      "group": "type-coverage",
+      "summary": "Each param declaration without a native type, while fewer than min percent (default 99) of the project's param declarations have one; measure = true reports the coverage instead.",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "type-coverage"
+      ],
+      "upstream": [
+        "ParamTypeCoverageRule",
+        "TomasVotruba\\TypeCoverage\\Rules\\ParamTypeCoverageRule",
+        "typeCoverage.paramTypeCoverage"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/type-coverage/property",
+      "command": "analyse",
+      "group": "type-coverage",
+      "summary": "Each property declaration without a native type, while fewer than min percent (default 99) of the project's property declarations have one; measure = true reports the coverage instead.",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "type-coverage"
+      ],
+      "upstream": [
+        "PropertyTypeCoverageRule",
+        "TomasVotruba\\TypeCoverage\\Rules\\PropertyTypeCoverageRule",
+        "typeCoverage.propertyTypeCoverage"
+      ],
+      "ported": true
+    },
+    {
+      "id": "analyse/type-coverage/return",
+      "command": "analyse",
+      "group": "type-coverage",
+      "summary": "Each return declaration without a native type, while fewer than min percent (default 99) of the project's return declarations have one; measure = true reports the coverage instead.",
+      "enabled": [
+        "analyse-basic",
+        "analyse-essential",
+        "analyse-recommended",
+        "analyse-strict",
+        "analyse-max"
+      ],
+      "fix": "none",
+      "ecosystem": "core",
+      "tools": [
+        "phpstan",
+        "type-coverage"
+      ],
+      "upstream": [
+        "ReturnTypeCoverageRule",
+        "TomasVotruba\\TypeCoverage\\Rules\\ReturnTypeCoverageRule",
+        "typeCoverage.returnTypeCoverage"
       ],
       "ported": true
     },

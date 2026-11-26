@@ -70,7 +70,7 @@ A plain entry is a path from the project root. Format is the exception: as in Pi
 
 ## [extensions]
 
-Extensions add the rules and analysis for a framework or test tool. Each one is off until `[extensions]` turns it on, so `pun.toml` alone shows what runs. A locked package never turns an extension on by itself. [`pun migrate`](/docs/commands/migrate) and [`pun init`](/docs/commands/init) turn on each extension whose package [`composer.lock`](#dependencies) locks.
+Extensions add the rules and analysis for a framework or test tool. Each one is off until `[extensions]` turns it on, so `pun.toml` alone shows what runs. A locked package never turns an extension on by itself. [`pun migrate`](/docs/commands/migrate) and [`pun init`](/docs/commands/init) turn on each extension whose package [`composer.lock`](#dependencies) locks. `pun migrate` also follows phpstan.neon: it turns on an extension whose PHPStan extension phpstan.neon loads, and writes `disallowed-calls` or `type-coverage` as `"off"` when composer.lock locks its package but phpstan.neon doesn't load it.
 
 | Extension | Package `pun migrate` looks for | What it turns on |
 | --- | --- | --- |
@@ -78,6 +78,9 @@ Extensions add the rules and analysis for a framework or test tool. Each one is 
 | `pest` | `pestphp/pest` | The `pest` lint rules |
 | `phpunit` | `phpunit/phpunit` | The `phpunit` lint rules |
 | `carbon` | `nesbot/carbon` | Carbon's PHPStan extension in analyse: the methods that `Carbon::macro()` registers, and `Carbon\DatePeriodBase` |
+| `mockery` | `mockery/mockery` or `phpstan/phpstan-mockery` | phpstan-mockery's PHPStan extension in analyse: the mock types of `Mockery::mock()`, `allows()` and `expects()`, and `MockInterface\|Foo` read as `MockInterface&Foo` |
+| `disallowed-calls` | `spaze/phpstan-disallowed-calls` | The `disallowed` analyse rules, which report the calls and uses their options forbid |
+| `type-coverage` | `tomasvotruba/type-coverage` | The `type-coverage` analyse rules, with the options `min` (default 99) and `measure`: `[analyse.rules."type-coverage/return"] min = 95` |
 
 | Value | Effect |
 | --- | --- |
@@ -121,6 +124,7 @@ Risky and code-deleting fixers are [lint rules](/docs/commands/lint).
 | `groups` | `"error"`, `"warn"`, or `"off"` for every rule in a group |
 | `rules` | `"error"`, `"warn"`, or `"off"` (not `true` or `false`), or a table with `level`, `fix = "off"`, and the rule's options. `level` defaults to `"error"` |
 | `[[lint.overrides]]` | `files` (globs) and `rules`, which set rule levels for matching files |
+| `baseline` | The lint baseline file, written by `pun lint --generate-baseline`. A path outside the project is a config error |
 
 Later settings win, in this order:
 
@@ -143,7 +147,7 @@ Laravel, Pest, and PHPUnit rules also need their [extension](#extensions). PHP u
 | `preset` | `basic`, `essential`, `recommended` (default), `strict`, or `max`. Each includes the ones before it. Or a PHPStan level preset, `phpstan/level_0` to `phpstan/level_10` or `phpstan/level_max`, which runs exactly that PHPStan level. See [presets](/docs/configuration/presets#phpstan-level-presets) |
 | `paths` | Paths to analyse, instead of `[files] paths` |
 | `exclude` | Added to `[files] exclude` for analyse only |
-| `baseline` | The baseline file. A path outside the project is a config error |
+| `baseline` | The baseline file, written by `pun analyse --generate-baseline`. A path outside the project is a config error |
 | `stubs` | Stub files whose PHPDoc refines vendor symbols, as in PHPStan's `stubFiles` |
 | `scan` | Files and folders Pun reads for their classes, functions, and constants but doesn't analyse, as in PHPStan's `scanFiles` and `scanDirectories` |
 | `bootstrap` | PHPStan's `bootstrapFiles`. Pun doesn't run them: it reads their symbols as `scan` does, and Larastan reads their macros |

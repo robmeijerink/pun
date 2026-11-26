@@ -48,7 +48,7 @@ pub(crate) enum Definition {
     Mixin(String),
 }
 
-fn discovered_providers(root: &Path) -> Vec<PathBuf> {
+pub(crate) fn discovered_providers(root: &Path) -> Vec<PathBuf> {
     let composer = root.join("vendor/composer");
     let Some(installed) = std::fs::read(composer.join("installed.json"))
         .ok()
@@ -105,6 +105,7 @@ impl Macros {
         bootstrap: &[PathBuf],
         analysed: &[PathBuf],
         scanned: &[PathBuf],
+        autoloaded: &[crate::project::Autoloaded],
         root: &Path,
         codebase: &CodebaseMetadata,
         app: &App,
@@ -150,6 +151,25 @@ impl Macros {
                 .map(|s| s.to_string_lossy().to_ascii_lowercase());
             if stem.is_some_and(|stem| mixins.contains(&stem)) && seen.insert(path.clone()) {
                 read_files.read(path);
+            }
+        }
+        // A package's mixin (Filament's `Testable::mixin(new TestsActions)` in its provider) sits where Composer's
+        // PSR-4 autoloading finds it.
+        let unread: HashSet<String> = (read_files.registrations.iter())
+            .filter_map(|(_, _, definition)| match definition {
+                Definition::Mixin(class)
+                    if !read_files.classes.contains(&class.to_ascii_lowercase()) =>
+                {
+                    Some(class.trim_start_matches('\\').to_ascii_lowercase())
+                }
+                _ => None,
+            })
+            .collect();
+        for a in autoloaded {
+            if unread.contains(String::from_utf8_lossy(&a.class).as_ref())
+                && seen.insert(a.path.clone())
+            {
+                read_files.read(&a.path);
             }
         }
         let mut macros = Macros {

@@ -93,11 +93,20 @@ fn evaluate(cond: &Expression<'_>, version: i64) -> Option<bool> {
             | BinaryOperator::AngledNotEqual(_) => true,
             _ => return None,
         };
+        let loose = matches!(
+            b.operator,
+            BinaryOperator::Equal(_)
+                | BinaryOperator::NotEqual(_)
+                | BinaryOperator::AngledNotEqual(_)
+        );
         let result = compare(call, version)?;
         let expected = value(other)?;
+        // Rector 2.9.2's ConditionEvaluator compares `==` and `!=` loosely: `true == 1`.
         let same = match (expected, result) {
             (Value::Bool(e), Compared::Bool(r)) => e == r,
             (Value::Int(e), Compared::Int(r)) => e == r,
+            (Value::Int(e), Compared::Bool(r)) if loose => (e != 0) == r,
+            (Value::Bool(e), Compared::Int(r)) if loose => e == (r != 0),
             _ => false,
         };
         Compared::Bool(same != negated)

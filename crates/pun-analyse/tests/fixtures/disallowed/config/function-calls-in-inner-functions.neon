@@ -1,0 +1,16 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/InnerFunctions.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md5()"
+			"allowInFunctionsWithAttributes": 
+				- "InnerFunctions\\AllowMd5"
+		-
+			"function": "sha1()"
+			"allowExceptInFunctionsWithAttributes": 
+				- "InnerFunctions\\DisallowSha1"

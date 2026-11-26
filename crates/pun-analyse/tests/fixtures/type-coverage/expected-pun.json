@@ -1,0 +1,313 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Pun/Edges.php",
+   "line": 9,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 11,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 11,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 13,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 18,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 20,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 20,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 25,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 34,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 38,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 38,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 61,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 65,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 67,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 70,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 76,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 80,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 89,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 89,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 97,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 104,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 104,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 113,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 120,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 124,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 124,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 148,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 148,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 157,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 159,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 159,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 164,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 176,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 181,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 181,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 200,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 202,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 203,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/MembersTrait.php",
+   "line": 13,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 21 possible return types, only 1 - 4.7 % actually have it. Add more return types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/MembersTrait.php",
+   "line": 13,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/MembersTrait.php",
+   "line": 15,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/TraitUsers.php",
+   "line": 9,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/TraitUsers.php",
+   "line": 9,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 9 possible constant types, only 2 - 22.2 % actually have it. Add more constant types to get over 99 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/TraitUsers.php",
+   "line": 20,
+   "identifier": "typeCoverage.paramTypeCoverage",
+   "message": "Out of 23 possible param types, only 4 - 17.3 % actually have it. Add more param types to get over 99.5 %",
+   "tip": null
+  }
+ ]
+}

@@ -47,7 +47,7 @@ final class RegExpMoreTest extends TestCase
     {
         self::assertDoesNotMatchRegularExpression('/a/', $string);
         $this->assertMatchesRegularExpression('/a/', $string, 'message');
-        $this->assertSame('/b/', $string);
+        $this->assertSame(2, preg_match('/b/', $string));
         $this->assertMatchesRegularExpression('/c/', $string);
         $this->assertMatchesRegularExpression('/d/', $string);
         $this->assertTrue(true);

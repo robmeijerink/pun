@@ -1,0 +1,54 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 29,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 39,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 49,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 59,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 69,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 79,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 89,
+   "identifier": "disallowed.continue",
+   "message": "Using the continue control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

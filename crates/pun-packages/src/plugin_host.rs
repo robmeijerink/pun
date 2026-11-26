@@ -224,6 +224,21 @@ impl Dispatcher {
     }
 
     pub fn dispatch(&mut self, event: &str) -> Result<()> {
+        self.dispatch_script(event, &[])
+    }
+
+    /// Whether the scripts print each command before it runs (the default).
+    pub fn echo(&mut self, on: bool) {
+        self.scripts.echo = on;
+    }
+
+    /// Sets the scripts' timeout in seconds (0 for none), as `run-script --timeout` does.
+    pub fn timeout(&mut self, seconds: u64) {
+        self.scripts.timeout = seconds;
+    }
+
+    /// Dispatches `event` with the arguments `composer run-script` passes on to its scripts.
+    pub fn dispatch_script(&mut self, event: &str, args: &[String]) -> Result<()> {
         let dev = self.scripts.dev_mode;
         let mut host = match &mut self.plugins {
             Some(p) => p.host(&self.scripts.php)?,
@@ -239,7 +254,7 @@ impl Dispatcher {
         };
         phase(&mut host, "before")?;
         if self.run_scripts {
-            self.scripts.dispatch(event, &[])?;
+            self.scripts.dispatch(event, args)?;
         }
         phase(&mut host, "after")
     }

@@ -457,6 +457,7 @@ pub struct Lint {
     pub ecosystems: Vec<&'static ExtensionMeta>,
     pub rules: Vec<LintRule>,
     pub overrides: Vec<Override>,
+    pub baseline: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -531,6 +532,7 @@ pub(crate) struct LintToml {
     rules: toml::Table,
     #[serde(default)]
     overrides: Vec<OverrideToml>,
+    baseline: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -842,6 +844,7 @@ pub(crate) fn lint(
         ecosystems,
         rules: on.into_values().collect(),
         overrides,
+        baseline: t.baseline,
     })
 }
 
@@ -1044,9 +1047,9 @@ pub(crate) fn analyse_preset(path: &Path, v: Option<&toml::Value>) -> Result<Ana
 }
 
 /// The rules (analyse and lint IDs) `phpstan analyse --level <level>` runs with its default parameters, and with
-/// Larastan's defaults (its rules only run where the `laravel` extension is on): every PHPStan core rule class of
-/// that level or below, without the opt-in ones (a gate with no `default true`), the bleeding-edge ones only with
-/// `bleeding_edge`. phpstan-strict-rules and phpstan-deprecation-rules are separate packages, not levels: none of
+/// Larastan's and type-coverage's defaults (their rules only run where the `laravel` or `type-coverage` extension
+/// is on): every PHPStan core rule class of that level or below, without the opt-in ones (a gate with no
+/// `default true`), the bleeding-edge ones only with `bleeding_edge`. phpstan-strict-rules and phpstan-deprecation-rules are separate packages, not levels: none of
 /// theirs.
 pub fn phpstan_level_rules(level: u8, bleeding_edge: bool) -> BTreeSet<String> {
     let classes = crate::mapping::section(&["upstream", "phpstan-classes"]).table();
@@ -1059,7 +1062,7 @@ pub fn phpstan_level_rules(level: u8, bleeding_edge: bool) -> BTreeSet<String> {
         let in_level = match package {
             Some("phpstan") => (e.get("level").and_then(toml::Value::as_integer))
                 .is_none_or(|l| l <= i64::from(level)),
-            Some("larastan") => true,
+            Some("larastan" | "type-coverage") => true,
             _ => false,
         };
         let gated = (e.get("gated_by").and_then(toml::Value::as_str))

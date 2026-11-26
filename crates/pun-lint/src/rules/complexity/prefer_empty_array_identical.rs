@@ -1,9 +1,12 @@
 use crate::problem::{Edit, Fix, Safety};
 use mago_syntax::cst::*;
 
+use crate::rules::dead_code::no_redundant_property_default::is_property_assigned;
 use crate::rules::support::side_effects::any_node;
 use crate::rules::support::syntax_types::is_array_property;
+use crate::rules::types::add_property_type_constructor::is_test_case;
 use crate::rules::types::facts::{Facts, facts};
+use crate::rules::types::property_type::ClassView;
 use crate::syntax::{node_span, unparenthesize};
 use crate::{Context, OptionsError, Report, Rule};
 
@@ -92,9 +95,16 @@ fn is_allowed(ctx: &Context<'_>, ancestors: &[Node<'_, '_>], value: &Expression<
                 && !is_non_typed_from_param(&facts, value)
                 && !merged_in_loop(&facts, ancestors, v.name)
         }
-        Expression::Access(Access::Property(_) | Access::StaticProperty(_)) => {
-            is_array_property(ancestors, value, &|v, _| is_non_typed_from_param(&facts, v))
-        }
+        Expression::Access(Access::Property(_) | Access::StaticProperty(_)) => is_array_property(
+            ancestors,
+            value,
+            &|v, _| is_non_typed_from_param(&facts, v),
+            &|class, path, name| {
+                ClassView::of(&facts, class, path).is_some_and(|view| {
+                    is_property_assigned(ctx, &view, is_test_case(&facts, &view), name)
+                })
+            },
+        ),
         _ => false,
     }
 }

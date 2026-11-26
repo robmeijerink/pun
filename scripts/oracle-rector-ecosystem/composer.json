@@ -1,6 +1,6 @@
 {
     "require": {
-        "rector/rector": "2.8.4",
+        "rector/rector": "2.9.2",
         "driftingly/rector-laravel": "2.7.3",
         "pestphp/pest-plugin-rector": "5.x-dev#8c1b780c5e551cb78150ee91ceb73d34cd029946",
         "phpstan/phpstan": "2.3.5"

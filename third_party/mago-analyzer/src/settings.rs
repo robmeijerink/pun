@@ -1,6 +1,8 @@
 use mago_algebra::AlgebraThresholds;
+use mago_codex::metadata::CodebaseMetadata;
 use mago_codex::metadata::class_like::ClassLikeMetadata;
 use mago_codex::ttype::combiner::CombinerOptions;
+use mago_codex::ttype::union::TUnion;
 use mago_php_version::PHPVersion;
 use mago_word::Word;
 use mago_word::WordSet;
@@ -21,6 +23,18 @@ pub const DEFAULT_LOOP_ASSIGNMENT_DEPTH_THRESHOLD: u8 = 1;
 
 /// Default duration before analysis of a source file is reported as slow.
 pub const DEFAULT_SLOW_FILE_WARNING_THRESHOLD_MS: u16 = 5_000;
+
+/// A PHPDoc union resolver (see [`Settings::phpdoc_union_resolver`]), compared by address.
+#[derive(Debug, Clone, Copy)]
+pub struct PhpDocUnionResolver(pub fn(&CodebaseMetadata, &TUnion) -> Option<TUnion>);
+
+impl PartialEq for PhpDocUnionResolver {
+    fn eq(&self, other: &Self) -> bool {
+        std::ptr::fn_addr_eq(self.0, other.0)
+    }
+}
+
+impl Eq for PhpDocUnionResolver {}
 
 /// Configuration settings that control the behavior of the Mago analyzer.
 ///
@@ -56,6 +70,10 @@ pub struct Settings {
     /// The class a trait's methods are analysed for (PHPStan analyses a trait only in each using class's
     /// context): a trait method's untyped parameter takes the PHPDoc type of the method it overrides in that class.
     pub trait_context_class: Option<Word>,
+
+    /// A PHPStan TypeNodeResolverExtension for an inline `@var` whose PHPDoc type is a union of exactly two members:
+    /// it gets the resolved union, before population, and returns the type to use instead.
+    pub phpdoc_union_resolver: Option<PhpDocUnionResolver>,
 
     /// Bind `$this`/`static` of a method found on a named `@mixin` to the receiver carrying the tag (Larastan's
     /// forwarding extensions), not to the mixin object as MixinMethodsClassReflectionExtension does. Defaults to
@@ -472,6 +490,7 @@ impl Settings {
             track_variable_flow: false,
             pollute_scope_with_block: true,
             trait_context_class: None,
+            phpdoc_union_resolver: None,
             mixin_receiver_binding: true,
             template_arguments: crate::template_arguments::TemplateArgumentMode::Off,
             find_unused_expressions: true,

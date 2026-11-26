@@ -1,0 +1,243 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 14,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute PunCoverage\\AttrOne is forbidden. [PunCoverage\\AttrOne matches PunCoverage\\Attr*]",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 42,
+   "identifier": "disallowed.method",
+   "message": "Calling PunCoverage\\Base::staticMethod() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 43,
+   "identifier": "disallowed.method",
+   "message": "Calling PunCoverage\\Base::staticMethod() (as PunCoverage\\Child::staticMethod()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 44,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 45,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() (as PunCoverage\\Child::__construct()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 46,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() (as PunCoverage\\Child::__construct()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 46,
+   "identifier": "new.static",
+   "message": "Unsafe usage of new static().",
+   "tip": "See: https://phpstan.org/blog/solving-phpstan-error-unsafe-usage-of-new-static"
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 47,
+   "identifier": "disallowed.classConstant",
+   "message": "Using PunCoverage\\Base::SHARED (as PunCoverage\\Child::SHARED) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 47,
+   "identifier": "disallowed.classConstant",
+   "message": "Using PunCoverage\\Base::SHARED is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 48,
+   "identifier": "staticProperty.nonStaticAccess",
+   "message": "Non-static access to static property PunCoverage\\Base::$stat.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 50,
+   "identifier": "disallowed.property",
+   "message": "Using PunCoverage\\Base::$stat is forbidden, a later entry replaces the earlier one.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 51,
+   "identifier": "disallowed.property",
+   "message": "Using PunCoverage\\Base::$stat is forbidden, a later entry replaces the earlier one.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 52,
+   "identifier": "disallowed.property",
+   "message": "Using PunCoverage\\Base::$stat is forbidden, a later entry replaces the earlier one.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 54,
+   "identifier": "property.staticAccess",
+   "message": "Static access to instance property PunCoverage\\Base::$inst.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 58,
+   "identifier": "class.notFound",
+   "message": "Class PunCoverage\\WithMissingParent extends unknown class PunCoverage\\MissingParent.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 88,
+   "identifier": "disallowed.method",
+   "message": "Calling PunCoverage\\Base::instanceMethod() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 90,
+   "identifier": "disallowed.method",
+   "message": "Calling PDO::query() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 91,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 93,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() (as PunCoverage\\Child::__construct()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 93,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Base::__construct() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 94,
+   "identifier": "disallowed.method",
+   "message": "Calling PunCoverage\\Base::instanceMethod() (as {PunCoverage\\Base,PunCoverage\\Child}::instanceMethod()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 95,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\Unknown::__construct() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 95,
+   "identifier": "disallowed.class",
+   "message": "Class PunCoverage\\Unknown is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 95,
+   "identifier": "class.notFound",
+   "message": "Instantiated class PunCoverage\\Unknown not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 96,
+   "identifier": "disallowed.new",
+   "message": "Calling PunCoverage\\WithMissingParent::__construct() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 97,
+   "identifier": "new.noConstructor",
+   "message": "Class class@anonymous/Coverage.php:97 does not have a constructor and must be instantiated without any parameters.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 109,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\covA() (as covA()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 110,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\covB() (as covB()) is forbidden, second.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 111,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\covC() (as covC()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 112,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\covFlags() (as covFlags()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 114,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\Fns\\covListA() (as covListA()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php",
+   "line": 117,
+   "identifier": "disallowed.class",
+   "message": "Class PunCoverage\\Fns\\Thing is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/Coverage.php (in context of class PunCoverage\\UsesTrait)",
+   "line": 66,
+   "identifier": "disallowed.function",
+   "message": "Calling PunCoverage\\covA() (as covA()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/pun-coverage/allowed.php",
+   "line": 9,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute PunCoverage\\AttrOne is forbidden. [PunCoverage\\AttrOne matches PunCoverage\\Attr*]",
+   "tip": null
+  }
+ ]
+}

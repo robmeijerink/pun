@@ -1,0 +1,8 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Rules/ParamTypeCoverageRule]
+    tmpDir: /tmp/pun-type-coverage-oracle-param
+    type_coverage:
+        param_type: 80

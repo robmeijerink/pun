@@ -1,0 +1,14 @@
+{
+ "level": 10,
+ "featureToggles": {
+  "unusedVariable": true
+ },
+ "errors": [
+  {
+   "line": 73,
+   "identifier": "variable.unused",
+   "message": "Variable $order is never read.",
+   "tip": null
+  }
+ ]
+}

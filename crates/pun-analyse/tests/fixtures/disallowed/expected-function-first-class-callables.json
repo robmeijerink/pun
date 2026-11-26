@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, nope.",
+   "tip": null
+  }
+ ]
+}

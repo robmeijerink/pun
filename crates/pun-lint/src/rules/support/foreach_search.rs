@@ -6,6 +6,7 @@ use mago_syntax::cst::{
 use crate::Context;
 use crate::rules::support::expressions::{equal, is_constant, operand, text};
 use crate::rules::support::phpdoc_writer::native_expr_type;
+use crate::rules::support::side_effects::writes_variable;
 use crate::rules::support::statement_edits::replace_run;
 use crate::rules::support::statement_edits::{List, body_list, expression, holder_list, if_view};
 use crate::rules::support::values::is_native_array;
@@ -66,7 +67,12 @@ fn parts<'a>(ctx: &Context<'_>, foreach: &'a Foreach<'a>) -> Option<Loop<'a>> {
         return None;
     };
     let view = if_view(ctx.source, r#if);
-    if view.else_.is_some() || !view.elseifs.is_empty() || view.stmts.nop {
+    // Rector 2.9.2: the arrow function captures by value, so a write in the condition would be lost.
+    if view.else_.is_some()
+        || !view.elseifs.is_empty()
+        || view.stmts.nop
+        || writes_variable(view.condition)
+    {
         return None;
     }
     let (key, value) = match &foreach.target {

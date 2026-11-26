@@ -87,6 +87,11 @@ impl Look {
         }
     }
 
+    /// Whether it shows colour at all.
+    pub(crate) fn colored(self) -> bool {
+        self.depth != Depth::None
+    }
+
     /// The look for stdout under `--color=<choice>`.
     pub(crate) fn stdout(choice: ColorChoice) -> Look {
         Look::detect(choice, std::io::stdout().is_terminal(), &|k| {

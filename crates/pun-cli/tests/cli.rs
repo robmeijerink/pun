@@ -1100,10 +1100,13 @@ fn extension_list_says_why_each_is_on() {
         ],
     );
     // A locked package alone turns nothing on: pest is off, and the list says how to turn it on.
-    let want = r#"laravel  on   Laravel's rules and Larastan's analysis: on in pun.toml
-pest     off  Rules for Pest tests: pestphp/pest v4.1.0 is locked; turn it on with pest = "on" in [extensions]
-phpunit  off  Rules for PHPUnit tests: not in pun.toml
-carbon   off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
+    let want = r#"laravel           on   Laravel's rules and Larastan's analysis: on in pun.toml
+pest              off  Rules for Pest tests: pestphp/pest v4.1.0 is locked; turn it on with pest = "on" in [extensions]
+phpunit           off  Rules for PHPUnit tests: not in pun.toml
+carbon            off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
+mockery           off  phpstan-mockery's mock types in analyse: not in pun.toml
+disallowed-calls  off  The calls and uses your config forbids, in analyse: not in pun.toml
+type-coverage     off  Minimum shares of declared types, in analyse: not in pun.toml
 "#;
     assert_eq!(
         pun(&dir, &["extension", "list"]),
@@ -1128,6 +1131,9 @@ carbon   off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
                 ("pest", false, None),
                 ("phpunit", false, None),
                 ("carbon", false, None),
+                ("mockery", false, None),
+                ("disallowed-calls", false, None),
+                ("type-coverage", false, None),
             ],
             Some(0)
         )
@@ -1135,7 +1141,7 @@ carbon   off  Carbon's macros and DatePeriodBase in analyse: not in pun.toml
     std::fs::remove_file(dir.join("pun.toml")).unwrap();
     let (out, _, code) = pun(&dir, &["extension", "list"]);
     assert!(
-        out.starts_with("laravel  off ") && out.contains("\npest     off "),
+        out.starts_with("laravel           off ") && out.contains("\npest              off "),
         "{out}"
     );
     assert_eq!(code, Some(0));
@@ -1220,6 +1226,9 @@ laravel = "off"
 pest = "off"
 phpunit = "off"
 carbon = "off"
+mockery = "off"
+disallowed-calls = "off"
+type-coverage = "off"
 
 [format]
 preset = "empty"

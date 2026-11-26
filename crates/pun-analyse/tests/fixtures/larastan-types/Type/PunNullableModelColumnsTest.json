@@ -1,0 +1,47 @@
+{
+    "test": "Type/PunNullableModelColumnsTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-nullable-model-columns.php",
+            "declares": [
+                "punnullablemodelcolumns\\reads"
+            ],
+            "asserts": [
+                15,
+                16,
+                17,
+                18,
+                19
+            ],
+            "errors": [
+                {
+                    "line": 16,
+                    "identifier": "property.nonObject",
+                    "message": "Cannot access property $name on App\\User|null.",
+                    "tip": null
+                },
+                {
+                    "line": 17,
+                    "identifier": "property.nonObject",
+                    "message": "Cannot access property $name on App\\User|null.",
+                    "tip": null
+                },
+                {
+                    "line": 25,
+                    "identifier": "property.nonObject",
+                    "message": "Cannot access property $name on App\\User|null.",
+                    "tip": null
+                },
+                {
+                    "line": 25,
+                    "identifier": "return.type",
+                    "message": "Method PunNullableModelColumns\\Reads::firstName() should return int but returns string.",
+                    "tip": null
+                }
+            ]
+        }
+    ]
+}

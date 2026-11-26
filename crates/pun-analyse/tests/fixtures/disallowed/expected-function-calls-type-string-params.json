@@ -1,0 +1,229 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() (as config()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\arrayParam2() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 23,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam3() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mixedParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 32,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mixedParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 35,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\zeroParam() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\paramsAnywhereAlias() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsTypeStringParams.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\paramsAnywhereDisallowAlias() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() (as config()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() (as config()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\baz() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\arrayParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\arrayParam2() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 21,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mocky() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 22,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 23,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 25,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam2() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam3() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 27,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam3() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 28,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam4() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 29,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\intParam4() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mixedParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 32,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mixedParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 33,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mixedParam1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 35,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\zeroParam() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\paramsAnywhereAlias() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsTypeStringParams.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\paramsAnywhereDisallowAlias() is forbidden.",
+   "tip": null
+  }
+ ]
+}

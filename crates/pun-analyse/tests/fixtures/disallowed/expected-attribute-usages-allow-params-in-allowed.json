@@ -1,0 +1,103 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 8,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 12,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 15,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 18,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 21,
+   "identifier": "attribute.notAttribute",
+   "message": "Class Attributes\\AttributeColumn is not an Attribute class.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 25,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 25,
+   "identifier": "class.notFound",
+   "message": "Class Attributes\\UserRepository not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 25,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasAvocado() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 31,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 31,
+   "identifier": "class.notFound",
+   "message": "Class Attributes\\UserRepository not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 31,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasTuna() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 37,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasKetchup() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 43,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasPineapple() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 45,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  }
+ ]
+}

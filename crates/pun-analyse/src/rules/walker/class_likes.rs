@@ -60,6 +60,7 @@ impl<'arena> Checker<'_, 'arena> {
         type_aliases::class_like(self, class.span());
         invalid_throws::node(self, class.span());
         missing_types::class(self, class);
+        type_coverage::properties(self, class.members.as_slice());
         generics::class(self, class);
         larastan::class(self, class);
         constants::read_only_class(self, class.span(), class.modifiers.as_slice(), false);
@@ -105,6 +106,7 @@ impl<'arena> Checker<'_, 'arena> {
         type_aliases::class_like(self, i.span());
         invalid_throws::node(self, i.span());
         missing_types::interface(self, i);
+        type_coverage::properties(self, i.members.as_slice());
         generics::interface(self, i);
     }
 
@@ -150,6 +152,7 @@ impl<'arena> Checker<'_, 'arena> {
         type_aliases::class_like(self, e.span());
         invalid_throws::node(self, e.span());
         missing_types::enum_(self, e);
+        type_coverage::properties(self, e.members.as_slice());
         generics::enum_(self, e);
     }
 
@@ -296,6 +299,7 @@ impl<'arena> Checker<'_, 'arena> {
             types::too_wide_properties(self, k, a.members.as_slice());
         }
         generics::anonymous(self, a, &name, &display);
+        type_coverage::properties(self, a.members.as_slice());
         invalid_throws::anonymous(self, a);
         constants::read_only_class(self, a.span(), a.modifiers.as_slice(), true);
     }
@@ -368,6 +372,7 @@ impl<'arena> Checker<'_, 'arena> {
         if let Some(params) = &h.parameter_list {
             functions::function_like(self, h, params);
             declarations::promoted(self, h.span(), declarations::FunctionLike::Other, params);
+            type_coverage::parameters(self, h.span(), params, None);
         }
         syntax::function_like_types(self, h.parameter_list.as_ref(), None);
         self.syntax.by_ref.push(h.ampersand.is_some());

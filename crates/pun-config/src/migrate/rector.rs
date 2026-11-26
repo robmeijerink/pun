@@ -137,8 +137,9 @@ fn set_of(path: &str) -> Option<String> {
 
 /// The Pun options that keep a rule merged with a PHP-CS-Fixer fixer to what its Rector rules check, so a project
 /// clean under Rector is clean under Pun. The fixer's own checks run only when it is named in pint.json.
-const AS_RECTOR: [(&str, &str); 3] = [
+const AS_RECTOR: [(&str, &str); 4] = [
     ("lint/control-flow/no-return-assignment", "skip-commented"),
+    ("lint/operators/prefer-coalesce", "null-checks"),
     ("lint/style/prefer-class-constant", "namespaced-only"),
     (
         "lint/style/prefer-empty-string-compare",

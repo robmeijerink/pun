@@ -1,0 +1,775 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/DifferentNamespaceTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/DifferentNamespaceTest.php",
+   "line": 20,
+   "identifier": "assign.propertyType",
+   "message": "Property PHPStan\\Mockery\\DifferentNamespaceTest::$fooMock (App\\DifferentFoo&Mockery\\MockInterface) does not accept Mockery\\MockInterface.",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 32,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: App\\Sealed|Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 33,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 34,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\LegacyMockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 35,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: object",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 36,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: mixed",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 37,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: int|Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 38,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: array<int>|Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 39,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: (callable(): mixed)|Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 44,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 44,
+   "identifier": "method.staticCall",
+   "message": "Static call to instance method Mockery\\MockInterface::allows().",
+   "tip": null
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 15,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\IsolatedMockeryTest::requireFoo2() expects PHPStan\\Mockery\\Foo2, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 18,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 24,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\IsolatedMockeryTest::requireFoo3() expects PHPStan\\Mockery\\Foo3, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 27,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryBarTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/MockeryBarTest.php",
+   "line": 22,
+   "identifier": "assign.propertyType",
+   "message": "Property PHPStan\\Mockery\\MockeryBarTest::$fooMock (Mockery\\MockInterface&PHPStan\\Mockery\\Foo) does not accept Mockery\\MockInterface.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryBarTest.php",
+   "line": 23,
+   "identifier": "assign.propertyType",
+   "message": "Property PHPStan\\Mockery\\MockeryBarTest::$fooSpy (Mockery\\MockInterface&PHPStan\\Mockery\\Foo) does not accept Mockery\\MockInterface.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryBarTest.php",
+   "line": 30,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\ExpectsHigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 24,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 26,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 27,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 33,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 35,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\ExpectsHigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 36,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 43,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 50,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 55,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface|PHPStan\\Mockery\\Foo given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 57,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 57,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface|PHPStan\\Mockery\\Foo::allows().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 58,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface|PHPStan\\Mockery\\Foo::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 64,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $baz of method PHPStan\\Mockery\\MockeryTest::requireBaz() expects PHPStan\\Mockery\\Baz, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 65,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $buzz of method PHPStan\\Mockery\\MockeryTest::requireBuzz() expects PHPStan\\Mockery\\Buzz, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 68,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 74,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 75,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $baz of method PHPStan\\Mockery\\MockeryTest::requireBaz() expects PHPStan\\Mockery\\Baz, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 76,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $buzz of method PHPStan\\Mockery\\MockeryTest::requireBuzz() expects PHPStan\\Mockery\\Buzz, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 79,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 85,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 88,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 94,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 95,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $buzz of method PHPStan\\Mockery\\MockeryTest::requireBuzz() expects PHPStan\\Mockery\\Buzz, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 98,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 104,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 106,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 107,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 113,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 116,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 122,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 124,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 125,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 131,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $foo of method PHPStan\\Mockery\\MockeryTest::requireFoo() expects PHPStan\\Mockery\\Foo, Mockery\\MockInterface given.",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 133,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 134,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\MockInterface::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 33,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 34,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 35,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 36,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 37,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 38,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 39,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 40,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 41,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 42,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 43,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 44,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 45,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 46,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 47,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 48,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 49,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 57,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 58,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\ExpectsHigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 59,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 59,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *ERROR*",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 60,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\ExpectsHigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 60,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *ERROR*",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 61,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 62,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 63,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 64,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 65,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\ExpectsHigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 66,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 67,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 68,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 69,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 70,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 71,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\VerificationDirector",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 72,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 73,
+   "identifier": "method.notFound",
+   "message": "Call to an undefined method Mockery\\HigherOrderMessage::doFoo().",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 73,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *ERROR*",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 82,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 83,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 84,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|null",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 85,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Foo|null",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 86,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\LegacyMockInterface|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 87,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Bar|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 88,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 89,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Baz",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 93,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Buzz",
+   "tip": null
+  },
+  {
+   "file": "src/data/Bar.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Baz.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Buzz.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo2.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo3.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  }
+ ]
+}

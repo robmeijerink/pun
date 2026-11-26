@@ -127,6 +127,26 @@ impl App {
                     .push(TypeMetadata::new(TUnion::from_atomic(object), k.span));
             }
         }
+        // AuthsMethodsExtension: the auth contracts have the methods of the auth models, first model first
+        let models: Vec<_> = (self.auth_models(None).iter())
+            .filter_map(|model| Some(metadata.get_class_like(model.as_bytes())?.original_name))
+            .collect();
+        for contract in [
+            "Illuminate\\Contracts\\Auth\\Authenticatable",
+            "Illuminate\\Contracts\\Auth\\CanResetPassword",
+            "Illuminate\\Contracts\\Auth\\Access\\Authorizable",
+        ] {
+            let Some(key) = metadata.get_class_like(contract.as_bytes()).map(|k| k.name) else {
+                continue;
+            };
+            if let Some(k) = metadata.class_likes.get_mut(&key) {
+                for model in &models {
+                    let object = TAtomic::Object(TObject::Named(TNamedObject::new(*model)));
+                    k.mixins
+                        .push(TypeMetadata::new(TUnion::from_atomic(object), k.span));
+                }
+            }
+        }
     }
 
     pub(crate) fn auth_models(&self, guard: Option<&str>) -> Vec<String> {

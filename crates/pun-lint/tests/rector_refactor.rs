@@ -1,4 +1,4 @@
-//! Rector 2.8.4's own fixtures for the ported `refactor` codemods and the other Rector rules tested here, copied verbatim from rector-src (rules-tests/...)
+//! Rector 2.9.2's own fixtures for the ported `refactor` codemods and the other Rector rules tested here, copied verbatim from rector-src (rules-tests/...)
 //! into tests/rector/<Rector class>/Fixture, with the fixture's `Source/` classes. Each rule is configured through
 //! `Rule::configure` with the options `pun migrate` writes for the fixture's config/configured_rule.php. Oracle/ holds
 //! extra inputs with what Rector 2.8.4 (`.oracle/rector-ecosystem`, the rule alone with the same configuration,

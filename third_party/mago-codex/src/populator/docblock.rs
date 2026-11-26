@@ -369,7 +369,10 @@ fn inherit_trait_method_docblocks(codebase: &mut CodebaseMetadata) {
             users.push((*class_name, *method_name, trait_method));
         }
     }
-    users.sort_unstable();
+    // A parent's copy first: a subclass's copy inherits from it, as PhpDocInheritanceResolver walks up past the
+    // first override (`AppInvoice extends VendorInvoice`, each using a trait that overrides `fireModelEvent()`)
+    let depth = |class: &Word| codebase.class_likes.get(class).map_or(0, |c| c.all_parent_classes.len());
+    users.sort_unstable_by(|a, b| depth(&a.0).cmp(&depth(&b.0)).then_with(|| a.cmp(b)));
 
     let mut copied = Vec::new();
     for (class_name, method_name, trait_method) in users {

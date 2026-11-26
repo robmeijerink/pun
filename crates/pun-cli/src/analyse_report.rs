@@ -54,7 +54,7 @@ fn raw(findings: &[Finding], general: &[String], verbose: bool) -> String {
     for f in findings {
         let at = f.line().map_or("?".to_string(), |l| l.to_string());
         let _ = write!(out, "{}:{at}:{}", f.file.display(), f.message);
-        if verbose {
+        if verbose && !f.identifier.is_empty() {
             let _ = write!(out, " [identifier={}]", f.identifier);
         }
         out.push('\n');
@@ -91,7 +91,10 @@ fn json(findings: &[Finding], general: &[String]) -> String {
         if let Some(tip) = &f.tip {
             message.insert("tip".into(), json!(tip));
         }
-        message.insert("identifier".into(), json!(f.identifier));
+        // an error without an identifier (type-coverage's measure mode) has no key
+        if !f.identifier.is_empty() {
+            message.insert("identifier".into(), json!(f.identifier));
+        }
         if f.fixable {
             message.insert("fixable".into(), json!(true));
         }
@@ -136,12 +139,16 @@ fn checkstyle(findings: &[Finding], general: &[String]) -> String {
     for (rel, list) in files {
         let _ = writeln!(out, "<file name=\"{}\">", xml(rel));
         for f in list {
+            let source = if f.identifier.is_empty() {
+                String::new()
+            } else {
+                format!(" source=\"{}\"", xml(&f.identifier))
+            };
             let _ = writeln!(
                 out,
-                "  <error line=\"{}\" column=\"1\" severity=\"error\" message=\"{}\" source=\"{}\" />",
+                "  <error line=\"{}\" column=\"1\" severity=\"error\" message=\"{}\"{source} />",
                 line(f),
                 xml(&f.message),
-                xml(&f.identifier)
             );
         }
         out.push_str("</file>\n");
@@ -197,7 +204,7 @@ fn gitlab(findings: &[Finding], general: &[String]) -> String {
         .map(|f| {
             serde_json::json!({
                 "description": f.message,
-                "check_name": f.identifier,
+                "check_name": (!f.identifier.is_empty()).then_some(&f.identifier),
                 "fingerprint": sha(format!("{}{}{}", f.file.display(), line(f), f.message)),
                 "severity": if f.ignorable() { "major" } else { "blocker" },
                 "location": { "path": f.rel, "lines": { "begin": f.line } },
@@ -256,7 +263,7 @@ fn teamcity(findings: &[Finding], general: &[String], config: Option<&str>) -> S
         "##teamcity[inspectionType id='phpstan' name='phpstan' category='phpstan' description='phpstan Inspection']\n",
     );
     for f in findings {
-        let message = if f.ignorable() {
+        let message = if f.ignorable() && !f.identifier.is_empty() {
             format!("{} (🪪 {})", f.message, f.identifier)
         } else {
             f.message.clone()

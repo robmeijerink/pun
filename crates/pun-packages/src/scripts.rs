@@ -58,7 +58,7 @@ impl Runner {
             echo: true,
             timeout: process_timeout(
                 manifest,
-                global_timeout(crate::fetch::composer_dirs().map(|(home, _)| home)).as_ref(),
+                global_timeout(crate::fetch::composer_dirs_in(env).map(|(home, _)| home)).as_ref(),
                 env("COMPOSER_PROCESS_TIMEOUT"),
             ),
             quiet: false,
@@ -544,6 +544,17 @@ mod tests {
         d
     }
 
+    /// The process's environment with `COMPOSER_HOME` at `dir/home` and no `COMPOSER_PROCESS_TIMEOUT`, so the
+    /// developer's own Composer config can't change what a test sees.
+    fn env(dir: &Path) -> impl Fn(&str) -> Option<String> {
+        let home = dir.join("home").to_string_lossy().into_owned();
+        move |k| match k {
+            "COMPOSER_HOME" => Some(home.clone()),
+            "COMPOSER_PROCESS_TIMEOUT" => None,
+            _ => std::env::var(k).ok(),
+        }
+    }
+
     #[expect(
         clippy::needless_pass_by_value,
         reason = "a test helper called with temporaries"
@@ -552,10 +563,7 @@ mod tests {
         let manifest = json!({"scripts": scripts}).as_object().unwrap().clone();
         let vendor = dir.join("vendor").to_string_lossy().into_owned();
         let bin = dir.join("vendor/bin").to_string_lossy().into_owned();
-        Runner::new(dir, &vendor, &bin, &manifest, true, &|k| {
-            std::env::var(k).ok()
-        })
-        .dispatch(event, &[])
+        Runner::new(dir, &vendor, &bin, &manifest, true, &env(dir)).dispatch(event, &[])
     }
 
     #[test]
@@ -597,11 +605,9 @@ mod tests {
         let vendor = d.join("vendor").to_string_lossy().into_owned();
         let bin = d.join("vendor/bin").to_string_lossy().into_owned();
         let args = ["one".to_string(), "two words".to_string()];
-        Runner::new(&d, &vendor, &bin, &manifest, true, &|k| {
-            std::env::var(k).ok()
-        })
-        .dispatch("a", &args)
-        .unwrap();
+        Runner::new(&d, &vendor, &bin, &manifest, true, &env(&d))
+            .dispatch("a", &args)
+            .unwrap();
         assert_eq!(
             std::fs::read_to_string(d.join("out.txt")).unwrap(),
             "b one two words extra\nc one two words\nn\nphp\n"
@@ -699,6 +705,25 @@ mod tests {
         std::fs::remove_dir_all(&d).unwrap();
     }
 
+    /// Composer 2.11.2 reads the global `process-timeout` from `$COMPOSER_HOME/config.json`: with 1 there and none in
+    /// composer.json, `sleep 2` stops at 1 s. The home is the one the runner's environment names.
+    #[test]
+    fn global_timeout_from_the_given_composer_home() {
+        let d = project("global-timeout");
+        std::fs::create_dir_all(d.join("home")).unwrap();
+        std::fs::write(
+            d.join("home/config.json"),
+            r#"{"config": {"process-timeout": 1}}"#,
+        )
+        .unwrap();
+        let err = run(&d, json!({"slow": "sleep 2"}), "slow").unwrap_err();
+        assert_eq!(
+            err.to_string(),
+            "The process \"sleep 2\" exceeded the timeout of 1 seconds."
+        );
+        std::fs::remove_dir_all(&d).unwrap();
+    }
+
     /// Composer 2.11.2 with `process-timeout: 1`: `sleep 3; echo done` stops at 1 s with Symfony's message and prints
     /// nothing; `Composer\Config::disableProcessTimeout` lets the commands after it run on.
     #[test]
@@ -714,13 +739,7 @@ mod tests {
         let manifest = manifest.as_object().unwrap().clone();
         let vendor = d.join("vendor").to_string_lossy().into_owned();
         let bin = d.join("vendor/bin").to_string_lossy().into_owned();
-        let runner = || {
-            Runner::new(&d, &vendor, &bin, &manifest, true, &|k| {
-                (k != "COMPOSER_PROCESS_TIMEOUT")
-                    .then(|| std::env::var(k).ok())
-                    .flatten()
-            })
-        };
+        let runner = || Runner::new(&d, &vendor, &bin, &manifest, true, &env(&d));
         let started = std::time::Instant::now();
         let err = runner().dispatch("slow", &[]).unwrap_err();
         assert!(started.elapsed() < std::time::Duration::from_secs(3));
@@ -737,13 +756,9 @@ mod tests {
             json!({"config": {"process-timeout": 1}, "scripts": {"t": "trap '' TERM; sleep 4"}});
         let stubborn = stubborn.as_object().unwrap().clone();
         let started = std::time::Instant::now();
-        let err = Runner::new(&d, &vendor, &bin, &stubborn, true, &|k| {
-            (k != "COMPOSER_PROCESS_TIMEOUT")
-                .then(|| std::env::var(k).ok())
-                .flatten()
-        })
-        .dispatch("t", &[])
-        .unwrap_err();
+        let err = Runner::new(&d, &vendor, &bin, &stubborn, true, &env(&d))
+            .dispatch("t", &[])
+            .unwrap_err();
         assert!(
             started.elapsed() < std::time::Duration::from_secs(3),
             "{err}"

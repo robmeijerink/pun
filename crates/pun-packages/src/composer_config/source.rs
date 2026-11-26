@@ -6,7 +6,7 @@ use crate::error::{Context, Result, bail};
 use crate::manifest_edit::{Manipulator, Php};
 use pcre2::bytes::Regex;
 use serde_json::Value;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// The settings `addConfigSetting` keeps per host (and `platform`, per package).
 const PER_HOST: &str = r"^(bitbucket-oauth|github-oauth|gitlab-oauth|gitlab-token|bearer|http-basic|custom-headers|forgejo-token|platform)\.";
@@ -144,13 +144,12 @@ impl Source {
     }
 
     fn write(&self, text: &str, new: bool) -> Result<()> {
-        std::fs::write(&self.path, text)
-            .with_context(|| format!("can't write {}", self.path.display()))?;
         if new {
-            use std::os::unix::fs::PermissionsExt;
-            std::fs::set_permissions(&self.path, std::fs::Permissions::from_mode(0o600))?;
+            write_new(&self.path, text)
+        } else {
+            std::fs::write(&self.path, text).map_err(Into::into)
         }
-        Ok(())
+        .with_context(|| format!("can't write {}", self.path.display()))
     }
 
     /// `manipulateJson`: `edit` with the manipulator, else `fallback` on the decoded file, written again whole.
@@ -337,5 +336,45 @@ pub(super) fn read(path: &std::path::Path, shown: &str) -> Result<Php> {
     match serde_json::from_slice::<Value>(&text) {
         Ok(value) => Ok(Php::assoc(&value)),
         Err(_) => bail!("\"{shown}\" does not contain valid JSON"),
+    }
+}
+
+/// A new file with `text`, readable by its owner only: created with mode 0600 (Composer chmods it so after writing),
+/// so an auth file is never readable by others, not even for a moment.
+pub(super) fn write_new(path: &Path, text: &str) -> Result<()> {
+    use std::io::Write;
+    use std::os::unix::fs::OpenOptionsExt;
+    std::fs::OpenOptions::new()
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .mode(0o600)
+        .open(path)?
+        .write_all(text.as_bytes())?;
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::os::unix::fs::PermissionsExt;
+
+    /// Composer 2.11.2 leaves a config or auth file it creates at mode 0600, whatever the umask.
+    #[test]
+    fn new_files_are_private() {
+        let dir = std::env::temp_dir().join(format!("pun-config-new-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("auth.json");
+        write_new(&file, "{\n}\n").unwrap();
+        let meta = std::fs::metadata(&file).unwrap();
+        assert_eq!(
+            (
+                meta.permissions().mode() & 0o777,
+                std::fs::read_to_string(&file).unwrap()
+            ),
+            (0o600, "{\n}\n".to_string())
+        );
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }

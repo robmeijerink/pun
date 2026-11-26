@@ -1,6 +1,6 @@
 //! `ConfigCommand` (with `BaseConfigCommand`): reading a setting, listing them all, and writing or removing one.
 
-use super::source::{Source, read};
+use super::source::{Source, read, write_new};
 use super::{
     Config, Env, OBJECT_SETTINGS, boolean, encode, entries, is_int_key, isset, php_string, string,
     truthy,
@@ -485,14 +485,6 @@ fn load_auth_domains(config: &mut Config) -> Result<()> {
             );
         }
     }
-    Ok(())
-}
-
-/// A new file with `text`, readable by its owner only.
-fn write_new(path: &Path, text: &str) -> Result<()> {
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::write(path, text)?;
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o600))?;
     Ok(())
 }
 

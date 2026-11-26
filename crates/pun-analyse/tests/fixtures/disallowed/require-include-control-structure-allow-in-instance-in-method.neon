@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/require-include-control-structure-allow-in-instance-in-method.neon

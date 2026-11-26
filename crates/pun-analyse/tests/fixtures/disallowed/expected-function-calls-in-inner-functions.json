@@ -1,0 +1,75 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 11,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 22,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class InnerFunctions\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 22,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 23,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class InnerFunctions\\DisallowSha1 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 31,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class InnerFunctions\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 32,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class InnerFunctions\\DisallowSha1 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling sha1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/InnerFunctions.php",
+   "line": 41,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  }
+ ]
+}

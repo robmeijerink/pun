@@ -1,0 +1,16 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/Functions.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md*()"
+			"allowInFunctions": 
+				- "\\Foo\\Bar\\Waldo\\qu*x()"
+		-
+			"function": "sha*()"
+			"allowExceptInFunctions": 
+				- "\\Foo\\Bar\\Waldo\\fred()"

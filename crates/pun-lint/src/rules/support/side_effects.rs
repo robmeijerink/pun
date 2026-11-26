@@ -67,6 +67,15 @@ pub(crate) fn any_node(node: Node<'_, '_>, f: &dyn Fn(Node<'_, '_>) -> bool) -> 
     false
 }
 
+/// Rector's `ExprModifiedInConditionalAnalyzer::isModified()`: `expr` holds an assignment (`=`, `op=`, `=&`) or an
+/// increment or decrement, at any depth.
+pub(crate) fn writes_variable(expr: &Expression<'_>) -> bool {
+    any_node(Node::Expression(expr), &|n| {
+        matches!(n, Node::Assignment(_) | Node::UnaryPostfix(_))
+            || matches!(n, Node::UnaryPrefix(u) if matches!(u.operator, UnaryPrefixOperator::PreIncrement(_) | UnaryPrefixOperator::PreDecrement(_)))
+    })
+}
+
 pub(crate) fn call_has_side_effect(ancestors: &[Node<'_, '_>], expr: &Expression<'_>) -> bool {
     match expr {
         Expression::Call(Call::StaticMethod(call)) => {

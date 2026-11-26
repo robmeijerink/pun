@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 2,
+   "identifier": "disallowed.declare",
+   "message": "Using the declare control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 118,
+   "identifier": "disallowed.declare",
+   "message": "Using the declare control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

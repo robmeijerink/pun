@@ -1,0 +1,39 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/AttributeClass.php"
+		- "../src/Functions.php"
+	disallowedNamespaces:
+		-
+			"namespace": "Waldo\\Foo\\Bar"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Attribute2"
+		-
+			"class": "Waldo\\Quux\\Blade"
+			"disallowInClassWithAttributes": 
+				- "\\Attributes\\Attribute3"
+			"allowInUse": true
+		-
+			"class": "PhpOption\\None"
+			"allowInMethodsWithAttributes": 
+				- "Attribute10"
+				- "Foo\\Bar\\NamespacedAttribute"
+			"allowInUse": true
+		-
+			"class": "PhpOption\\Some"
+			"allowExceptInFunctionsWithAttributes": 
+				- "Attribute11"
+			"allowInUse": true
+		-
+			"class": "Constructor\\ClassWithConstructor"
+			"allowInClassWithMethodAttributes": 
+				- "Attribute6"
+			"allowInUse": true
+		-
+			"class": "Constructor\\ClassWithoutConstructor"
+			"allowExceptInClassWithMethodAttributes": 
+				- "Attribute6"
+			"allowInUse": true

@@ -173,7 +173,7 @@ def bench_format() -> None:
 
 SCRATCH = Path(os.environ.get("BENCH_SCRATCH", ROOT / "target-bench"))
 PHPSTAN = ROOT / ".oracle/phpstan/vendor/phpstan/phpstan/phpstan.phar"
-RECTOR = ROOT / ".oracle/rector-ecosystem/vendor/bin/rector"  # rector 2.8.4 with rector-laravel and Pest's plugin
+RECTOR = ROOT / ".oracle/rector-ecosystem/vendor/bin/rector"  # rector 2.9.2 with rector-laravel and Pest's plugin
 # project -> (PHPStan includes, paths, extra parameter lines): the project's own config at level 0, without its
 # ignoreErrors and baseline (scripts/analyse-corpus.py's configs, plus laravel-pint).
 ANALYSE = {

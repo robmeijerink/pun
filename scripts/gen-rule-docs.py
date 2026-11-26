@@ -19,12 +19,12 @@ INVENTORY = MAPPING.parent / "upstream"
 RECTOR_SETS = json.loads((MAPPING.parent / "rector-sets.json").read_text())
 PHP_SETS = "rector/php-sets"
 EDIT = "https://github.com/shipfastlabs/pun/edit/main/crates/pun-config/rules/mapping.toml"
-FAMILY = ("phpstan", "larastan", "phpstan-strict-rules", "phpstan-deprecation-rules")
+FAMILY = ("phpstan", "larastan", "phpstan-strict-rules", "phpstan-deprecation-rules", "phpstan-disallowed-calls", "type-coverage")
 TOOLS = {
     "pint": ("php-cs-fixer", "pint"),
     "php-cs-fixer": ("php-cs-fixer",),
     "rector": ("rector", "rector-laravel", "pest-plugin-rector", "rector-phpunit", "rector-symfony", "rector-doctrine", "rector-downgrade-php"),
-    "phpstan": ("phpstan", "phpstan-strict-rules", "phpstan-deprecation-rules"),
+    "phpstan": ("phpstan", "phpstan-strict-rules", "phpstan-deprecation-rules", "phpstan-disallowed-calls", "type-coverage"),
     "larastan": ("larastan",),
     "mago": ("mago-linter", "mago-analyzer", "pun"),
 }
@@ -125,6 +125,10 @@ def upstream_url(row: dict, urls: dict) -> str:
         return "https://mago.carthage.software/1.61.0/en/tools/analyzer/overview/"
     if tool == "larastan":
         return "https://github.com/larastan/larastan/blob/v3.14.0/docs/rules.md"
+    if tool == "type-coverage":
+        return "https://github.com/TomasVotruba/type-coverage/blob/2.5.1/README.md"
+    if tool == "phpstan-disallowed-calls":
+        return "https://github.com/spaze/phpstan-disallowed-calls/blob/v4.15.1/docs/custom-rules.md"
     return "https://laravel.com/docs/pint"
 
 
@@ -329,7 +333,7 @@ def phpstan_level_rules(data: dict, level: int, bleeding_edge: bool) -> set[str]
         if not entry.get("pun"):
             continue
         package = entry.get("package")
-        in_level = (package == "phpstan" and int(entry.get("level", 0)) <= level) or package == "larastan"
+        in_level = (package == "phpstan" and int(entry.get("level", 0)) <= level) or package in ("larastan", "type-coverage")
         gate = entry.get("gated_by")
         if in_level and (gate is None or default_on(gate)):
             out.add(entry["pun"])
@@ -515,6 +519,10 @@ Layout-only Rector rules map to format rules. The migration reports any that `[f
 | Changed rule parameters | Kebab-case options on each running rule that reads the parameter |
 | strict-rules or deprecation-rules includes | The matching Pun checks, when their parameter enables them |
 | nesbot/carbon's `extension.neon` | Built in: `carbon = "on"` in `[extensions]` when composer.lock locks `nesbot/carbon` |
+| phpstan-mockery's `extension.neon` | Built in: `mockery = "on"` in `[extensions]`. `mockery.convertUnionToIntersectionType: true` needs no line, as Pun always converts; `false` is reported as unsupported |
+| spaze/phpstan-disallowed-calls' or tomasvotruba/type-coverage's `extension.neon` | Built in: `disallowed-calls = "on"` or `type-coverage = "on"` in `[extensions]`. When phpstan.neon doesn't load the package but composer.lock locks it, the switch is `"off"`, because PHPStan doesn't run its rules |
+| `type_coverage` parameters | `min` on each `analyse/type-coverage/*` rule, from `return_type` or its alias `return`, which wins when set. `measure` goes on all four. The deprecated `declare` and `print_suggestions` are reported and skipped |
+| `disallowedFunctionCalls`, `disallowedMethodCalls` and the other `disallowed*` lists | The `calls`, `namespaces`, `constants` and other options of the `disallowed/*` rules, with kebab-case entry keys (`allow-in`). Bundled configs such as `disallowed-dangerous-calls.neon` are copied entry by entry. `allowIn`, `allowExceptIn`, `disallowIn` and `definedIn` paths become relative to the project root, so `filesRootDir` and `allowInRootDir` aren't copied. An `ignoreErrors` entry for an entry's `errorIdentifier` goes to that entry's rule |
 | A check that is a lint rule in Pun (`array.duplicateKey`) | The lint rule, on in `[[lint.overrides]]` for `paths` and off for `excludePaths`, unless another config turns it on everywhere. `pun analyse` also reports the check's errors under the lint rule's ID, because the lint rule sees no types and can miss some |
 | `@phpstan-ignore method.notFound` | `@pun-ignore analyse/undefined/method` |
 | Baselines | Not copied. Run `pun analyse --generate-baseline`. |

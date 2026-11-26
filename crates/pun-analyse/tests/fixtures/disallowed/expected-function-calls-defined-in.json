@@ -1,0 +1,40 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/functionCallsDefinedIn.php",
+   "line": 6,
+   "identifier": "arguments.count",
+   "message": "Function Foo\\Bar\\Waldo\\foo invoked with 0 parameters, 1-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsDefinedIn.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\fred() is forbidden. [Foo\\Bar\\Waldo\\fred() matches Foo\\Bar\\Waldo\\f*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsDefinedIn.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden. [Foo\\Bar\\Waldo\\foo() matches Foo\\Bar\\Waldo\\f*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsDefinedIn.php",
+   "line": 6,
+   "identifier": "arguments.count",
+   "message": "Function Foo\\Bar\\Waldo\\foo invoked with 0 parameters, 1-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsDefinedIn.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\quux() is forbidden. [Foo\\Bar\\Waldo\\quux() matches Foo\\Bar\\Waldo\\q*x()]",
+   "tip": null
+  }
+ ]
+}

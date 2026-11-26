@@ -16,6 +16,7 @@ impl<'arena> Checker<'_, 'arena> {
         functions::inner_function(self, f);
         self.larastan_enter_function(&f.parameter_list);
         missing_types::function(self, f);
+        type_coverage::parameters(self, f.span(), &f.parameter_list, None);
         types::function(self, f);
         types::function_defaults(self, f);
         types::function_returns(self, f);
@@ -153,6 +154,8 @@ impl<'arena> Checker<'_, 'arena> {
         hierarchy::interface_method_visibility(self, m);
         dead_code::method_parameters(self, m, &method);
         missing_types::method(self, m);
+        type_coverage::method(self, m, &method);
+        type_coverage::parameters(self, m.span(), &m.parameter_list, Some(&method));
         types::method(self, m);
         types::method_defaults(self, m);
         types::method_returns(self, m);
@@ -298,6 +301,7 @@ impl<'arena> Checker<'_, 'arena> {
         self.larastan_enter_closure(f);
         dead_code::closure(self, f);
         types::closure(self, f);
+        type_coverage::parameters(self, f.span(), &f.parameter_list, None);
         types::anonymous_defaults(self, &f.parameter_list);
         types::closure_returns(self, f);
         types::too_wide_closure(self, f);
@@ -362,6 +366,7 @@ impl<'arena> Checker<'_, 'arena> {
         self.assign.enter_scope();
         types::anonymous_defaults(self, &f.parameter_list);
         types::arrow_function_returns(self, f);
+        type_coverage::parameters(self, f.span(), &f.parameter_list, None);
         types::too_wide_arrow_function(self, f);
         if self.rebound.get(&f.span()).is_some_and(|b| b.defines_this) {
             self.enter_this(true);

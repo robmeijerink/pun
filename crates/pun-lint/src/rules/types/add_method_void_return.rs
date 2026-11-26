@@ -40,13 +40,19 @@ impl Rule for AddMethodVoidReturn {
             return;
         };
         let count = statement_count(ctx.source, body);
-        if !scope.is_final {
+        // Rector 2.9.2: a final method cannot be overridden by a child.
+        let can_be_overridden = !scope.is_final
+            && !method
+                .modifiers
+                .iter()
+                .any(|m| matches!(m, Modifier::Final(_)));
+        if can_be_overridden {
             let only_throw = count == 1 && body.statements.first().is_some_and(is_throw_statement);
             if only_throw || count == 0 {
                 return;
             }
         }
-        if !scope.is_final
+        if can_be_overridden
             && method
                 .modifiers
                 .iter()

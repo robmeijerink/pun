@@ -1,0 +1,12 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/bugs/Bug288DocblockTemplateCallableParam.php"
+	disallowedFunctionCalls:
+		-
+			"function": "disallowedFunction()"
+	disallowedMethodCalls: []
+	disallowedStaticCalls: []

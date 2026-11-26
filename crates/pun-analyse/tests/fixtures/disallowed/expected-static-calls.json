@@ -1,0 +1,166 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/staticCalls.php",
+   "line": 18,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese! [Fiction\\Pulp\\Royale::withoutCheese() matches Fiction\\Pulp\\Royale::WithoutCheese()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/staticCalls.php",
+   "line": 21,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese! [Fiction\\Pulp\\Royale::withoutCheese() matches Fiction\\Pulp\\Royale::WithoutCheese()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/staticCalls.php",
+   "line": 25,
+   "identifier": "staticMethod.notFound",
+   "message": "Call to an undefined static method Fiction\\Pulp\\Royale::withMayo().",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/staticCalls.php",
+   "line": 35,
+   "identifier": "arguments.count",
+   "message": "Static method PhpOption\\Option<mixed>::fromArraysValue() invoked with 1 parameter, 2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 7,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withCheese() is forbidden, a Quarter Pounder with Cheese?",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 8,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withCheese() is forbidden, a Quarter Pounder with Cheese?",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 9,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::WithBadCheese() is forbidden, a Quarter Pounder with Cheese? [Fiction\\Pulp\\Royale::WithBadCheese() matches Fiction\\Pulp\\*::withBad*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 12,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese! [Fiction\\Pulp\\Royale::withoutCheese() matches Fiction\\Pulp\\Royale::WithoutCheese()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 14,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese! [Fiction\\Pulp\\Royale::withoutCheese() matches Fiction\\Pulp\\Royale::WithoutCheese()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 18,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withoutCheese() is forbidden, a Quarter Pounder without Cheese! [Fiction\\Pulp\\Royale::withoutCheese() matches Fiction\\Pulp\\Royale::WithoutCheese()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 25,
+   "identifier": "staticMethod.notFound",
+   "message": "Call to an undefined static method Fiction\\Pulp\\Royale::withMayo().",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 28,
+   "identifier": "disallowed.method",
+   "message": "Calling Inheritance\\Base::woofer() (as Inheritance\\Sub::woofer()) is forbidden, method Base::woofer() is dangerous. [Inheritance\\Base::woofer() matches Inheritance\\Base::w*f*r()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 31,
+   "identifier": "disallowed.method",
+   "message": "Calling Traits\\TestTrait::z() (as Traits\\TestClass::z()) is forbidden, method TestTrait::z() is dangerous.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 32,
+   "identifier": "disallowed.method",
+   "message": "Calling Traits\\AnotherTestClass::zz() is forbidden, method AnotherTestClass::zz() is dangerous.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 35,
+   "identifier": "disallowed.method",
+   "message": "Calling PhpOption\\Option::fromArraysValue() is forbidden, do not use PhpOption. [PhpOption\\Option::fromArraysValue() matches PhpOption\\Option::*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 35,
+   "identifier": "arguments.count",
+   "message": "Static method PhpOption\\Option<mixed>::fromArraysValue() invoked with 1 parameter, 2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 36,
+   "identifier": "disallowed.method",
+   "message": "Calling PhpOption\\None::create() is forbidden, do not use PhpOption. [PhpOption\\None::create() matches PhpOption\\None::*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 37,
+   "identifier": "disallowed.method",
+   "message": "Calling PhpOption\\Some::create() is forbidden, do not use PhpOption.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 40,
+   "identifier": "disallowed.method",
+   "message": "Calling Interfaces\\BaseInterface::y() (as Interfaces\\Implementation::y()) is forbidden, method BaseInterface::y() is dangerous. [Interfaces\\BaseInterface::y() matches Interfaces\\BaseInterface::y*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 53,
+   "identifier": "disallowed.method",
+   "message": "Calling Interfaces\\BaseInterface::y() (as class@anonymous::y()) is forbidden, method BaseInterface::y() is dangerous. [Interfaces\\BaseInterface::y() matches Interfaces\\BaseInterface::y*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 57,
+   "identifier": "disallowed.method",
+   "message": "Calling Inheritance\\Base::woofer() (as class@anonymous::woofer()) is forbidden, method Base::woofer() is dangerous. [Inheritance\\Base::woofer() matches Inheritance\\Base::w*f*r()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 60,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withCheese() is forbidden, a Quarter Pounder with Cheese?",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/staticCalls.php",
+   "line": 61,
+   "identifier": "disallowed.method",
+   "message": "Calling Fiction\\Pulp\\Royale::withCheese() is forbidden, a Quarter Pounder with Cheese?",
+   "tip": null
+  }
+ ]
+}

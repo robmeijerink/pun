@@ -1,0 +1,208 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Bar.php",
+   "line": 32,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 35,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 41,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 50,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeZone is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 54,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeZone is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 58,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeZone is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 70,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 73,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 79,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/namespaceUsages.php",
+   "line": 11,
+   "identifier": "class.nameCase",
+   "message": "Class Waldo\\Quux\\Blade referenced with incorrect case: Waldo\\Quux\\blade.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 6,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Framework\\SomeInterface is forbidden, no framework some. [Framework\\SomeInterface matches Framew*rk\\Some*]",
+   "tip": "Work more on your frames"
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 7,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Inheritance\\Base is forbidden, no inheritance sub base.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 8,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Inheritance\\Sub is forbidden, no inheritance sub base.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 9,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Traits\\TestTrait is forbidden, no TestTrait.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 10,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Waldo\\Foo\\Bar is forbidden, no FooBar. [Waldo\\Foo\\Bar matches Waldo\\Foo\\bar]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 11,
+   "identifier": "class.nameCase",
+   "message": "Class Waldo\\Quux\\Blade referenced with incorrect case: Waldo\\Quux\\blade.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 11,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace Waldo\\Quux\\blade is forbidden, no blade. [Waldo\\Quux\\blade matches Waldo\\Quux\\Blade]",
+   "tip": "\u2022 Dexempo\n\u2022 Vederex"
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 12,
+   "identifier": "disallowed.namespace",
+   "message": "Namespace ZipArchive is forbidden, use clippy instead of zippy.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 14,
+   "identifier": "disallowed.class",
+   "message": "Class Inheritance\\Base is forbidden, no inheritance sub base.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 14,
+   "identifier": "disallowed.interface",
+   "message": "Interface Framework\\SomeInterface is forbidden, no framework some. [Framework\\SomeInterface matches Framew*rk\\Some*]",
+   "tip": "Work more on your frames"
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 17,
+   "identifier": "disallowed.trait",
+   "message": "Trait Traits\\TestTrait is forbidden, no TestTrait.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 24,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\blade is forbidden, no blade. [Waldo\\Quux\\blade matches Waldo\\Quux\\Blade]",
+   "tip": "\u2022 Dexempo\n\u2022 Vederex"
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 32,
+   "identifier": "disallowed.class",
+   "message": "Class Inheritance\\Sub is forbidden, no inheritance sub base.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 38,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden, no FooBar. [Waldo\\Foo\\Bar matches Waldo\\Foo\\bar]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 44,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden, no FooBar. [Waldo\\Foo\\Bar matches Waldo\\Foo\\bar]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 50,
+   "identifier": "disallowed.class",
+   "message": "Class ZipArchive is forbidden, use clippy instead of zippy.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 56,
+   "identifier": "disallowed.class",
+   "message": "Class Inheritance\\Base is forbidden, no inheritance sub base.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 62,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Foo\\Bar is forbidden, no FooBar. [Waldo\\Foo\\Bar matches Waldo\\Foo\\bar]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsages.php",
+   "line": 67,
+   "identifier": "disallowed.interface",
+   "message": "Interface Framework\\SomeInterface is forbidden, no framework some. [Framework\\SomeInterface matches Framew*rk\\Some*]",
+   "tip": "Work more on your frames"
+  }
+ ]
+}

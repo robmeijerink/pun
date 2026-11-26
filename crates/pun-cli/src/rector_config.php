@@ -99,6 +99,12 @@ try {
         'settings' => $settings,
     ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 } catch (\Throwable $e) {
-    echo "\0pun-migrate\0", $e->getMessage();
+    $message = $e->getMessage();
+    // rector.php calls a method the project's Rector lacks, such as withSetProviders(), which Rector 2.9.0 removed:
+    // Rector itself fails on it the same way.
+    if ($e instanceof \Error && str_starts_with($message, 'Call to undefined method Rector\\') && class_exists(\Rector\Application\VersionResolver::class)) {
+        $message .= sprintf(' (Rector %s has no such method, so `vendor/bin/rector` fails on this rector.php too)', \Rector\Application\VersionResolver::PACKAGE_VERSION);
+    }
+    echo "\0pun-migrate\0", $message;
     exit(1);
 }

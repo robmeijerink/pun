@@ -1,0 +1,20 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/RoyaleExceptWithParams.php"
+	disallowedFunctionCalls:
+		-
+			"function": "crc32()"
+			"allowExceptInMethods": 
+				- "Fiction\\Pulp\\RoyaleExceptWithParams::methodA()"
+			"allowParamsInAllowed": 
+				"1": "a"
+		-
+			"function": "strtolower()"
+			"allowExceptInMethods": 
+				- "Fiction\\Pulp\\RoyaleExceptWithParams::methodA()"
+			"allowExceptParamsInAllowed": 
+				"1": "a"

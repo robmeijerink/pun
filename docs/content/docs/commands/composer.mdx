@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own: `dump-autoload` and `config`.
+Run Composer commands that have no `pun` command of their own: `dump-autoload`, `run-script`, `exec` and `config`.
 
 ## Usage
 
@@ -14,6 +14,12 @@ pun composer <command> [options]
 ```bash
 pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
+pun composer run test
+pun composer run test -- --filter=UserTest
+pun composer test
+pun composer run --list
+pun composer exec phpstan -- analyse --memory-limit=1G
+pun composer exec --list
 pun composer config process-timeout 600
 pun composer config --no-plugins allow-plugins.pestphp/pest-plugin true
 pun composer config --global github-oauth.github.com <token>
@@ -36,7 +42,28 @@ For `dump-autoload` (alias `dumpautoload`):
 | `--no-plugins` | Skip Composer plugins. |
 | `--ignore-platform-req=<req>` | Leave one requirement out of `platform_check.php`. |
 | `--ignore-platform-reqs` | Write no `platform_check.php`. |
-| `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
+
+For `run-script` (alias `run`):
+
+| Option | Description |
+| --- | --- |
+| `<script> [args]...` | The script to run, and arguments passed on to it. Put arguments that start with `-` after `--`. |
+| `-l`, `--list` | List the scripts and their `scripts-descriptions`. |
+| `--dev` | Run in dev mode (the default). |
+| `--no-dev` | Run with `COMPOSER_DEV_MODE=0`. |
+| `--timeout=<seconds>` | Stop each command after this many seconds; `0` never stops one. Default: `config.process-timeout`, else 300. |
+| `--no-plugins` | Skip Composer plugins. |
+
+For `exec`:
+
+| Option | Description |
+| --- | --- |
+| `<binary> [args]...` | The binary to run, and arguments passed on to it. Composer's options count up to `--`, also after the binary: put arguments that start with `-` after `--`. |
+| `-l`, `--list` | List the binaries. |
+| `-q`, `--quiet` | Print nothing, not even what the binary prints, but the line about a binary that failed. |
+| `-v`, `-vv`, `-vvv` | Print the command before it runs. Pun prints no further debug output. |
+| `--ansi`, `--no-ansi` | Colour the list and the error line, or don't; `--ansi` wins when both are given. By default each of stdout and stderr is coloured on a terminal. |
+| `--no-plugins`, `--no-scripts`, `--no-cache` | Taken, as in Composer. They change nothing here. |
 
 For `config`:
 
@@ -54,6 +81,15 @@ For `config`:
 | `--append` | Add a repository last, not first. |
 | `--no-plugins` | Taken, as in Composer. This command runs no plugins. |
 
+For every command, before or after its name:
+
+| Option | Description |
+| --- | --- |
+| `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
+| `-n`, `--no-interaction` | Ask nothing: `run-script` without a script name exits 2, `exec` without a binary lists the binaries. |
+
+A script also runs as `pun composer <script>`, or by a name from `scripts-aliases`, as in Composer. That form takes `--dev`, `--no-dev`, `--no-plugins`, `-d` and `-n`, and, like Composer, stops reading at the first option it doesn't know: that option and every word after it are dropped, unless they follow `--`. Scripts named after a Composer event, such as `post-autoload-dump`, or after a Composer command or its alias, such as `show` or `i`, run only through `run-script`. A Composer command's name also wins over a script's alias.
+
 ## What happens
 
 `dump-autoload`:
@@ -64,6 +100,23 @@ For `config`:
 - Without `--dev` or `--no-dev`, follows the last install.
 - Pun never calls the Composer CLI.
 
+`run-script`:
+
+- Runs the script's commands as Composer does: `/bin/sh` with `vendor/bin` first on the `PATH`, `@php` (a bare name such as `@php phpstan` is found on that `PATH`), `@composer`, `@putenv`, references to other scripts with `@<name>`, `@additional_args`, and PHP callbacks such as `Foo\Bar::baz`.
+- Sets `COMPOSER_DEV_MODE` and `PHP_BINARY` for each command.
+- Runs the listeners of allowed Composer plugins for the script's event.
+- Stops a command that runs longer than Composer's `process-timeout` (300 seconds unless `--timeout`, `COMPOSER_PROCESS_TIMEOUT`, composer.json's or the global Composer config's `config.process-timeout` says otherwise; `Composer\Config::disableProcessTimeout` turns it off) and exits 2.
+- Without a script name, in a terminal, asks which script to run.
+- `@composer` runs the `composer` on your `PATH`.
+- A command that is a binary of composer.json's own `bin` runs through the interpreter its shebang names, else `php`, as in Composer.
+
+`exec`:
+
+- Runs the binary as Composer does: as a command of its own (the binary may be any command line, or `@<script>`), through `/bin/sh` in the project's directory, with the bin dir first on the `PATH`, under the same `process-timeout`. It prints no `> binary` line, and, unlike `run-script`, sets no `COMPOSER_DEV_MODE`.
+- A binary of composer.json's own `bin` runs through the interpreter its shebang names, else `php`.
+- Without a binary, in a terminal, asks which binary to run; otherwise, and with `--list`, lists the files of the bin dir (without a `.bat` beside its binary) and composer.json's `bin`, marked `(local)`.
+- Exits with the binary's exit code, after Composer's line about it when it isn't 0.
+
 `config`:
 
 - Reads a setting as Composer does: from composer.json, the global `config.json` and `auth.json`, `COMPOSER_AUTH` and the `COMPOSER_*` variables, then Composer's defaults; `--list` shows them all.
@@ -72,7 +125,9 @@ For `config`:
 
 ## Limitations
 
-- Only `dump-autoload` and `config` exist. Any other command exits 2.
+- Only `dump-autoload`, `run-script`, `exec` and `config` exist. Any other command exits 2.
+- `exec` doesn't take Composer's `--help`, `--version` or `--profile` after the binary: put them before `exec`, or after `--` for the binary.
+- `run-script` without a script name outside a terminal exits 2.
 - `config` doesn't open an editor (`--editor`) and exits 2.
 - `config` doesn't check the file it wrote against Composer's schema, as Composer does (which puts the old file back when it doesn't hold); for a value that isn't JSON, it gives only the first line of Composer's message.
 
@@ -80,6 +135,7 @@ For `config`:
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written, or the setting shown or written. |
+| 0 | Written, the setting shown or written, or the script or binary succeeded. |
 | 1 | Written, but a package is missing from `vendor/`. |
-| 2 | Unknown command, or another error. |
+| 2 | Unknown command or script, or another error. |
+| other | `run-script` and `exec`: the failed script's or binary's exit code, as in Composer. |

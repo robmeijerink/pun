@@ -30,9 +30,9 @@ function a($a, $b, $c)
 {
     $x = $a !== $b && $c;
     $x = ($a != $b) . 'x';
-    $x = $a >= ($b ?: $c);
+    $x = !($a < ($b ?: $c));
     $x = $a == $b;
-    $x = $a < $b;
+    $x = !(($a) >= ($b));
     $x = !($a instanceof B);
     $x = !($a + $b);
     $x = !($a || $b);

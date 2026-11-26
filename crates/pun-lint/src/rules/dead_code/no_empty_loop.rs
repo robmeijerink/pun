@@ -2,7 +2,7 @@ use crate::problem::{Fix, Safety};
 use mago_span::HasSpan;
 use mago_syntax::cst::*;
 
-use crate::rules::support::side_effects::has_side_effect;
+use crate::rules::support::side_effects::{has_side_effect, writes_variable};
 use crate::rules::support::statement_edits::{
     HOLDERS, List, block_list, body_list, holder_list, is_plain_assign, open_list, remove,
 };
@@ -51,7 +51,7 @@ impl Rule for NoEmptyLoop {
         let Some((body, exprs)) = parts(source, stmt) else {
             return;
         };
-        if !body.is_empty() {
+        if !body.is_empty() || keeps_state(ctx, stmt) {
             return;
         }
         if exprs.iter().any(|&expr| {
@@ -86,6 +86,21 @@ impl Rule for NoEmptyLoop {
                 edits,
             }),
         });
+    }
+}
+
+/// Rector 2.9.2 keeps a loop whose condition changes state, and a foreach over anything but an array (iterating a
+/// generator or an `Iterator` runs its code).
+fn keeps_state(ctx: &Context<'_>, stmt: &Statement<'_>) -> bool {
+    let changes = |e: &Expression<'_>| writes_variable(e);
+    match stmt {
+        Statement::DoWhile(r#do) => changes(r#do.condition),
+        Statement::While(r#while) => changes(r#while.condition),
+        Statement::For(r#for) => r#for.conditions.iter().any(|c| changes(c)),
+        Statement::Foreach(foreach) => !crate::rules::types::facts::facts(ctx)
+            .full_type(node_span(crate::syntax::unparenthesize(foreach.expression)))
+            .is_some_and(mago_codex::ttype::union::TUnion::is_array),
+        _ => false,
     }
 }
 

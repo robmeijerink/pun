@@ -1,5 +1,5 @@
-//! Rector 2.8.4's own fixtures for its rector-preset rules that edit Rector rule classes, copied verbatim from
-//! rector-src's rules-tests at 2.8.4 (DeadCode/Rector/Class_/..., TypeDeclarationDocblocks/Rector/Class_/...) into
+//! Rector 2.9.2's own fixtures for its rector-preset rules that edit Rector rule classes, copied verbatim from
+//! rector-src's rules-tests at 2.9.2 (DeadCode/Rector/Class_/..., TypeDeclarationDocblocks/Rector/Class_/...) into
 //! tests/rector/<Rector class>/Fixture, with the php-parser and Rector classes they name declared in Stubs/. Oracle/
 //! holds extra inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the rule alone, `phpVersion(80400)`, and
 //! `importNames()` for AddParamTypeToRefactorMethodRector as its config/configured_rule.php has) wrote for them. A

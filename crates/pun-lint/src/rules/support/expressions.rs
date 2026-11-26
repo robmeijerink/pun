@@ -62,6 +62,30 @@ pub(crate) fn inverse(op: &BinaryOperator<'_>) -> Option<&'static str> {
     })
 }
 
+/// Rector 2.9.2's `BinaryOpManipulator::resolveSafeInversedClass()`: [`inverse`], but an ordering comparison inverts
+/// only when both operands' native types are `int` (NAN, arrays and objects are neither smaller nor greater).
+pub(crate) fn safe_inverse(
+    ctx: &Context<'_>,
+    op: &BinaryOperator<'_>,
+    lhs: &Expression<'_>,
+    rhs: &Expression<'_>,
+) -> Option<&'static str> {
+    let inverse = inverse(op)?;
+    let ordering = matches!(
+        op,
+        BinaryOperator::GreaterThan(_)
+            | BinaryOperator::LessThan(_)
+            | BinaryOperator::GreaterThanOrEqual(_)
+            | BinaryOperator::LessThanOrEqual(_)
+    );
+    let int = |e: &Expression<'_>| {
+        crate::rules::types::facts::facts(ctx)
+            .native_type(node_span(unparenthesize(e)))
+            .is_some_and(|t| !t.types.is_empty() && t.is_int())
+    };
+    (!ordering || (int(lhs) && int(rhs))).then_some(inverse)
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Prec {
     Infix(i32, i32, i32),
@@ -183,9 +207,10 @@ pub(crate) fn inverse_node(
     lhs: Option<i32>,
 ) -> (String, Prec) {
     match unparenthesize(expr) {
-        Expression::Binary(b) if inverse(&b.operator).is_some() => {
+        Expression::Binary(b) if safe_inverse(ctx, &b.operator, b.lhs, b.rhs).is_some() => {
             let (p, l, r) = binary(&b.operator);
-            let code = infix(ctx, b.lhs, inverse(&b.operator).unwrap(), b.rhs, (l, r));
+            let inverse = safe_inverse(ctx, &b.operator, b.lhs, b.rhs).unwrap();
+            let code = infix(ctx, b.lhs, inverse, b.rhs, (l, r));
             (code, Prec::Infix(p, l, r))
         }
         Expression::UnaryPrefix(u) if u.operator.is_not() => {

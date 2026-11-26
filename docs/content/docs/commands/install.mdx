@@ -42,6 +42,7 @@ pun install --ignore-platform-req=ext-imagick
 - Keeps one copy of each package in a shared store and links it into `vendor/`.
 - Writes the autoloader and `vendor/bin`.
 - Runs the install scripts and the plugins in `config.allow-plugins`.
+- Stops a script command after Composer's `process-timeout` (300 seconds by default), as Composer does.
 - Skips the work when nothing changed since the last install.
 
 With `hardlink`, editing a file in `vendor/` also changes it in other projects. Use `clone` or `copy` if you edit `vendor/` by hand. Switching an install to `clone` or `copy` gives the packages still hardlinked their own files.

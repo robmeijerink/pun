@@ -161,6 +161,10 @@ CASES = [
     ('set-bump', PROJECT, ['config', 'bump-after-update', 'dev']),
     ('set-platform-check', PROJECT, ['config', 'platform-check', 'false']),
     ('set-suffix-null', PROJECT, ['config', 'autoloader-suffix', 'null']),
+    # -d, before or after the command's name: Composer reads and writes the composer.json there, and resolves paths there.
+    ('working-dir-get', {'sub/composer.json': j({'name': 'acme/sub'})}, ['-d', 'sub', 'config', 'name']),
+    ('working-dir-set-after', {'sub/composer.json': j({'name': 'acme/sub'})}, ['config', '-d', 'sub', 'description', 'Hi']),
+    ('working-dir-absolute', {'sub/composer.json': j({'name': 'acme/sub'})}, ['--working-dir=sub', 'config', '--absolute', 'vendor-dir']),
     ('set-cafile', {**PROJECT, 'ca.pem': 'x\n'}, ['config', 'cafile', 'ca.pem']),
     ('set-cafile-missing', PROJECT, ['config', 'cafile', 'nope.pem']),
     ('set-capath', {**PROJECT, 'certs/.keep': ''}, ['config', 'capath', 'certs']),

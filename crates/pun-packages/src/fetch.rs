@@ -132,10 +132,15 @@ fn base64(bytes: &[u8]) -> String {
 }
 
 pub fn composer_dirs() -> Option<(PathBuf, PathBuf)> {
+    composer_dirs_in(&|k| std::env::var(k).ok())
+}
+
+/// [`composer_dirs`] with the variables `env` gives. Whether XDG applies still comes from the process's own
+/// environment, which Composer reads from `$_SERVER`; it only decides which directory under `HOME` comes first.
+pub fn composer_dirs_in(env: crate::Env) -> Option<(PathBuf, PathBuf)> {
     let xdg_env = std::env::vars_os().any(|(k, _)| k.to_string_lossy().starts_with("XDG_"));
     let xdg = Path::new("/etc/xdg").is_dir() || xdg_env;
-    let env = |k: &str| std::env::var(k).ok();
-    dirs_in(&env, xdg, cfg!(target_os = "macos"))
+    dirs_in(env, xdg, cfg!(target_os = "macos"))
 }
 
 fn dirs_in(

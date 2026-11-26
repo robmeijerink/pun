@@ -3,7 +3,15 @@ use std::fmt::{self, Display};
 #[derive(Debug)]
 pub enum Error {
     Message(String),
-    Context { message: String, source: Box<Error> },
+    Context {
+        message: String,
+        source: Box<Error>,
+    },
+    /// A script that exited with `code`; Composer exits with that code too.
+    Script {
+        message: String,
+        code: i32,
+    },
     Io(std::io::Error),
     Json(serde_json::Error),
     Pcre(pcre2::Error),
@@ -19,9 +27,20 @@ impl Error {
         Error::Message(message.to_string())
     }
 
+    /// The exit code of the failed script behind this error, through any context around it.
+    pub fn script_code(&self) -> Option<i32> {
+        match self {
+            Error::Script { code, .. } => Some(*code),
+            Error::Context { source, .. } => source.script_code(),
+            _ => None,
+        }
+    }
+
     fn head(&self) -> &dyn Display {
         match self {
-            Error::Message(m) | Error::Context { message: m, .. } => m,
+            Error::Message(m)
+            | Error::Context { message: m, .. }
+            | Error::Script { message: m, .. } => m,
             Error::Io(e) => e,
             Error::Json(e) => e,
             Error::Pcre(e) => e,
@@ -50,7 +69,7 @@ impl Display for Error {
 impl std::error::Error for Error {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
-            Error::Message(_) => None,
+            Error::Message(_) | Error::Script { .. } => None,
             Error::Context { source, .. } => Some(source.as_ref()),
             Error::Io(e) => e.source(),
             Error::Json(e) => e.source(),
@@ -147,5 +166,15 @@ mod tests {
         assert_eq!(err.to_string(), "installing");
         assert_eq!(format!("{err:#}"), "installing: reading: gone");
         assert_eq!(format!("{:#}", Error::msg("plain")), "plain");
+        assert_eq!(Error::msg("plain").script_code(), None);
+        let script: std::result::Result<(), _> = Err(Error::Script {
+            message: "failed".into(),
+            code: 3,
+        });
+        let err = script.context("called").unwrap_err();
+        assert_eq!(
+            (format!("{err:#}"), err.script_code()),
+            ("called: failed".into(), Some(3))
+        );
     }
 }

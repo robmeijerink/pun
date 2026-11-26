@@ -1,0 +1,28 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/Enums.php"
+	disallowedConstants:
+		-
+			"class": "Enums\\Enum"
+			"constant": "ENUM_CONST"
+		-
+			"class": "Enums\\Enum"
+			"constant": "Bar"
+		-
+			"class": "Enums\\BackedEnum"
+			"constant": "ENUM_CONST"
+		-
+			"class": "Enums\\BackedEnum"
+			"constant": "Quux"
+	disallowedEnums:
+		-
+			"enum": "Enums\\Enum"
+			"case": "Foo"
+			"message": "use Baz instead"
+		-
+			"enum": "Enums\\BackedEnum"
+			"case": "Waldo"

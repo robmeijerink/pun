@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/enumPropertyUsages.php",
+   "line": 6,
+   "identifier": "disallowed.property",
+   "message": "Using Enums\\BackedEnum::$value is forbidden.",
+   "tip": null
+  }
+ ]
+}

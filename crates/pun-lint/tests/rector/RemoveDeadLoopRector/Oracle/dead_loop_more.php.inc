@@ -31,6 +31,8 @@ class A
 
 function a($items, $x)
 {
+    foreach ($items as $item):
+    endforeach;
     while ($x):
         foo();
     endwhile;

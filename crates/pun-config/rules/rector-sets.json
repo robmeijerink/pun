@@ -2572,9 +2572,6 @@
   "lint/functions/require-strict-in-array": [
    "StrictInArrayRector"
   ],
-  "lint/refactor/replace-function-with-constant": [
-   "FuncCallToConstFetchRector"
-  ],
   "lint/style/no-escaped-quotes": [
    "SimplifyQuoteEscapeRector"
   ],
@@ -2602,9 +2599,6 @@
   ],
   "lint/style/require-parent-visibility": [
    "MakeInheritedMethodVisibilitySameAsParentRector"
-  ],
-  "lint/style/require-statement-padding": [
-   "NewlineAfterStatementRector"
   ]
  },
  "rector/datetime-to-carbon": {

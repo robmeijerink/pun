@@ -1,5 +1,5 @@
 //! Rector's own fixtures for `lint/php-8.5/no-null-array-key` (`ArrayKeyExistsNullToEmptyStringRector`) and
-//! `lint/statements/add-safe-strict-types` (`SafeDeclareStrictTypesRector`), copied verbatim from rector-src 2.8.4
+//! `lint/statements/add-safe-strict-types` (`SafeDeclareStrictTypesRector`), copied verbatim from rector-src 2.9.2
 //! (`.oracle/rector`, rules-tests/...) into tests/rector/<Rector class>/Fixture. Oracle/ holds extra inputs with what
 //! Rector 2.8.4 (`.oracle/rector-ecosystem`, the rule alone, `phpVersion(80500)`, 80400 for the strict types rule)
 //! wrote for them. Each must pass as `format(pun lint --fix) == format(expected)` with the laravel preset, and the text edits

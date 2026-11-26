@@ -93,9 +93,13 @@ pub(crate) struct Checks {
     pub(super) level: u8,
     relative_path: RelativePath,
     larastan: Option<super::Larastan>,
+    mockery: Option<crate::Mockery>,
+    type_coverage: Option<super::TypeCoverage>,
     internal: Option<super::internal::Names>,
     pub(super) type_aliases: Vec<(String, String)>,
     reported: Option<crate::project::Reported>,
+    extension_identifiers: HashSet<String>,
+    disallowed: Option<super::Disallowed>,
     method_rules: crate::MethodRules,
     pub(super) strict: crate::StrictRules,
     pub(super) exceptions: crate::Exceptions,
@@ -144,19 +148,33 @@ fn patched_docs(codebase: &CodebaseMetadata) -> HashMap<Span, Span> {
 }
 
 impl Checks {
+    /// Drops the errors of rules that are off. Pun's own rules always give an identifier, so an error without one
+    /// comes from an extension that is on (type-coverage's measure mode), as one with an identifier its config entry
+    /// names does.
     pub(crate) fn keep_reported(&self, errors: &mut Vec<Error>) {
         if let Some(reported) = &self.reported {
             errors.retain(|e| {
-                let id = e.identifier.as_deref().unwrap_or_default();
-                id == "phpstan.parse" || id.starts_with("larastan.collected.") || reported(id)
+                e.identifier.as_deref().is_none_or(|id| {
+                    id == "phpstan.parse"
+                        || id.starts_with("larastan.collected.")
+                        || id == super::type_coverage::COLLECTED
+                        || self.extension_identifiers.contains(id)
+                        || reported(id)
+                })
             });
         }
     }
 
     fn extensions(&self) -> impl Iterator<Item = &dyn crate::AnalyseExtension> {
-        self.larastan
+        (self
+            .larastan
             .iter()
-            .map(|l| l as &dyn crate::AnalyseExtension)
+            .map(|l| l as &dyn crate::AnalyseExtension))
+        .chain(
+            self.mockery
+                .iter()
+                .map(|m| m as &dyn crate::AnalyseExtension),
+        )
     }
 }
 
@@ -385,6 +403,8 @@ impl Checks {
             php_version: project.php_version.id(),
             relative_path: project.relative_path.clone(),
             larastan,
+            mockery: project.mockery.clone(),
+            type_coverage: project.type_coverage,
             internal: (internal_members
                 || project
                     .options
@@ -401,6 +421,8 @@ impl Checks {
             }),
             type_aliases: project.type_aliases.clone(),
             reported: project.reported.clone(),
+            extension_identifiers: project.extension_identifiers.clone(),
+            disallowed: (!project.disallowed.is_empty()).then(|| project.disallowed.clone()),
             method_rules: project.method_rules,
             patched_docs: patched_docs(codebase),
             classes: Default::default(),
@@ -537,6 +559,10 @@ fn checker<'a, 'arena>(
         names, codebase, program,
     ));
     typed.extend(super::debug::typed_expressions(names, codebase, program));
+    typed.extend(super::disallowed::typed_expressions(
+        project.disallowed.is_some(),
+        program,
+    ));
     typed.extend(arrays::typed_expressions(program));
     typed.extend(super::names::typed_class_constants(program, project.level));
     typed.extend(super::scope::typed_method_receivers(program));
@@ -695,6 +721,7 @@ fn checker<'a, 'arena>(
         level: project.level,
         switches: project.switches,
         larastan: project.larastan.as_ref(),
+        type_coverage: project.type_coverage.as_ref(),
         larastan_state: Default::default(),
         internal: project.internal.as_ref(),
         unreachable: Default::default(),
@@ -708,6 +735,7 @@ fn checker<'a, 'arena>(
         toggled: &project.toggled,
         by_ref_foreach: Vec::new(),
         method_rules: project.method_rules,
+        disallowed: project.disallowed.as_ref(),
         errors: Vec::new(),
     }
 }

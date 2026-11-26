@@ -5,7 +5,8 @@ use mago_codex::ttype::atomic::array::key::ArrayKey;
 use mago_codex::ttype::atomic::object::TObject;
 use mago_codex::ttype::atomic::scalar::TScalar;
 use mago_syntax::cst::{
-    ClassLikeMember, ClassLikeMemberSelector, Expression, Literal, Method, Modifier, Node, NodeKind,
+    ClassLikeMember, ClassLikeMemberSelector, Expression, Literal, Method, Modifier, Node,
+    NodeKind, Variable,
 };
 
 use super::facts::{Facts, facts};
@@ -13,6 +14,7 @@ use super::names::resolve_class_name;
 use super::param::{add_hint, param_declaration_unsorted};
 use crate::rules::support::class_members::{qualified, type_of};
 use crate::rules::support::options::{boolean, configure};
+use crate::rules::support::phpdoc_writer::DocTarget;
 use crate::syntax::{node_span, unparenthesize};
 use crate::{Context, OptionsError, Report, Rule};
 
@@ -98,7 +100,7 @@ impl Rule for AddParamTypeMethodCall {
             if !only_own || (!private && !protected) {
                 continue;
             }
-            let Some(types) = call_types(&facts, &scoped, &name, &methods, method.name.value)
+            let Some(types) = call_types(ctx, &facts, &scoped, &name, &methods, method.name.value)
             else {
                 continue;
             };
@@ -160,6 +162,7 @@ fn is_vendor_locked(facts: &Facts, class: &str, method: &Method<'_>, private: bo
 }
 
 fn call_types(
+    ctx: &Context<'_>,
     facts: &Facts,
     scoped: &[Node<'_, '_>],
     class: &str,
@@ -169,6 +172,21 @@ fn call_types(
     let mut positions: Vec<Option<Vec<TAtomic>>> = Vec::new();
     let mut unpacked = false;
     for m in methods {
+        let info = DocTarget::of(ctx, node_span(*m).start).info(ctx.source);
+        // Rector 2.9.2's `isDocblockTypedOnlyParamVariable()`: an untyped param with a `@param` type, which can
+        // narrow its native type (`isset($data['key'])`), counts as mixed.
+        let doc_only = |value: &Expression<'_>| {
+            let Expression::Variable(Variable::Direct(v)) = unparenthesize(value) else {
+                return false;
+            };
+            m.parameter_list.parameters.iter().any(|p| {
+                p.variable.name == v.name
+                    && p.hint.is_none()
+                    && info
+                        .param_tag(&String::from_utf8_lossy(v.name))
+                        .is_some_and(|t| !t.ty.to_string().eq_ignore_ascii_case("mixed"))
+            })
+        };
         walk(Node::Method(m), &mut |node| {
             let (selector, args, on_class) = match node {
                 Node::MethodCall(call) => (
@@ -200,7 +218,7 @@ fn call_types(
                 }
                 let native = facts
                     .native_type(node_span(unparenthesize(value)))
-                    .filter(|_| !is_optional_offset(facts, value));
+                    .filter(|_| !is_optional_offset(facts, value) && !doc_only(value));
                 let Some(types) = &mut positions[position] else {
                     continue;
                 };

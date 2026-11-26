@@ -255,6 +255,53 @@ pub fn collection_of(codebase: &CodebaseMetadata, named: &mut TNamedObject, opti
     })
 }
 
+/// `collection-of<[TKey, ]TModel>` that still holds a template, resolved as a call's return type is
+/// (`TypeUtils::resolveLateResolvableTypes($type, true)`): CollectionOfType::getResult() picks the collection class
+/// from the template's bound and keeps the template as the collection's model.
+pub fn collection_of_unresolvable(codebase: &CodebaseMetadata, named: &TNamedObject) -> Option<TUnion> {
+    let (key, model) = match named.type_parameters.as_deref()? {
+        [model] => (None, model),
+        [key, model] => (Some(key), model),
+        _ => return None,
+    };
+    if !model.has_template_types() && !key.is_some_and(TUnion::has_template_types) {
+        return None;
+    }
+    fn bounds(union: &TUnion, into: &mut Vec<TAtomic>) {
+        for atomic in union.types.iter() {
+            match atomic {
+                TAtomic::GenericParameter(parameter) => bounds(&parameter.constraint, into),
+                atomic => into.push(atomic.clone()),
+            }
+        }
+    }
+    let mut bound = Vec::new();
+    bounds(model, &mut bound);
+    let bound = TUnion::from_vec(bound);
+    let resolved = COLLECTION_OF_RESULT.get().and_then(|result| result(codebase, &bound, key)).unwrap_or_else(|| {
+        TUnion::from_atomic(TAtomic::Object(TObject::Named(TNamedObject::new_with_type_parameters(
+            mago_word::word("Illuminate\\Database\\Eloquent\\Collection"),
+            Some(vec![key.cloned().unwrap_or_else(crate::ttype::get_int), bound.clone()]),
+        ))))
+    });
+    let types = resolved
+        .types
+        .iter()
+        .map(|atomic| match atomic {
+            TAtomic::Object(TObject::Named(collection)) => {
+                let mut collection = collection.clone();
+                if let Some(last) = collection.type_parameters.as_mut().and_then(|parameters| parameters.last_mut()) {
+                    *last = model.clone();
+                }
+                TAtomic::Object(TObject::Named(collection))
+            }
+            atomic => atomic.clone(),
+        })
+        .collect();
+
+    Some(TUnion::from_vec(types))
+}
+
 /// Larastan's `builder-of<TModel[, TRelation]>` (BuilderOfType) and `relation-of<TModel, TRelation>` (RelationOfType),
 /// LateResolvableTypes like `collection-of`: the type builder's placeholder objects of these names.
 pub const BUILDER_OF: &[u8] = b"builder-of";
@@ -1286,7 +1333,11 @@ fn should_use_static_type_params(named: &TNamedObject, static_obj: &TNamedObject
         return true;
     };
 
-    let Some(class_metadata) = codebase.get_class_like_by_name(static_obj.name) else {
+    // Pun: the current arguments were filled in for the class `static` is declared in (`Relation`'s three), which may
+    // name more templates than the receiver's class (`HasMany`'s two)
+    let Some(class_metadata) =
+        codebase.get_class_like_by_name(named.name).or_else(|| codebase.get_class_like_by_name(static_obj.name))
+    else {
         return false;
     };
 

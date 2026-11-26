@@ -167,13 +167,8 @@ fn keep_living<'a>(
         | Expression::Static(_)
         | Expression::Parent(_) => {}
         Expression::CompositeString(s) if !matches!(s, CompositeString::ShellExecute(_)) => {}
-        Expression::Clone(c) => {
-            if may_be_object(scope, c.object) {
-                out.push(expr);
-            } else {
-                keep_living(scope, c.object, out);
-            }
-        }
+        // Rector 2.9.2 keeps every clone: __clone() may be declared in a subclass.
+        Expression::Clone(_) => out.push(expr),
         Expression::UnaryPrefix(u)
             if matches!(
                 u.operator,

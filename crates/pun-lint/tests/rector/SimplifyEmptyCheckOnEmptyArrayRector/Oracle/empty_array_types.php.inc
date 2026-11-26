@@ -110,7 +110,7 @@ class A
         $e = empty($this->generic);
         $f = empty($this->union);
         $g = empty($this->noVar);
-        $h = $this->hooked === [];
+        $h = empty($this->hooked);
         $i = empty($this->shape);
     }
 

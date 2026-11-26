@@ -79,7 +79,16 @@ impl Rule for NoClosureFromCallable {
                     return;
                 };
                 match target {
-                    Expression::Variable(_) => format!("{}->{method}(...)", text(ctx, target)),
+                    // Rector 2.9.2: a string variable holds a static callable, e.g. 'SomeClass'.
+                    Expression::Variable(_) => {
+                        let object = crate::rules::types::facts::facts(ctx)
+                            .full_type(node_span(target))
+                            .is_some_and(|t| !t.types.is_empty() && t.is_objecty());
+                        if !object {
+                            return;
+                        }
+                        format!("{}->{method}(...)", text(ctx, target))
+                    }
                     Expression::Literal(Literal::String(class)) => {
                         let Some(class) = class.value.map(String::from_utf8_lossy) else {
                             return;

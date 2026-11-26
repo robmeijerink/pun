@@ -1,0 +1,17 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/ClassWithAttributes.php"
+	disallowedAttributes:
+		-
+			"attribute": 
+				- "Attributes\\AttributeEntity"
+			"allowIn": 
+				- "src/ClassWithAttributes.php"
+		-
+			"attribute": "#[\\Attributes\\AttributeClass()]"
+			"allowIn": 
+				- "src/ClassWithAttributes.php"

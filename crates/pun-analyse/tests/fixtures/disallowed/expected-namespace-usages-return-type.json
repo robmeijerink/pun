@@ -1,0 +1,103 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/DnfTypesEverywhere.php",
+   "line": 23,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden, do androids dream of electric sheep?",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 15,
+   "identifier": "property.unresolvableNativeType",
+   "message": "Property Types\\TypesEverywhere::$uWotBl8 has unresolvable native type.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 22,
+   "identifier": "parameter.unresolvableNativeType",
+   "message": "Parameter $privateUWotBl8 of method Types\\TypesEverywhere::__construct() has unresolvable native type.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 22,
+   "identifier": "property.unresolvableNativeType",
+   "message": "Property Types\\TypesEverywhere::$privateUWotBl8 has unresolvable native type.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 27,
+   "identifier": "return.missing",
+   "message": "Method Types\\TypesEverywhere::blade() should return Waldo\\Quux\\Blade but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 29,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden, do androids dream of electric sheep?",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 33,
+   "identifier": "return.missing",
+   "message": "Method Types\\TypesEverywhere::maybeBlade() should return Waldo\\Quux\\Blade|null but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 35,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden, do androids dream of electric sheep?",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 39,
+   "identifier": "return.missing",
+   "message": "Method Types\\TypesEverywhere::doYouEvenBlade() should return Waldo\\Quux\\Blade|null but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 41,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden, do androids dream of electric sheep?",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 45,
+   "identifier": "return.missing",
+   "message": "Method Types\\TypesEverywhere::uWotBl8() should return *NEVER* but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 46,
+   "identifier": "parameter.unresolvableNativeType",
+   "message": "Parameter $blade of method Types\\TypesEverywhere::uWotBl8() has unresolvable native type.",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 47,
+   "identifier": "disallowed.class",
+   "message": "Class Waldo\\Quux\\Blade is forbidden, do androids dream of electric sheep?",
+   "tip": null
+  },
+  {
+   "file": "src/TypesEverywhere.php",
+   "line": 47,
+   "identifier": "return.unresolvableNativeType",
+   "message": "Method Types\\TypesEverywhere::uWotBl8() has unresolvable native return type.",
+   "tip": null
+  }
+ ]
+}

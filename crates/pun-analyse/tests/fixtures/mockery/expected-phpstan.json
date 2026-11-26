@@ -1,0 +1,481 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/DifferentNamespaceTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 30,
+   "identifier": "parameter.unresolvableType",
+   "message": "PHPDoc tag @param for parameter $array contains unresolvable type.",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 30,
+   "identifier": "parameter.unresolvableType",
+   "message": "PHPDoc tag @param for parameter $int contains unresolvable type.",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 30,
+   "identifier": "parameter.unresolvableType",
+   "message": "PHPDoc tag @param for parameter $sealed contains unresolvable type.",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 32,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *NEVER*",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 33,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: App\\SubMock",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 34,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 35,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 36,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 37,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *NEVER*",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 38,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *NEVER*",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 39,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: callable(): mixed&Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 44,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Intersections.php",
+   "line": 44,
+   "identifier": "method.staticCall",
+   "message": "Static call to instance method Mockery\\MockInterface::allows().",
+   "tip": null
+  },
+  {
+   "file": "src/IsolatedMockeryTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/MockeryBarTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/MockeryTest.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 20,
+   "identifier": "property.unresolvableType",
+   "message": "PHPDoc tag @var for property PHPStan\\Mockery\\Probe::$nullable contains unresolvable type.",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 33,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 34,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 35,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo2",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 36,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo3",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 37,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 38,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Buzz&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 39,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 40,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Baz&PHPStan\\Mockery\\Buzz",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 41,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 42,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 43,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 44,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 45,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 46,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 47,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Buzz&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 48,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 49,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 57,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Type\\Allows",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 58,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Type\\Expects",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 59,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 60,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 61,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Type\\Allows",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 62,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Type\\Expects",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 63,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Type\\Allows",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 64,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\HigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 65,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\ExpectsHigherOrderMessage",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 66,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 67,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 68,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 69,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 70,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 71,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 72,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 73,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\Expectation",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 82,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 83,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 84,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: *NEVER*",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 85,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface|PHPStan\\Mockery\\Foo|null",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 86,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\LegacyMockInterface|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 87,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: PHPStan\\Mockery\\Bar|PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 88,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Foo",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 89,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Baz",
+   "tip": null
+  },
+  {
+   "file": "src/Probe.php",
+   "line": 93,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: Mockery\\MockInterface&PHPStan\\Mockery\\Buzz",
+   "tip": null
+  },
+  {
+   "file": "src/data/Bar.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Baz.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Buzz.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo2.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  },
+  {
+   "file": "src/data/Foo3.php",
+   "line": 3,
+   "identifier": "phpstanApi.phpstanNamespace",
+   "message": "Declaring PHPStan namespace is not allowed in 3rd party packages.",
+   "tip": "See:\n   https://phpstan.org/developing-extensions/backward-compatibility-promise"
+  }
+ ]
+}

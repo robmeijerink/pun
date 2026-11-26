@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/bugs/Bug288DocblockTemplateCallableParam.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling disallowedFunction() is forbidden.",
+   "tip": null
+  }
+ ]
+}

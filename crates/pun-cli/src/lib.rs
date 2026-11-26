@@ -12,6 +12,7 @@ mod cache;
 mod composer;
 mod composer_config;
 mod console;
+mod exec;
 mod extensions;
 pub mod finder;
 mod fix_report;
@@ -158,7 +159,7 @@ enum Cmd {
     /// Find code that could be written better
     ///
     /// Use --fix to apply the fixes.
-    Lint(Box<StageCmd>),
+    Lint(Box<LintCmd>),
     /// Run format, lint and analyse together
     ///
     /// Use --fix to apply the format and lint fixes.
@@ -261,6 +262,20 @@ struct StageCmd {
     /// `-A`, `-W` and `-D` in command-line order (filled in `main` from clap's indices).
     #[arg(skip)]
     levels: Vec<(lint_plan::CliLevel, String)>,
+}
+
+/// `pun lint`: the stage flags plus `--generate-baseline`.
+#[derive(Args)]
+struct LintCmd {
+    #[command(flatten)]
+    stage: StageCmd,
+    /// Write every lint problem to the baseline (`[lint] baseline`, else pun-lint-baseline.toml) and exit 0.
+    #[arg(long, value_name = "FILE", num_args = 0..=1, conflicts_with = "fix")]
+    #[expect(
+        clippy::option_option,
+        reason = "clap: the flag is absent, bare, or given a file"
+    )]
+    generate_baseline: Option<Option<PathBuf>>,
 }
 
 #[derive(Clone, Copy, PartialEq, clap::ValueEnum)]
@@ -425,9 +440,12 @@ fn run() -> ExitCode {
     }
     let matches = command().get_matches_from(args);
     let mut cli = Cli::from_arg_matches(&matches).unwrap_or_else(|e| e.exit());
-    if let (Cmd::Lint(cmd) | Cmd::Check(cmd), Some((_, sub))) = (&mut cli.cmd, matches.subcommand())
-    {
-        cmd.levels = levels(sub);
+    if let Some((_, sub)) = matches.subcommand() {
+        match &mut cli.cmd {
+            Cmd::Lint(cmd) => cmd.stage.levels = levels(sub),
+            Cmd::Check(cmd) => cmd.levels = levels(sub),
+            _ => {}
+        }
     }
     let name = matches.subcommand_name().unwrap_or_default();
     let flag = (cli.agent || cli.no_agent).then_some(cli.agent);
@@ -446,7 +464,11 @@ fn run() -> ExitCode {
             a.github_actions = github_actions;
             (a.max_processes, a.failure())
         }
-        Cmd::Lint(cmd) | Cmd::Check(cmd) => {
+        Cmd::Lint(cmd) => {
+            cmd.stage.args.github_actions = github_actions;
+            (cmd.stage.args.max_processes, cmd.stage.args.failure())
+        }
+        Cmd::Check(cmd) => {
             cmd.args.github_actions = github_actions;
             (cmd.args.max_processes, cmd.args.failure())
         }
@@ -463,8 +485,10 @@ fn run() -> ExitCode {
     let result = match cmd {
         Cmd::Format(a) if a.pun.watch => watch::run(*a),
         Cmd::Format(a) => run::stage(&a, Stage::Format, &LintOpts::default()),
-        Cmd::Lint(cmd) => lint_or_check(*cmd, |fix| Stage::Lint { fix }),
-        Cmd::Check(cmd) => lint_or_check(*cmd, |fix| Stage::Check { fix }),
+        Cmd::Lint(cmd) => {
+            lint_or_check(cmd.stage, cmd.generate_baseline, |fix| Stage::Lint { fix })
+        }
+        Cmd::Check(cmd) => lint_or_check(*cmd, None, |fix| Stage::Check { fix }),
         Cmd::Analyse(a) => analyse::run(&a),
         Cmd::Migrate(a) => migrate::run(&a),
         Cmd::Init(a) => init::run(a),
@@ -496,7 +520,15 @@ fn run() -> ExitCode {
 }
 
 /// `pun lint` / `pun check`: a `pun format` run over other rules; without `--fix` nothing is written.
-fn lint_or_check(cmd: StageCmd, stage: fn(bool) -> Stage) -> Result<Exit> {
+#[expect(
+    clippy::option_option,
+    reason = "clap: `--generate-baseline` is absent, bare, or given a file"
+)]
+fn lint_or_check(
+    cmd: StageCmd,
+    generate_baseline: Option<Option<PathBuf>>,
+    stage: fn(bool) -> Stage,
+) -> Result<Exit> {
     let mut a = cmd.args;
     a.test |= !cmd.fix;
     let lint = LintOpts {
@@ -504,6 +536,7 @@ fn lint_or_check(cmd: StageCmd, stage: fn(bool) -> Stage) -> Result<Exit> {
         deny_warnings: cmd.deny_warnings,
         max_warnings: cmd.max_warnings,
         concise: cmd.concise,
+        generate_baseline,
     };
     run::stage(&a, stage(cmd.fix), &lint)
 }

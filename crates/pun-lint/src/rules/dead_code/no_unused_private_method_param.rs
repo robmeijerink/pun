@@ -6,7 +6,7 @@ use crate::rules::support::names::resolve_class_name;
 use crate::rules::support::options::part_on;
 use crate::rules::support::rewrites::{list_removal, merge, remove_params};
 use crate::syntax::is_this;
-use crate::syntax::node_span;
+use crate::syntax::{node_span, unparenthesize};
 use crate::{Context, OptionsError, Report, Rule};
 
 #[derive(Default)]
@@ -207,10 +207,28 @@ fn find_references<'a>(
         }
         Node::StaticMethodPartialApplication(call) if named(&call.method) != Some(false) => {
             match receiver(class, call.class) {
-                _ if matches!(call.class, Expression::Self_(_) | Expression::Static(_)) => {}
                 Some(false) => {}
                 Some(true) => out.push(Reference::Callable),
                 None => out.push(Reference::Unknown(None)),
+            }
+        }
+        // Rector 2.9.2's `isUsedAsArrayCallable()`: `[$this, 'method']` or `[self::class, $dynamic]` hands the
+        // method to code that decides how many arguments it passes; `[Other::class, 'method']` names another method.
+        Node::Array(Array { elements, .. }) | Node::LegacyArray(LegacyArray { elements, .. }) => {
+            if let [ArrayElement::Value(first), ArrayElement::Value(second)] = elements.as_slice()
+                && let Some(own) = callable_class(class, first.value)
+            {
+                match unparenthesize(second.value) {
+                    Expression::Literal(Literal::String(s)) => {
+                        if !own {
+                            return;
+                        }
+                        if s.value.is_some_and(|v| v.eq_ignore_ascii_case(name)) {
+                            out.push(Reference::Callable);
+                        }
+                    }
+                    _ => out.push(Reference::Callable),
+                }
             }
         }
         Node::LiteralString(s) if s.value.is_some_and(|v| v.eq_ignore_ascii_case(name)) => {
@@ -219,6 +237,19 @@ fn find_references<'a>(
         _ => {}
     }
     node.visit_children(|child| find_references(class, child, name, out));
+}
+
+/// The class an array callable's first item names: `Some(true)` for this class (`$this`, `self::class`,
+/// `static::class`, `__CLASS__`), `Some(false)` for another one, `None` when it names no class.
+fn callable_class(class: &ClassScope<'_, '_>, expr: &Expression<'_>) -> Option<bool> {
+    match unparenthesize(expr) {
+        e if is_this(e) => Some(true),
+        Expression::MagicConstant(MagicConstant::Class(_)) => Some(true),
+        Expression::Access(Access::ClassConstant(fetch)) if matches!(&fetch.constant, ClassLikeConstantSelector::Identifier(c) if c.value.eq_ignore_ascii_case(b"class")) => {
+            receiver(class, fetch.class)
+        }
+        _ => None,
+    }
 }
 
 fn receiver(class: &ClassScope<'_, '_>, expr: &Expression<'_>) -> Option<bool> {

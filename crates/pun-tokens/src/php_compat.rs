@@ -354,12 +354,19 @@ pub fn preg_quote(s: &[u8], delimiter: Option<u8>) -> Vec<u8> {
 }
 
 pub fn fnmatch(pattern: &[u8], string: &[u8]) -> bool {
+    fnmatch_flags(pattern, string, false, false)
+}
+
+/// PHP's `fnmatch($pattern, $string, $flags)` with `FNM_NOESCAPE` and `FNM_CASEFOLD` as asked.
+pub fn fnmatch_flags(pattern: &[u8], string: &[u8], noescape: bool, casefold: bool) -> bool {
     use std::ffi::CString;
+    let flags = if noescape { libc::FNM_NOESCAPE } else { 0 }
+        | if casefold { libc::FNM_CASEFOLD } else { 0 };
     CString::new(pattern)
         .ok()
         .zip(CString::new(string).ok())
         // SAFETY: both are valid NUL-terminated C strings for the duration of the call.
-        .is_some_and(|(p, s)| unsafe { libc::fnmatch(p.as_ptr(), s.as_ptr(), 0) == 0 })
+        .is_some_and(|(p, s)| unsafe { libc::fnmatch(p.as_ptr(), s.as_ptr(), flags) == 0 })
 }
 
 /// PHP's `glob($pattern)` without flags: the C library's sorted matches, or an empty list when

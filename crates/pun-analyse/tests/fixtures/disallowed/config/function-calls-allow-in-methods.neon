@@ -1,0 +1,22 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/Royale.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md5_file()"
+			"allowInMethods": 
+				- "\\Fiction\\Pulp\\Royale::withB*dCheese()"
+		-
+			"function": "sha1_file()"
+			"allowInFunctions": 
+				- "\\Fiction\\Pulp\\Royale::WithoutCheese()"
+			"allowParamsInAllowed": 
+				"2": true
+		-
+			"function": "sha1()"
+			"allowExceptInFunctions": 
+				- "\\Fiction\\Pulp\\Royale::__construct()"

@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinClasses.php",
+   "line": 18,
+   "identifier": "disallowed.new",
+   "message": "Calling Waldo\\Quux\\Blade::__construct() is forbidden. [Waldo\\Quux\\Blade::__construct() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinClasses.php",
+   "line": 19,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden. [Waldo\\Quux\\Blade::runner() matches *()]",
+   "tip": null
+  }
+ ]
+}

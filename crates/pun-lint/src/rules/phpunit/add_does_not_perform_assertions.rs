@@ -4,12 +4,14 @@
 //! `$this->addToAssertionCount()` statements go.
 
 use crate::problem::{Edit, Safety, Span};
+use mago_codex::identifier::method::MethodIdentifier;
 use mago_codex::ttype::atomic::TAtomic;
 use mago_codex::ttype::atomic::object::TObject;
 use mago_syntax::cst::{
-    Call, ClassLikeMemberSelector, Expression, Method, MethodBody, Node, NodeKind, Statement,
-    Variable,
+    Call, ClassLikeMember, ClassLikeMemberSelector, Expression, Method, MethodBody, Modifier, Node,
+    NodeKind, Statement, Variable,
 };
+use mago_word::word;
 
 use super::annotations::Annotated;
 use super::prefer_create_stub_expression::is_test_class_method;
@@ -18,6 +20,7 @@ use crate::rules::support::class_members::walk;
 use crate::rules::support::docblocks::Doc;
 use crate::rules::support::names::{has_attribute, resolve_function};
 use crate::rules::support::rewrites::merge;
+use crate::rules::support::side_effects::any_node;
 use crate::rules::support::statement_edits::{block_list, line_indent, remove};
 use crate::rules::types::facts::facts;
 use crate::syntax::{node_span, unparenthesize};
@@ -35,8 +38,33 @@ const ASSERT_METHOD_NAME_PREFIXES: &[&str] = &[
     "expectException",
     "setExpectedException",
     "expectOutput",
+    "expectUserDeprecationMessage",
     "should",
 ];
+/// `PHPUnitClassName::FRAMEWORK_TEST_CASES`: their methods are never parsed, their hooks do not count as test
+/// assertions.
+const FRAMEWORK_TEST_CASES: &[&str] = &[
+    "PHPUnit\\Framework\\TestCase",
+    "PHPUnit\\Framework\\Assert",
+    "Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase",
+    "Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase",
+    "Symfony\\Component\\Form\\Test\\TypeTestCase",
+];
+const HOOK_METHOD_NAMES: &[&str] = &[
+    "setUp",
+    "tearDown",
+    "assertPreConditions",
+    "assertPostConditions",
+];
+const HOOK_ATTRIBUTES: &[&str] = &[
+    "PHPUnit\\Framework\\Attributes\\Before",
+    "PHPUnit\\Framework\\Attributes\\After",
+    "PHPUnit\\Framework\\Attributes\\PreCondition",
+    "PHPUnit\\Framework\\Attributes\\PostCondition",
+];
+const HOOK_ANNOTATIONS: &[&str] = &["@before", "@after", "@preCondition", "@postCondition"];
+/// Every parent class is parsed, so stop walking deep chains.
+const MAX_PARENT_CLASS_LEVEL: usize = 5;
 
 pub struct AddDoesNotPerformAssertions;
 
@@ -69,8 +97,10 @@ impl Rule for AddDoesNotPerformAssertions {
         }) else {
             return;
         };
-        // we have no idea how the trait is used, the using class can assert on its own
+        // the rule visits classes: a test method of a trait is left alone, and an abstract class's child can add
+        // asserting lifecycle methods that count toward the inherited tests
         if matches!(ancestors[at], Node::Trait(_))
+            || matches!(ancestors[at], Node::Class(c) if c.modifiers.iter().any(|m| matches!(m, Modifier::Abstract(_))))
             || !matches!(method.body, MethodBody::Concrete(_))
             || !is_in_test_class(ctx, ancestors, Some(method))
             || !is_test_class_method(ctx, ancestors, method)
@@ -100,7 +130,11 @@ impl Rule for AddDoesNotPerformAssertions {
         }
         let mut chain = ancestors.to_vec();
         chain.push(node);
-        if contains_assert_call(ctx, &chain, method, true, 1) || contains_mock(ctx, &chain, node) {
+        if contains_assert_call(ctx, &chain, method, true, 1)
+            || contains_mock(ctx, &chain, node)
+            // assertions in lifecycle methods count toward every test of the class
+            || has_asserting_lifecycle_method(ctx, &ancestors[..=at])
+        {
             return;
         }
         let source = ctx.source;
@@ -234,12 +268,199 @@ fn contains_assert_call(
         let (Some(class), Some(name)) = (called_class(ctx, &scope, &call, top), call.name()) else {
             return false;
         };
+        // e.g. "parent::setUp()" declared in PHPUnit or Symfony, no need to parse their huge classes
+        if declared_in_framework_test_case(ctx, &class, name) {
+            return false;
+        }
         with_method(ctx, chain, &class, name, &mut |called_chain, called| {
             // skip circular self calls
             !std::ptr::addr_eq(called, method)
                 && contains_assert_call(ctx, called_chain, called, false, level + 1)
         })
     })
+}
+
+fn is_framework_test_case(class: &str) -> bool {
+    let class = class.trim_start_matches('\\');
+    FRAMEWORK_TEST_CASES
+        .iter()
+        .any(|c| c.eq_ignore_ascii_case(class))
+}
+
+/// `AssertCallAnalyzer::isDeclaredInFrameworkTestCase()`.
+fn declared_in_framework_test_case(ctx: &Context<'_>, class: &str, name: &[u8]) -> bool {
+    let codebase = facts(ctx);
+    let codebase = codebase.documented();
+    let id = MethodIdentifier::new(word(class.as_bytes()), word(name));
+    codebase
+        .get_method_by_id(&codebase.get_declaring_method_identifier(&id))
+        .is_some()
+        && is_framework_test_case(
+            &codebase
+                .get_declaring_method_identifier(&id)
+                .get_class_name()
+                .to_string(),
+        )
+}
+
+/// rector-phpunit's `LifecycleMethodAssertAnalyzer::hasAssertingLifecycleMethod()`: a hook of the class or of a
+/// parent class (up to 5 levels, below PHPUnit's and Symfony's test cases) asserts. `chain` ends at the class.
+fn has_asserting_lifecycle_method(ctx: &Context<'_>, chain: &[Node<'_, '_>]) -> bool {
+    let members = match chain.last() {
+        Some(Node::Class(c)) => &c.members,
+        Some(Node::AnonymousClass(c)) => &c.members,
+        _ => return false,
+    };
+    let mut overridden = Vec::new();
+    if hooks_assert(ctx, chain, members, ctx.source, true, &mut overridden) {
+        return true;
+    }
+    let facts = facts(ctx);
+    let codebase = facts.documented();
+    let Some(mut class) = super::own_class_reflection(ctx, chain) else {
+        return false;
+    };
+    for _ in 0..MAX_PARENT_CLASS_LEVEL {
+        let Some(parent) = codebase
+            .get_class_like(class.as_bytes())
+            .and_then(|c| c.direct_parent_class)
+            .map(|p| p.to_string())
+        else {
+            return false;
+        };
+        if is_framework_test_case(&parent) {
+            return false;
+        }
+        if with_class(ctx, chain, &parent, &mut |parent_chain, members, source| {
+            hooks_assert(ctx, parent_chain, members, source, false, &mut overridden)
+        }) {
+            return true;
+        }
+        class = parent;
+    }
+    false
+}
+
+/// `isClassLikeAsserting()`'s loop over the methods of one class.
+fn hooks_assert(
+    ctx: &Context<'_>,
+    chain: &[Node<'_, '_>],
+    members: &mago_syntax::cst::Sequence<'_, ClassLikeMember<'_>>,
+    source: &str,
+    top: bool,
+    overridden: &mut Vec<&'static str>,
+) -> bool {
+    for member in members {
+        let ClassLikeMember::Method(method) = member else {
+            continue;
+        };
+        let hook = HOOK_METHOD_NAMES
+            .iter()
+            .copied()
+            .find(|h| method.name.value.eq_ignore_ascii_case(h.as_bytes()));
+        // methods marked as hooks run too, also when overridden
+        let relevant = hook.is_some_and(|h| !overridden.contains(&h))
+            || HOOK_ATTRIBUTES
+                .iter()
+                .any(|a| has_attribute(chain, &method.attribute_lists, a))
+            || hook_annotation(source, node_span(method).start);
+        if relevant {
+            let mut method_chain = chain.to_vec();
+            method_chain.push(Node::Method(method));
+            if contains_assert_call(ctx, &method_chain, method, top, 1) {
+                return true;
+            }
+        }
+        // a hook overridden here hides the parent one, unless it calls it through "parent::"
+        if let Some(h) = hook
+            && !any_node(Node::Method(method), &|n| {
+                matches!(n, Node::StaticMethodCall(c)
+                    if matches!(c.class, Expression::Parent(_))
+                        && call_name(&c.method).is_some_and(|m| m.eq_ignore_ascii_case(h.as_bytes())))
+            })
+        {
+            overridden.push(h);
+        }
+    }
+    false
+}
+
+/// The docblock right before `start` has `@before`, `@after`, `@preCondition` or `@postCondition`.
+fn hook_annotation(source: &str, start: usize) -> bool {
+    let before = source[..start].trim_end();
+    let Some(open) = before.strip_suffix("*/").and_then(|b| b.rfind("/**")) else {
+        return false;
+    };
+    let doc = &before[open..];
+    HOOK_ANNOTATIONS.iter().any(|tag| {
+        doc.match_indices(tag).any(|(i, _)| {
+            !doc[i + tag.len()..]
+                .chars()
+                .next()
+                .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+        })
+    })
+}
+
+/// Runs `f` on the class `class` names, with the nodes from its file's root down to it and that file's source.
+fn with_class(
+    ctx: &Context<'_>,
+    chain: &[Node<'_, '_>],
+    class: &str,
+    f: &mut dyn FnMut(
+        &[Node<'_, '_>],
+        &mago_syntax::cst::Sequence<'_, ClassLikeMember<'_>>,
+        &str,
+    ) -> bool,
+) -> bool {
+    let facts = facts(ctx);
+    let Some(name_span) = facts
+        .documented()
+        .get_class_like(class.as_bytes())
+        .and_then(|c| c.name_span)
+    else {
+        return false;
+    };
+    let at = name_span.start.offset as usize;
+    let find = |program: Node<'_, '_>,
+                source: &str,
+                f: &mut dyn FnMut(
+        &[Node<'_, '_>],
+        &mago_syntax::cst::Sequence<'_, ClassLikeMember<'_>>,
+        &str,
+    ) -> bool| {
+        let mut found = None;
+        walk(program, &mut |n, path| {
+            if found.is_some() {
+                return false;
+            }
+            if let Node::Class(c) = n {
+                if node_span(&c.name).start == at {
+                    let mut chain = path.to_vec();
+                    chain.push(n);
+                    found = Some((chain, &c.members));
+                }
+                return false;
+            }
+            true
+        });
+        found.is_some_and(|(chain, members)| f(&chain, members, source))
+    };
+    if facts.text(name_span).is_some() {
+        return chain
+            .first()
+            .is_some_and(|program| find(*program, ctx.source, f));
+    }
+    let Some(source) = facts.source_of(name_span.file_id) else {
+        return false;
+    };
+    let arena = mago_allocator::LocalArena::new();
+    let file = mago_database::file::File::ephemeral(
+        std::borrow::Cow::Borrowed(b"parent.php"),
+        std::borrow::Cow::Owned(source.as_bytes().to_vec()),
+    );
+    let program = mago_syntax::parser::parse_file(&arena, &file);
+    find(Node::Program(program), &source, f)
 }
 
 fn called_class(
@@ -253,6 +474,12 @@ fn called_class(
         Expression::Variable(Variable::Direct(v)) if v.name == b"$this" => own_class(scope),
         Expression::Self_(_) | Expression::Static(_) if call.is_static => own_class(scope),
         Expression::Identifier(id) if call.is_static => Some(resolve(scope, id)),
+        // "parent" is the direct parent class of the class the call is in
+        Expression::Parent(_) if call.is_static => facts(ctx)
+            .documented()
+            .get_class_like(own_class(scope)?.as_bytes())?
+            .direct_parent_class
+            .map(|p| p.to_string()),
         _ if top => object_class(ctx, receiver),
         _ => None,
     }

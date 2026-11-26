@@ -26,6 +26,6 @@ max(x: 0, y: min(100, $v));
 max(0, min(...$v));
 clamp($w, 0, 100);
 max($lo, min($v, $hi));
-clamp($v, PHP_FLOAT_EPSILON, PHP_INT_SIZE);
+max(PHP_FLOAT_EPSILON, min(PHP_INT_SIZE, $v));
 clamp($v, 0, 100);
 clamp($v, 0, 100);

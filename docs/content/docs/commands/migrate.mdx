@@ -45,7 +45,7 @@ pun migrate --dry-run    # show the diff, write nothing
 - Rewrites `@php-cs-fixer-ignore` and `@phpstan-ignore` comments to `@pun-ignore`.
 - Prints each rule it skipped. Send a PR to add it.
 - Leaves your old configs and `composer.json` alone.
-- Does not copy PHPStan baselines. Run `pun analyse --generate-baseline` instead.
+- Does not copy PHPStan baselines. Run `pun analyse --generate-baseline` instead, and `pun lint --generate-baseline` when PHPStan checks became lint rules. Then set `[analyse] baseline` and `[lint] baseline`.
 
 Reading `.php-cs-fixer.php` or `rector.php` runs project PHP code. Run it only on code you trust, after `composer install`.
 

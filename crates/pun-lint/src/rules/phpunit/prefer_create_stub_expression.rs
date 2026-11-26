@@ -4,7 +4,8 @@ use mago_codex::ttype::atomic::TAtomic;
 use mago_codex::ttype::atomic::object::TObject;
 use mago_codex::ttype::union::TUnion;
 use mago_syntax::cst::{
-    Argument, Call, Expression, Method, MethodBody, Node, NodeKind, Statement, Variable,
+    Argument, ArrayElement, AssignmentOperator, Call, Expression, Method, MethodBody, Node,
+    NodeKind, Statement, UnaryPrefixOperator, Variable,
 };
 
 use super::annotations::named_tags;
@@ -12,6 +13,7 @@ use super::no_bare_mock_assign::scoped;
 use super::{AnyCall, is_public, object_class, own_class};
 use crate::rules::support::docblocks::Doc;
 use crate::rules::support::names::has_attribute;
+use crate::rules::support::side_effects::any_node;
 use crate::rules::support::statement_edits::{assign, expression};
 use crate::rules::types::facts::facts;
 use crate::syntax::{node_span, unparenthesize};
@@ -69,6 +71,10 @@ impl Rule for PreferCreateStubExpression {
             if is_used_for_mocking(ctx, ancestors, &roots, &variable.name[1..], false) {
                 continue;
             }
+            // the mock can be configured through an alias, e.g. foreach ([$a, $b] as $mock)
+            if is_escaping_to_alias(Node::Block(block), variable.name) {
+                continue;
+            }
             out.push(Report::fixed(
                 node_span(statement),
                 "Use createStub() for a mock that expects no calls.",
@@ -77,6 +83,43 @@ impl Rule for PreferCreateStubExpression {
             ));
         }
     }
+}
+
+/// rector-phpunit's `MockObjectExprDetector::isEscapingToAlias()`: the variable is put in an array, assigned to
+/// another variable or captured by a closure, anywhere in the method (closures included).
+fn is_escaping_to_alias(body: Node<'_, '_>, name: &[u8]) -> bool {
+    let named = |e: &Expression<'_>| matches!(unparenthesize(e), Expression::Variable(Variable::Direct(v)) if v.name == name);
+    let in_array = |e: &Expression<'_>| {
+        let elements = match unparenthesize(e) {
+            Expression::Array(a) => &a.elements,
+            Expression::LegacyArray(a) => &a.elements,
+            _ => return false,
+        };
+        elements.iter().any(|el| match el {
+            ArrayElement::Value(v) => named(v.value),
+            ArrayElement::KeyValue(kv) => named(kv.value),
+            _ => false,
+        })
+    };
+    any_node(body, &|n| match n {
+        Node::Foreach(f) => in_array(f.expression),
+        Node::Assignment(a) if matches!(a.operator, AssignmentOperator::Assign(_)) => {
+            let rhs = match unparenthesize(a.rhs) {
+                Expression::UnaryPrefix(u)
+                    if matches!(u.operator, UnaryPrefixOperator::Reference(_)) =>
+                {
+                    u.operand
+                }
+                rhs => rhs,
+            };
+            named(rhs) || in_array(rhs)
+        }
+        Node::Closure(c) => c
+            .use_clause
+            .as_ref()
+            .is_some_and(|u| u.variables.iter().any(|v| v.variable.name == name)),
+        _ => false,
+    })
 }
 
 pub(super) fn is_test_class_method(

@@ -57,7 +57,18 @@ impl Rule for NoSingleCaseSwitch {
                     .iter()
                     .map(|item| format!("{nl}{}", item.print(source, tokens, inner)))
                     .collect();
-                let cond = infix(ctx, switch.expression, "===", condition, (80, 80));
+                // Rector 2.9.2: switch compares loosely, so `===` only when both sides are ints.
+                let facts = crate::rules::types::facts::facts(ctx);
+                let int = |e: &Expression<'_>| {
+                    (facts.full_type(node_span(unparenthesize(e))))
+                        .is_some_and(|t| !t.types.is_empty() && t.is_int())
+                };
+                let op = if int(switch.expression) && int(condition) {
+                    "==="
+                } else {
+                    "=="
+                };
+                let cond = infix(ctx, switch.expression, op, condition, (80, 80));
                 let code = format!("if ({cond}) {{{body}\n{}}}", " ".repeat(outer));
                 Edit::new(Span::new(start, span.end), code)
             }

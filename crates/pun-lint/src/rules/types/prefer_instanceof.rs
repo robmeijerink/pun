@@ -63,7 +63,20 @@ impl Rule for PreferInstanceof {
                 let Some(name) = class_name(&facts, ancestors, fetch) else {
                     return;
                 };
-                format!("\\{name}")
+                // Rector 2.9.2 keeps a class name as written (`Foo::class`, `self::class`).
+                let written = matches!(&fetch.constant, ClassLikeConstantSelector::Identifier(c) if c.value.eq_ignore_ascii_case(b"class"))
+                    && matches!(
+                        unparenthesize(fetch.class),
+                        Expression::Identifier(_)
+                            | Expression::Self_(_)
+                            | Expression::Static(_)
+                            | Expression::Parent(_)
+                    );
+                if written {
+                    text(ctx, unparenthesize(fetch.class)).to_string()
+                } else {
+                    format!("\\{name}")
+                }
             }
             _ => return,
         };

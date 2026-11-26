@@ -112,7 +112,6 @@ final class MoreTest extends BaseCase
         (new Checker())->check(1);
     }
 
-    #[\PHPUnit\Framework\Attributes\DoesNotPerformAssertions]
     public function testParentHelper(): void
     {
         parent::verify(true);

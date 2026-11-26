@@ -1,0 +1,26 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCallsDefinedIn.php"
+		- "../src/disallowed-allow/functionCallsDefinedIn.php"
+	disallowedFunctionCalls:
+		-
+			"function": "\\Foo\\Bar\\Waldo\\f*()"
+			"definedIn": "src/Fun*.php"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\b*()"
+			"definedIn": "src/ThisFileDoesNotExist.php"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\q*x()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

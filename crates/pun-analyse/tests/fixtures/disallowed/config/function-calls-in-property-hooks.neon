@@ -1,0 +1,32 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/PropertyHooks.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md5()"
+			"allowInMethodsWithAttributes": 
+				- "PropertyHooks\\AllowMd5"
+		-
+			"function": "sha1()"
+			"allowExceptInMethodsWithAttributes": 
+				- "PropertyHooks\\DisallowSha1"
+		-
+			"function": "crc32()"
+			"allowInClassWithMethodAttributes": 
+				- "PropertyHooks\\AllowCrc32"
+		-
+			"function": "strlen()"
+			"allowExceptInClassWithMethodAttributes": 
+				- "PropertyHooks\\DenyStrlen"
+		-
+			"function": "ucfirst()"
+			"allowInMethods": 
+				- "PropertyHooks\\NamedHooks::$named::get()"
+		-
+			"function": "lcfirst()"
+			"allowExceptInMethods": 
+				- "PropertyHooks\\*::$named::set()"

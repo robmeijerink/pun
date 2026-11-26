@@ -162,6 +162,17 @@ where
         present_value.set_possibly_undefined(false, Some(false));
         lhs_context.locals.insert(id, Rc::new(present_value));
     }
+    // Pun: CoalesceHandler specifies a property fetch as set on the isset-success edge too, so the join keeps its read
+    // type; without it the RHS edge's `null` pin is the fetch's only value after the `??`.
+    if matches!(unwrap_expression(binary.lhs), Expression::Access(_))
+        && !lhs_type.is_error()
+        && let Some(id) = lhs_id
+        && !lhs_context.locals.contains_key(&id)
+    {
+        let mut present_value = lhs_type.remove_null();
+        present_value.set_possibly_undefined(false, Some(false));
+        lhs_context.locals.insert(id, Rc::new(present_value));
+    }
     // CoalesceCompositionHelper reads the LHS on its isset-success scope.
     // Removing an explicit null from the raw read alone does not narrow mixed.
     let mut non_null_lhs_type = lhs_id

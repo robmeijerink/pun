@@ -1,0 +1,257 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/AttributeClass.php",
+   "line": 11,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute2 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 15,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute4 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 28,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute3 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 32,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 45,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute4 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 48,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 59,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attributes\\Attribute5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 75,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 85,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute8 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 95,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 105,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute6 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 111,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute8 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 117,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 117,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute9 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 123,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 123,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute7 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 136,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 136,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 139,
+   "identifier": "disallowed.function",
+   "message": "Calling strtolower() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 143,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 143,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 145,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 145,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 150,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute11 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 150,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 157,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 157,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 159,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeClass.php",
+   "line": 159,
+   "identifier": "function.inner",
+   "message": "Inner named functions are not supported by PHPStan. Consider refactoring to an anonymous function, class method, or a top-level-defined function. See issue #165 (https://github.com/phpstan/phpstan/issues/165) for more details.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 4,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling strtolower() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 12,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute11 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 20,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute10 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 20,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute12 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 26,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute11 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributeFunctions.php",
+   "line": 26,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class Attribute13 does not exist.",
+   "tip": null
+  }
+ ]
+}

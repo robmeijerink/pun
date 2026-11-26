@@ -1,0 +1,29 @@
+{
+ "level": 6,
+ "errors": [
+  {
+   "line": 9,
+   "identifier": "function.notFound",
+   "message": "Used function Acme\\Helpers\\commented not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "line": 11,
+   "identifier": "function.notFound",
+   "message": "Used function Acme\\Helpers\\unrequired not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function Acme\\Helpers\\commented not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function Acme\\Helpers\\unrequired not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  }
+ ]
+}

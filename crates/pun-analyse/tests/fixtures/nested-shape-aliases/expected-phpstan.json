@@ -1,0 +1,11 @@
+{
+ "level": 10,
+ "errors": [
+  {
+   "line": 32,
+   "identifier": "return.phpDocType",
+   "message": "PHPDoc tag @return with type array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, array<string, int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int>|int> is incompatible with native type int.",
+   "tip": null
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 96,
+   "identifier": "disallowed.switch",
+   "message": "Using the switch control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 104,
+   "identifier": "disallowed.switch",
+   "message": "Using the switch control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

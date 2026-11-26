@@ -1,0 +1,82 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Fixture/AlphaPlainUntypedMethod.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Fixture/OmegaPlainUntypedMethod.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Fixture/UnknownReturnType.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Fixture/UnknownReturnType.php",
+   "line": 13,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/AlphaSameLineTrait.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/MultiMemberTrait.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/MultiMemberTrait.php",
+   "line": 14,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/OmegaSameLineTrait.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/TraitWithMissingReturnType.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/TwoMethodsOnOneLineTrait.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ReturnTypeCoverageRule/Source/TwoMethodsOnOneLineTrait.php",
+   "line": 9,
+   "identifier": "typeCoverage.returnTypeCoverage",
+   "message": "Out of 14 possible return types, only 3 - 21.4 % actually have it. Add more return types to get over 80 %",
+   "tip": null
+  }
+ ]
+}

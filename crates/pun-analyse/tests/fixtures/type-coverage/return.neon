@@ -1,0 +1,8 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Rules/ReturnTypeCoverageRule]
+    tmpDir: /tmp/pun-type-coverage-oracle-return
+    type_coverage:
+        return_type: 80

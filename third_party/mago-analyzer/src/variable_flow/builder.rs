@@ -32,6 +32,13 @@ pub(crate) fn expression<A: Arena>(
     if !context.settings.track_variable_flow || context.raw_callback_gather_depth != 0 {
         return;
     }
+    // Pun: a match arm compares a synthetic `$-tmp-match-` variable that carries the subject's span; its flow
+    // would replace the subject's (`$order?->kind` reads `$order`)
+    if let Expression::Variable(Variable::Direct(variable)) = expr
+        && variable.name.starts_with(b"$-tmp-match-")
+    {
+        return;
+    }
     let function_name = if let Expression::Call(Call::Function(call)) = expr
         && let Expression::Identifier(identifier) = call.function
     {

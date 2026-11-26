@@ -1,0 +1,16 @@
+# Lines of expected-<neon>.json where Pun still differs (tests/mockery.rs): `<neon> <file>:<line> <identifier>`.
+# The list must be exact: a line that matches has to leave it.
+# Mago's PHPDoc builder folds `MockInterface|mixed` to `mixed` before TypeNodeResolverExtension sees two members
+phpstan src/Intersections.php:36 phpstan.dumpType
+# a callable is no object, and Pun's intersection of MockInterface with `callable` is not ported
+phpstan src/Intersections.php:39 phpstan.dumpType
+# Pun's own PHPDoc resolution asks extensions only for a union of two plain names, so `MockInterface|array<int>`
+# stays a union there and the parameter is not unresolvable
+phpstan src/Intersections.php:30 parameter.unresolvableType
+# Mockery's `($methodNames is list{} ? HigherOrderMessage : Expectation)` on a variadic called without arguments:
+# Mago keeps both branches (not the extension; with it, the stub's `Expectation` is right)
+phpstan-without src/Probe.php:69 phpstan.dumpType
+# a static call to an instance method: Pun's analyser types it `*ERROR*`, PHPStan by the method's return type
+# (Mockery's conditional), with or without the extension
+phpstan src/Intersections.php:44 phpstan.dumpType
+phpstan-without src/Intersections.php:44 phpstan.dumpType

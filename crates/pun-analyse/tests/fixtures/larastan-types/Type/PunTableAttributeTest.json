@@ -1,0 +1,32 @@
+{
+    "test": "Type/PunTableAttributeTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-table-attribute.php",
+            "declares": [
+                "puntableattribute\\item",
+                "puntableattribute\\product",
+                "puntableattribute\\positional",
+                "puntableattribute\\declared",
+                "puntableattribute\\usage"
+            ],
+            "asserts": [
+                35,
+                36,
+                37,
+                38
+            ],
+            "errors": [
+                {
+                    "line": 43,
+                    "identifier": "property.notFound",
+                    "message": "Access to an undefined property PunTableAttribute\\Item::$missing.",
+                    "tip": null
+                }
+            ]
+        }
+    ]
+}

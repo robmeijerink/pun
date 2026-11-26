@@ -67,15 +67,16 @@ fn decided(cond: &Expression<'_>, version: i64) -> Option<bool> {
         return None;
     }
     let value = integer(if on_left { right } else { left })?;
+    // Rector 2.9.2 keeps a check that can still fail on the minimum version (`80000 < PHP_VERSION_ID` on 8.0).
     match (&b.operator, on_left) {
-        (BinaryOperator::LessThan(_), true)
-        | (BinaryOperator::GreaterThanOrEqual(_) | BinaryOperator::GreaterThan(_), false) => {
+        (BinaryOperator::LessThan(_), true) | (BinaryOperator::GreaterThan(_), false) => {
             (version >= value).then_some(false)
         }
-        (BinaryOperator::LessThan(_), false)
-        | (BinaryOperator::GreaterThanOrEqual(_) | BinaryOperator::GreaterThan(_), true) => {
-            (version >= value).then_some(true)
+        (BinaryOperator::GreaterThanOrEqual(_), false) => (version > value).then_some(false),
+        (BinaryOperator::LessThan(_), false) | (BinaryOperator::GreaterThan(_), true) => {
+            (version > value).then_some(true)
         }
+        (BinaryOperator::GreaterThanOrEqual(_), true) => (version >= value).then_some(true),
         _ => None,
     }
 }

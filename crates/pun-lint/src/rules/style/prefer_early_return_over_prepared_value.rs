@@ -105,7 +105,8 @@ fn refactor(ctx: &Context<'_>, list: &List<'_>) -> Option<(Vec<Edit>, Span)> {
         .iter()
         .map(|&(k, r#if)| match_bare_single_assign_if(ctx, list, k, r#if))
         .collect::<Option<_>>()?;
-    if bare.is_empty() {
+    // Rector 2.9.2: with several ifs the last true one wins; early returns would make the first one win.
+    if bare.len() != 1 {
         return None;
     }
     if !is_variable_shared(ctx, &bare, returned, initial) {

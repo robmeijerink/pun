@@ -1,0 +1,9 @@
+includes:
+	- bundled-loose.neon
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/configs/looseCalls.php"

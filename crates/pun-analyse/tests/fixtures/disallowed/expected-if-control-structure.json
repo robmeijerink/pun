@@ -1,0 +1,124 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 8,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 12,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 18,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 28,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 31,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 38,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 41,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 48,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 51,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 58,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 61,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 68,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 71,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 78,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 81,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 88,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 91,
+   "identifier": "disallowed.if",
+   "message": "Using the if control structure is forbidden, what if?",
+   "tip": "So long and thanks for all the ifs"
+  }
+ ]
+}

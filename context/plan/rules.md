@@ -172,8 +172,8 @@ strict_comparison = { pun = "lint/types/no-loose-comparison", risky = true, opti
   `options` says how upstream options carry over.
 - **`variant`** on PHPStan-family entries keeps the original identifier when one Pun rule replaces several, so `-v`
   output can print it and migrated `ignoreErrors` keep their narrow scope.
-- **Pinned upstream versions** are in `[meta] upstream`: PHP-CS-Fixer 3.95.25, Pint 1.32.1, Rector 2.8.4 (with
-  rector-phpunit dev-main@22c6dae bundled), rector-laravel 2.7.3, pest-plugin-rector 5.x-dev@8c1b780, PHPStan 2.3.5,
+- **Pinned upstream versions** are in `[meta] upstream`: PHP-CS-Fixer 3.95.25, Pint 1.32.1, Rector 2.9.2 (with
+  rector-phpunit dev-main@d0b6caa bundled), rector-laravel 2.7.3, pest-plugin-rector 5.x-dev@8c1b780, PHPStan 2.3.5,
   strict-rules 2.0.12, deprecation-rules 2.0.5, Larastan 3.14.0, Mago 1.61.0. reference/oracle.md says how to fetch
   each.
 
@@ -194,7 +194,7 @@ From mapping.toml (`scripts/check-rule-mapping.py` prints them):
 | PHP-CS-Fixer 3.95.25 | 300 | 163 | 115 | - | 18 (deprecated → successor) | 4 |
 | Pint's own fixers | 3 | 1 | 1 | - | 1 | - |
 | Pun `Pun/*` (Mago ports) | 17 | - | 17 | - | - | - |
-| Rector core 2.8.4 | 523 | 15 | 269 | - | 2 | 237 |
+| Rector core 2.9.2 | 523 | 15 | 263 | - | 2 | 243 |
 | rector-laravel 2.7.3 | 141 | - | 94 | - | - | 47 |
 | pest-plugin-rector 5.x-dev@8c1b780 | 61 | - | 59 | - | - | 2 |
 | rector-phpunit (bundled) | 116 | - | 81 | - | - | 35 |

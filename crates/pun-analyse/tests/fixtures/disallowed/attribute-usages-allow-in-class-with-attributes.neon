@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/attribute-usages-allow-in-class-with-attributes.neon

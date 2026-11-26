@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 10,
+   "identifier": "disallowed.elseIf",
+   "message": "Using the elseif control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 20,
+   "identifier": "disallowed.elseIf",
+   "message": "Using the elseif control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

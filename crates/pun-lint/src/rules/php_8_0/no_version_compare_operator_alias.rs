@@ -1,4 +1,4 @@
-//! Rector 2.8.4's `VersionCompareFuncCallArgumentRector`.
+//! Rector 2.9.2's `VersionCompareFuncCallArgumentRector`.
 
 use mago_syntax::cst::{Expression, Literal, Node, NodeKind};
 
@@ -12,7 +12,7 @@ use crate::{Context, Report, Rule};
 const OPERATOR_MAP: &[(&[u8], &str)] = &[
     (b"gte", "ge"),
     (b"lte", "le"),
-    (b"", "!="),
+    (b"", "<"),
     (b"!", "!="),
     (b"g", "gt"),
     (b"l", "lt"),

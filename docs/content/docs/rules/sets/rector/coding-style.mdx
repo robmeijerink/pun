@@ -14,14 +14,13 @@ sets = ["rector/coding-style"]
 
 A rule merged from several Rector rules runs only the rewrites of this set's Rector rules, unless a [preset](/docs/configuration/presets#lint-presets) also turns it on. Rector rules that are format rules in Pun run under `[format]` instead. Laravel, Pest, and PHPUnit rules also need their [extension](/docs/configuration/pun-toml#extensions).
 
-## Rules (14)
+## Rules (12)
 
 | Rule | Rector rules | Status |
 | --- | --- | --- |
 | [`lint/functions/no-call-user-func-method`](/docs/rules/lint/functions/no-call-user-func-method) | `CallUserFuncToMethodCallRector` | Ported |
 | [`lint/functions/require-strict-array-search`](/docs/rules/lint/functions/require-strict-array-search) | `StrictArraySearchRector` | Ported |
 | [`lint/functions/require-strict-in-array`](/docs/rules/lint/functions/require-strict-in-array) | `StrictInArrayRector` | Ported |
-| [`lint/refactor/replace-function-with-constant`](/docs/rules/lint/refactor/replace-function-with-constant) | `FuncCallToConstFetchRector` | Ported |
 | [`lint/style/no-escaped-quotes`](/docs/rules/lint/style/no-escaped-quotes) | `SimplifyQuoteEscapeRector` | Ported |
 | [`lint/style/no-multi-assign`](/docs/rules/lint/style/no-multi-assign) | `SplitDoubleAssignRector` | Ported |
 | [`lint/style/prefer-catch-name-from-type`](/docs/rules/lint/style/prefer-catch-name-from-type) | `CatchExceptionNameMatchingTypeRector` | Ported |
@@ -31,4 +30,3 @@ A rule merged from several Rector rules runs only the rewrites of this set's Rec
 | [`lint/style/prefer-variadic-param`](/docs/rules/lint/style/prefer-variadic-param) | `FuncGetArgsToVariadicParamRector` | Ported |
 | [`lint/style/require-assign-set-padding`](/docs/rules/lint/style/require-assign-set-padding) | `NewlineBeforeNewAssignSetRector` | Ported |
 | [`lint/style/require-parent-visibility`](/docs/rules/lint/style/require-parent-visibility) | `MakeInheritedMethodVisibilitySameAsParentRector` | Ported |
-| [`lint/style/require-statement-padding`](/docs/rules/lint/style/require-statement-padding) | `NewlineAfterStatementRector` | Ported |

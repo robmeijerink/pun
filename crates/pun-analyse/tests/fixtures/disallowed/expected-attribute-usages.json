@@ -1,0 +1,243 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 6,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 10,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 13,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 19,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 48,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 52,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 54,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 61,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 63,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 69,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 70,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 76,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php",
+   "line": 77,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php (in context of class Attributes\\ClassWithTraitWithAttributes)",
+   "line": 23,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php (in context of class Attributes\\ClassWithTraitWithAttributes)",
+   "line": 26,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php (in context of class Attributes\\ClassWithTraitWithAttributes)",
+   "line": 30,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/AttributesEverywhere.php (in context of class Attributes\\ClassWithTraitWithAttributes)",
+   "line": 32,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 34,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeColumn2 is forbidden.",
+   "tip": "\u2022 DateTime\n\u2022 or Immutable"
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 53,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 72,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeColumn2 is forbidden.",
+   "tip": "\u2022 DateTime\n\u2022 or Immutable"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 8,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 12,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 15,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 18,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 21,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeColumn is forbidden, use `utc_datetime_immutable` instead.",
+   "tip": "Bar or Stringable"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 21,
+   "identifier": "attribute.notAttribute",
+   "message": "Class Attributes\\AttributeColumn is not an Attribute class.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 25,
+   "identifier": "class.notFound",
+   "message": "Class Attributes\\UserRepository not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 25,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasAvocado() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 31,
+   "identifier": "class.notFound",
+   "message": "Class Attributes\\UserRepository not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 31,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasTuna() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 37,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasKetchup() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 43,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 43,
+   "identifier": "return.missing",
+   "message": "Method Attributes\\ClassWithAttributes::hasPineapple() should return bool but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassWithAttributes.php",
+   "line": 45,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute Attributes\\AttributeEntity is forbidden.",
+   "tip": null
+  }
+ ]
+}

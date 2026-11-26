@@ -1,0 +1,57 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/superglobalUsages.php"
+		- "../src/disallowed-allow/superglobalUsages.php"
+		- "../src/Superglobals.php"
+	disallowedSuperglobals:
+		-
+			"superglobal": "$GLOBALS"
+			"message": "the cake is a lie"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowInInstanceOf": 
+				- "\\Superglobals\\Superglobals"
+			"errorTip": "So long and thanks for all the tips"
+		-
+			"superglobal": 
+				- "$_GET"
+				- "$_POST"
+			"message": "the cake is a lie"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowInMethods": 
+				- "\\Superglobals\\ChildSuperglobals::leMethod()"
+		-
+			"superglobal": "$_REQUEST"
+			"message": "so $_GET or $_POST?"
+			"disallowIn": 
+				- "src/disallowed/*.php"
+			"errorTip": 
+				- "Choose one"
+				- "Or the other"
+		-
+			"superglobal": "$_SERVER"
+			"allowExceptInInstanceOf": 
+				- "\\Superglobals\\Superglobals2"
+		-
+			"superglobal": "$_FILES"
+			"allowInMethodsWithAttributes": 
+				- "\\Attributes\\AttributeClass"
+		-
+			"superglobal": "$_COOKIE"
+			"allowExceptInMethodsWithAttributes": 
+				- "\\Attributes\\AttributeColumn2"
+		-
+			"superglobal": "$_SESSION"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\AttributeClass"
+		-
+			"superglobal": "$_ENV"
+			"allowInClassWithMethodAttributes": 
+				- "AttributeClass2"

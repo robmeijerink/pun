@@ -1,0 +1,110 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Constants.php",
+   "line": 22,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ENCODE_HIGH is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 24,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_NO_ENCODE_QUOTES is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 33,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class AttributeClass2 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 47,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_EMAIL_UNICODE is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 49,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ALLOW_HEX is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 51,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ALLOW_OCTAL is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 52,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ALLOW_FRACTION is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 53,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ENCODE_AMP is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 54,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_ENCODE_LOW is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 55,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_IPV4 is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Constants.php",
+   "line": 56,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_IPV6 is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 8,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_NO_PRIV_RANGE is forbidden, the cake is a lie.",
+   "tip": "Use https://github.com/mlocati/ip-lib instead"
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 9,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_NO_PRIV_RANGE is forbidden, the cake is a lie.",
+   "tip": "Use https://github.com/mlocati/ip-lib instead"
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 10,
+   "identifier": "disallowed.constant",
+   "message": "Using FILTER_FLAG_NO_RES_RANGE is forbidden, the cake is a lie.",
+   "tip": "\u2022 No priv\n\u2022 No res"
+  },
+  {
+   "file": "src/disallowed/constantUsages.php",
+   "line": 40,
+   "identifier": "disallowed.constant",
+   "message": "Using PHP_EOL is forbidden.",
+   "tip": null
+  }
+ ]
+}

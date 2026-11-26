@@ -1,0 +1,195 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCalls.php"
+		- "../src/disallowed-allow/functionCalls.php"
+		- "../src/Bar.php"
+		- "../src/BarWildcard.php"
+		- "../src/disallowed-allow/functionCallsExceptWithParams.php"
+		- "../src/BarInstanceOfWithParams.php"
+	disallowedFunctionCalls:
+		-
+			"function": "\\var_dump()"
+			"message": "use logger instead"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": "See docs"
+		-
+			"function": "print_r()"
+			"message": "nope"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhere": 
+				"2": true
+		-
+			"function": "printf"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"errorTip": 
+				- "See docs"
+				- "Press F"
+		-
+			"function": "\\Foo\\Bar\\waldo()"
+			"message": "whoa, a namespace"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParamsInAllowed": 
+				"1": 123
+		-
+			"function": "shell_*"
+			"exclude": 
+				- "shell_b*()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "exe*()"
+		-
+			"function": "exe*()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "hash()"
+			"message": "MD4 very bad"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParams": 
+				"1": "md4"
+		-
+			"function": "hash()"
+			"message": "SHA-1 bad soon™"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				"1": "sha1"
+		-
+			"function": "hash()"
+			"message": "MD5 bad"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptCaseInsensitiveParams": 
+				"1": "MD5"
+		-
+			"function": "hash()"
+			"message": "SHA-1 bad SOON™"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptCaseInsensitiveParams": 
+				"1": "SHA1"
+		-
+			"function": "setcookie()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhere": 
+				"3": 0
+			"allowParamsInAllowed": 
+				"4": "/"
+		-
+			"function": "header()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhereAnyValue": 
+				- 2
+			"allowParamsInAllowedAnyValue": 
+				- 3
+		-
+			"function": "htmlspecialchars()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamFlagsInAllowed": 
+				-
+					"position": 2
+					"name": "flags"
+					"value": 3
+		-
+			"function": "array_filter()"
+			"message": "callback parameter must be given."
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhereAnyValue": 
+				- 2
+		-
+			"function": "\\Foo\\Bar\\Waldo\\mocky()"
+			"message": "mocking Blade is not allowed."
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				"1": "Waldo\\Quux\\Blade"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\config()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				"1": "string-key"
+		-
+			"function": "simplexml_load_string"
+			"allowInInstanceOf": 
+				- "Waldo\\Foo\\Bar"
+				- "Stringable"
+		-
+			"function": "dom_import_simplexml()"
+			"disallowInInstanceOf": 
+				- "Waldo\\Foo\\Bar"
+				- "Stringable"
+		-
+			"function": "str_starts_with()"
+			"allowInInstanceOf": 
+				- "Waldo\\Foo\\BarBase"
+			"allowExceptParamsInAllowed": 
+				"2": "forbidden"
+		-
+			"function": "str_ends_with()"
+			"disallowInInstanceOf": 
+				- "Waldo\\Foo\\BarBase"
+			"allowExceptParamsInAllowed": 
+				"2": "forbidden"
+		-
+			"function": "str_contains()"
+			"disallowInInstanceOf": 
+				- "Waldo\\Foo\\BarBase"
+			"allowParamsInAllowed": 
+				"2": "allowed_param"
+		-
+			"function": "ltrim()"
+			"allowInInstanceOf": 
+				- "Waldo\\Foo\\BarBase"
+			"allowParamsInAllowed": 
+				"2": "allowed_chars"
+		-
+			"function": "str_pad()"
+			"allowInInstanceOf": 
+				- "waldo\\foo\\wild*"
+		-
+			"function": "str_repeat()"
+			"disallowInInstanceOf": 
+				- "Waldo\\Foo\\Wild*"
+		-
+			"function": "pow()"
+			"allowExceptIn": 
+				- "src/disallowed-allow/*.php"
+			"allowParamsInAllowed": 
+				"1": 2
+		-
+			"function": "intdiv()"
+			"allowExceptIn": 
+				- "src/disallowed-allow/*.php"
+			"allowExceptParamsInAllowed": 
+				"1": 2

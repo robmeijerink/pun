@@ -1,4 +1,4 @@
-//! Rector 2.8.4's own fixtures for the core rules it added, copied verbatim from rector-src (rules-tests/...) into
+//! Rector 2.9.2's own fixtures for the core rules it added, copied verbatim from rector-src (rules-tests/...) into
 //! tests/rector/<Rector class>/Fixture. Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the
 //! rule alone, the PHP version of the rule's config) wrote for them; Pun/ holds the cases where Pun keeps the code
 //! valid where Rector does not, each with its reason in the file.

@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/namespace-usages-exclude-attribute.neon

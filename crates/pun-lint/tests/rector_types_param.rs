@@ -1,4 +1,4 @@
-//! Rector's own fixtures for the ported `types` rules that add parameter types, copied verbatim from rector-src 2.8.4
+//! Rector's own fixtures for the ported `types` rules that add parameter types, copied verbatim from rector-src 2.9.2
 //! (`.oracle/rector`, rules-tests/...) into tests/rector/<Rector class>/Fixture, with the classes they use in
 //! Source/. Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-ecosystem`, the rule alone,
 //! `phpVersion(80400)`) wrote for them; Pun/ holds the cases where Pun keeps the meaning but not Rector's bytes. Each

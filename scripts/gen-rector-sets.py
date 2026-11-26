@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes crates/pun-config/rules/rector-sets.json: every Rector set (Rector 2.8.4, rector-laravel, rector-phpunit and
+"""Writes crates/pun-config/rules/rector-sets.json: every Rector set (Rector 2.9.2, rector-laravel, rector-phpunit and
 the Pest plugin) under its Pun name, with the Pun lint rules its Rector rules map to and, for each, the Rector rules
 (short class names) of the set behind it. The set membership comes from the upstream exports in
 crates/pun-config/rules/upstream/ (each rule's `sets`); the Pun rule from mapping.toml's [upstream.*] entries. Rector

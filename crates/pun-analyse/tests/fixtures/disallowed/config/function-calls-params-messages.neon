@@ -1,0 +1,55 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCallsParamsMessages.php"
+		- "../src/disallowed-allow/functionCallsParamsMessages.php"
+	disallowedFunctionCalls:
+		-
+			"function": "\\Foo\\Bar\\Waldo\\config()"
+			"message": "foo & bar"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParamsAnyValue": 
+				- 1
+				- 2
+		-
+			"function": "\\Foo\\Bar\\Waldo\\config()"
+			"message": "foo"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParamsAnyValue": 
+				- 1
+		-
+			"function": "\\Foo\\Bar\\Waldo\\config()"
+			"message": "nothing"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\bar()"
+			"message": "foo & bar"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				"1": "foo"
+				"2": "bar"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\bar()"
+			"message": "foo"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				"1": "foo"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\bar()"
+			"message": "nothing"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

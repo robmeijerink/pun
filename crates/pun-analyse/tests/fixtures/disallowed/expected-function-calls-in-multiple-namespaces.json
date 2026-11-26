@@ -1,0 +1,61 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 6,
+   "identifier": "return.missing",
+   "message": "Function __() should return string but return statement is missing.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 20,
+   "identifier": "disallowed.function",
+   "message": "Calling __() (as alias()) is forbidden, use MyNamespace\\__ instead.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling MyNamespace\\__() (as __()) is forbidden, ha ha ha nope.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 30,
+   "identifier": "disallowed.function",
+   "message": "Calling printf() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling printf() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 39,
+   "identifier": "disallowed.function",
+   "message": "Calling MyNamespace\\__() (as alias()) is forbidden, ha ha ha nope.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 40,
+   "identifier": "disallowed.function",
+   "message": "Calling printf() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/FunctionInMultipleNamespaces.php",
+   "line": 41,
+   "identifier": "disallowed.function",
+   "message": "Calling printf() is forbidden.",
+   "tip": null
+  }
+ ]
+}

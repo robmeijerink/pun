@@ -75,7 +75,8 @@ pub(crate) struct Ctx<'a> {
     pub(crate) elapsed: Duration,
     pub(crate) github: bool,
     pub(crate) concise: bool,
-    pub(crate) unmatched_baseline: usize,
+    /// Baseline entries (counts) no problem matched any more: the lint baseline's, the analyse baseline's.
+    pub(crate) unmatched_baseline: (usize, usize),
     /// `pun check`: the analysis's errors that belong to no file (`[[analyse.ignore]]` entries nothing matched).
     pub(crate) general: &'a [String],
 }
@@ -466,6 +467,7 @@ fn human(ctx: &Ctx, results: &[FileResult]) -> String {
         }));
         return out;
     }
+    out.push_str(&unmatched_note(&r, ctx));
     let c = counts(ctx, results);
     let fix_command = format!("pun {cmd} --fix");
     out.push_str(&r.summary(&Summary {
@@ -653,9 +655,7 @@ fn check_human(ctx: &Ctx, results: &[FileResult]) -> String {
     {
         out.push_str(&fixer_error(&r, f));
     }
-    if ctx.unmatched_baseline > 0 {
-        out.push_str(&crate::analyse::baseline_note(&r, ctx.unmatched_baseline));
-    }
+    out.push_str(&unmatched_note(&r, ctx));
     let c = counts(ctx, results);
     out.push_str(&r.check_summary(&Summary {
         errors: c.errors,
@@ -667,6 +667,14 @@ fn check_human(ctx: &Ctx, results: &[FileResult]) -> String {
         elapsed: ctx.elapsed,
     }));
     out
+}
+
+/// The note for baseline entries no problem matched any more, if any.
+fn unmatched_note(r: &Renderer, ctx: &Ctx) -> String {
+    match ctx.unmatched_baseline {
+        (0, 0) => String::new(),
+        (lint, analyse) => crate::analyse::baseline_note(r, lint, analyse),
+    }
 }
 
 fn syntax_error(f: &FileResult) -> (Problem, String, LineIndex) {
@@ -811,6 +819,12 @@ fn agent(ctx: &Ctx, results: &[FileResult]) -> String {
     }
     if warnings > 0 {
         detail.push(count(warnings, "warning"));
+    }
+    let (lint, analyse) = ctx.unmatched_baseline;
+    if lint + analyse > 0 {
+        let n = lint + analyse;
+        let entries = if n == 1 { "entry" } else { "entries" };
+        detail.push(format!("{n} baseline {entries} no longer matched"));
     }
     let result = if errors > 0 || left > 0 || (fixed > 0 && ctx.dry_run) {
         "fail"

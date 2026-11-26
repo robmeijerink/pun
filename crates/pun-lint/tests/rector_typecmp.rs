@@ -1,6 +1,6 @@
 //! Rector's own fixtures for the rules built on Rector's type comparison (`TypeComparator`, `StaticTypeMapper`) and
 //! for `RemoveUnusedVariableAssignRector`,
-//! copied verbatim from rector-src 2.8.4 (`.oracle/rector`, rules-tests/...) into tests/rector/<Rector class>/Fixture,
+//! copied verbatim from rector-src 2.9.2 (`.oracle/rector`, rules-tests/...) into tests/rector/<Rector class>/Fixture,
 //! with the classes they use in Source/. Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-ecosystem`,
 //! the rule alone, `phpVersion(80400)` unless the test says otherwise) wrote for them. Each one must pass as
 //! `format(pun lint --fix) == format(expected)` with format being the laravel preset, and the text edits must give the

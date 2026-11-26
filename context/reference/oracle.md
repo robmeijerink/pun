@@ -11,10 +11,10 @@ The pinned upstream tools every Pun change is judged against. `scripts/oracle.sh
 | Composer | 2.11.2 (system; also the package manager's oracle, plan/packages.md) | |
 | laravel/pint | v1.32.1 | `006bd7825eb01daf92959d060b89cd9514fe4253` |
 | friendsofphp/php-cs-fixer | v3.95.25 (bundled in Pint's PHAR and its composer.lock) | `2cdfc1f3daf173d83a1ebb6177949b58c95de6ff` |
-| rector/rector | 2.8.4 (`.oracle/rector-bin`, locked by `scripts/oracle-rector/composer.lock`) | |
+| rector/rector | 2.9.2 (`.oracle/rector-bin`, locked by `scripts/oracle-rector/composer.lock`) | |
 | phpstan/phpstan for Rector | 2.3.5 (both Rector oracle locks, pinned apart from the analyse oracle's PHPStan) | |
-| rectorphp/rector-src | 2.8.4 (source and `rules-tests/` fixtures in `.oracle/rector`) | `0ddd8e3c8de9c32e9c12396a7f50234bdba559d0` |
-| rector/rector-phpunit | dev-main@22c6dae (bundled in rector/rector 2.8.4) | |
+| rectorphp/rector-src | 2.9.2 (source and `rules-tests/` fixtures in `.oracle/rector`) | `e8210558743a0d5fc3e2fc32c385b78833765822` |
+| rector/rector-phpunit | dev-main@d0b6caa (bundled in rector/rector 2.9.2) | |
 | driftingly/rector-laravel | 2.7.3 (`.oracle/rector-ecosystem`, locked by `scripts/oracle-rector-ecosystem/composer.lock`; tests and stubs at `699f25b`) | |
 | pestphp/pest-plugin-rector | 5.x-dev (`.oracle/rector-ecosystem`, same lock, `minimum-stability: dev` with `prefer-stable`) | `8c1b780c5e551cb78150ee91ceb73d34cd029946` |
 | prettier / prettier-plugin-blade / prettier-plugin-tailwindcss | 3.10.1 / 3.3.3 / 0.8.1 (only for `Pint/laravel_blade`, in `corpus/pinkary/node_modules`) | |

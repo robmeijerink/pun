@@ -182,10 +182,12 @@ b"
 
 function castPrec(string $a, string $b)
 {
-    return match ((int) ($a . $b)) {
-        1 => 'x',
-        default => 'y',
-    };
+    switch ($a . $b) {
+        case 1:
+            return 'x';
+        default:
+            return 'y';
+    }
 }
 
 function boolDyn($v)

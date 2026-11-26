@@ -1,0 +1,38 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/AttributeClass.php"
+		- "../src/AttributeFunctions.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md5()"
+			"allowInClassWithAttributes": 
+				- "\\Attribute"
+		-
+			"function": "sha1()"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Attribute2"
+				- "\\Attributes\\Attribute3"
+		-
+			"function": "strlen()"
+			"allowExceptInClassWithAttributes": 
+				- "\\Attributes\\Attribute3"
+		-
+			"function": "strtolower()"
+			"allowInMethodsWithAttributes": 
+				- "Attribute10"
+		-
+			"function": "strtoupper()"
+			"allowExceptInMethodsWithAttributes": 
+				- "Attribute11"
+		-
+			"function": "var_dump()"
+			"allowInClassWithMethodAttributes": 
+				- "Attribute6"
+		-
+			"function": "print_r()"
+			"allowExceptInClassWithMethodAttributes": 
+				- "Attribute6"

@@ -1,0 +1,145 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Enums.php",
+   "line": 16,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 17,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 18,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 19,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 31,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 32,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 33,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 34,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 37,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 38,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 39,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 39,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 40,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 46,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 47,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 52,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 59,
+   "identifier": "disallowed.interface",
+   "message": "Interface Enums\\EnumInterface is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 66,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\Enum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 67,
+   "identifier": "disallowed.enum",
+   "message": "Enum Enums\\BackedEnum is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 68,
+   "identifier": "disallowed.class",
+   "message": "Class DateTimeImmutable is forbidden.",
+   "tip": null
+  }
+ ]
+}

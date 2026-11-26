@@ -1,0 +1,30 @@
+{
+    "test": "Type/PunUntypedFactoriesTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-untyped-factories.php",
+            "declares": [
+                "pununtypedfactories\\order",
+                "pununtypedfactories\\invoice",
+                "pununtypedfactories\\orderfactory",
+                "pununtypedfactories\\invoicefactory"
+            ],
+            "asserts": [
+                61,
+                69,
+                70
+            ],
+            "errors": [
+                {
+                    "line": 72,
+                    "identifier": "property.notFound",
+                    "message": "Access to an undefined property Illuminate\\Database\\Eloquent\\Model::$status.",
+                    "tip": null
+                }
+            ]
+        }
+    ]
+}

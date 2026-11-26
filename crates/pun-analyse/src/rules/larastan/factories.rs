@@ -70,18 +70,32 @@ pub(super) fn model_factory(
             }
         }
     };
-    let factory = factory_class(codebase, model)?;
+    let Some(factory) =
+        factory_class(codebase, model, b"newFactory").or_else(|| naming_factory(codebase, model))
+    else {
+        // HasFactory's `factory()` returns its TFactory: a concrete factory when the model binds it (`@use
+        // HasFactory<UserFactory>`), else nothing Larastan can use, which makes the call an ErrorType
+        return match factory_class(codebase, model, b"factory") {
+            Some(_) => None,
+            None => Some(mago_codex::ttype::get_error()),
+        };
+    };
     factory_type(codebase, invocation, factory.as_bytes(), single)
 }
 
-fn factory_class(codebase: &CodebaseMetadata, model: &[u8]) -> Option<mago_word::Word> {
+/// The concrete factory `method` of `model` returns, as Larastan's getFactoryFromMethodReturnType() finds it.
+fn factory_class(
+    codebase: &CodebaseMetadata,
+    model: &[u8],
+    method: &[u8],
+) -> Option<mago_word::Word> {
     let k = codebase.get_class_like(model)?;
-    if codebase.method_exists(model, b"newFactory") {
+    if codebase.method_exists(model, method) {
         let returned = super::forwards::method_type(
             codebase,
             model,
             &TNamedObject::new(k.original_name),
-            b"newFactory",
+            method,
             None,
         );
         let classes: Vec<_> = returned
@@ -105,6 +119,12 @@ fn factory_class(codebase: &CodebaseMetadata, model: &[u8]) -> Option<mago_word:
             return Some(*factory);
         }
     }
+    None
+}
+
+/// Larastan's getFactoryFromNamingConvention(): Factory::resolveFactoryName() of the model, if that class exists.
+fn naming_factory(codebase: &CodebaseMetadata, model: &[u8]) -> Option<mago_word::Word> {
+    let k = codebase.get_class_like(model)?;
     let name = String::from_utf8_lossy(k.original_name.as_bytes()).into_owned();
     let relative = name
         .strip_prefix("App\\Models\\")

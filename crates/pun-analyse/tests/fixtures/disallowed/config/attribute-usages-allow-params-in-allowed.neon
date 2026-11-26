@@ -1,0 +1,22 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/ClassWithAttributes.php"
+	disallowedAttributes:
+		-
+			"attribute": 
+				- "Attributes\\AttributeEntity"
+			"allowIn": 
+				- "src/ClassWithAttributes.php"
+			"allowParamsInAllowed": 
+				-
+					"position": 1
+					"name": "repositoryClass"
+					"value": "Waldo\\Quux\\Blade"
+		-
+			"attribute": "#[\\Attributes\\AttributeClass()]"
+			"allowIn": 
+				- "src/ClassWithAttributes.php"

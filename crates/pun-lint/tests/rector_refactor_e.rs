@@ -1,5 +1,5 @@
-//! Rector 2.8.4's own fixtures for its configured rules in no set that edit a method's arguments, a property's name
-//! or an attribute's value, copied verbatim from rector-src's rules-tests at 2.8.4 into
+//! Rector 2.9.2's own fixtures for its configured rules in no set that edit a method's arguments, a property's name
+//! or an attribute's value, copied verbatim from rector-src's rules-tests at 2.9.2 into
 //! tests/rector/<Rector class>/Fixture (and its Source/), each run with the configuration of its
 //! config/configured_rule.php. Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the rule
 //! alone with the configuration below, `phpVersion(80400)`, Source/ on `withAutoloadPaths`) wrote for them. A fixture

@@ -1,0 +1,145 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 10,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 22,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowSha1 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 23,
+   "identifier": "disallowed.function",
+   "message": "Calling sha1() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 29,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 36,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 48,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowedAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 49,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 54,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowedAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 59,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowedExceptAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 60,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DenyAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 62,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowedExceptAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 73,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowCrc32 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 74,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DenyStrlen does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 82,
+   "identifier": "disallowed.function",
+   "message": "Calling strlen() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 97,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 112,
+   "identifier": "disallowed.function",
+   "message": "Calling ucfirst() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 113,
+   "identifier": "disallowed.function",
+   "message": "Calling lcfirst() is forbidden.",
+   "tip": null
+  }
+ ]
+}

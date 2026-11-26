@@ -1,7 +1,7 @@
 //! `pun composer config`: Composer 2.11.2's `ConfigCommand`, its output, its edits and its errors included.
 
 use crate::Exit;
-use anyhow::{Result, bail};
+use anyhow::{Context, Result, bail};
 use pun_packages::composer_config::{Dirs, Options, run};
 use std::path::Path;
 use std::rc::Rc;
@@ -70,7 +70,14 @@ fn data_dir(home: &Path) -> String {
     home.to_string_lossy().into_owned()
 }
 
-pub(crate) fn run_config(a: &ConfigArgs) -> Result<Exit> {
+/// `pun composer config`, in `-d`'s directory when it is given, as Composer changes into it first.
+pub(crate) fn run_config(a: &ConfigArgs, globals: &crate::composer::Globals) -> Result<Exit> {
+    let here = match &globals.working_dir {
+        Some(d) => d
+            .canonicalize()
+            .with_context(|| format!("can't open {}", d.display()))?,
+        None => std::env::current_dir()?,
+    };
     let Some((home, cache)) = pun_packages::fetch::composer_dirs() else {
         bail!("can't find Composer's home: set COMPOSER_HOME or HOME");
     };
@@ -92,7 +99,7 @@ pub(crate) fn run_config(a: &ConfigArgs) -> Result<Exit> {
         source: a.source,
     };
     let outcome = run(
-        &std::env::current_dir()?,
+        &here,
         &dirs,
         &(Rc::new(|k: &str| std::env::var(k).ok()) as pun_packages::composer_config::Env),
         options,

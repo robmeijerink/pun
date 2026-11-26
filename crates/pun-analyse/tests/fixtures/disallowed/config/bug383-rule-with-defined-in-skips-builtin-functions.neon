@@ -1,0 +1,11 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php"
+	disallowedFunctionCalls:
+		-
+			"function": "*"
+			"definedIn": "src/Fun*.php"

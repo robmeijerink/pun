@@ -966,7 +966,19 @@ fn trait_context_parameter_type<A: Arena>(
             .codebase
             .get_declaring_method_identifier(&MethodIdentifier::new(parent.name, function_like_metadata.name));
         if let Some(method) = context.codebase.get_method_by_id(&declaring) {
-            let parameter_type = method.parameters.get(offset)?.get_type_metadata().filter(|t| t.from_docblock)?;
+            let parameter_type = method.parameters.get(offset)?.get_type_metadata().filter(|t| t.from_docblock);
+            // a trait's untyped override in the parent: the inheritance walks on to the parent's own parents
+            let Some(parameter_type) = parameter_type else {
+                if context
+                    .codebase
+                    .get_class_like(declaring.get_class_name().as_bytes())
+                    .is_some_and(|declaring| declaring.kind.is_trait())
+                {
+                    parent_name = parent.direct_parent_class;
+                    continue;
+                }
+                return None;
+            };
             let Some(parameters) = class
                 .template_extended_parameters
                 .get(&declaring.get_class_name())
@@ -1058,7 +1070,53 @@ fn expand_type_union<A: Arena>(
         },
     );
 
-    signature_union
+    trait_context_templates(context, block_context, signature_union)
+}
+
+/// Pun: a trait method analysed in the context of `trait_context_class` sees the trait's templates as the class's
+/// `@use Trait<...>` gives them (PHPStan resolves the trait's PHPDoc with the using class's template type map), also
+/// inside the bound of a method template (`@template TPicked of TRow`).
+fn trait_context_templates<A: Arena>(
+    context: &Context<'_, '_, A>,
+    block_context: &BlockContext<'_>,
+    union: TUnion,
+) -> TUnion {
+    let Some(class_name) = context.settings.trait_context_class else {
+        return union;
+    };
+    let ReferenceOrigin::Symbol((declaring, _)) = block_context.scope.get_reference_origin() else {
+        return union;
+    };
+    let Some(declaring) = context.codebase.get_class_like(declaring.as_bytes()).filter(|t| t.kind.is_trait()) else {
+        return union;
+    };
+    let Some(parameters) = context
+        .codebase
+        .get_class_like(class_name.as_bytes())
+        .and_then(|class| class.template_extended_parameters.get(&declaring.name))
+        .filter(|parameters| !parameters.is_empty())
+    else {
+        return union;
+    };
+    let mut template_result = TemplateResult::default();
+    for (template_name, concrete) in parameters {
+        template_result.add_lower_bound(*template_name, GenericParent::ClassLike(declaring.name), concrete.clone());
+    }
+    let replaced = inferred_type_replacer::replace(&union, &template_result, context.codebase);
+    let types: Vec<TAtomic> = replaced
+        .types
+        .iter()
+        .map(|atomic| match atomic {
+            TAtomic::GenericParameter(parameter) if !matches!(parameter.defining_entity, GenericParent::ClassLike(name) if name == declaring.name) => {
+                let mut parameter = parameter.clone();
+                parameter.constraint =
+                    Arc::new(inferred_type_replacer::replace(&parameter.constraint, &template_result, context.codebase));
+                TAtomic::GenericParameter(parameter)
+            }
+            other => other.clone(),
+        })
+        .collect();
+    replaced.clone_with_types(types)
 }
 
 fn flatten_template_conditionals(codebase: &CodebaseMetadata, union: &TUnion, atomics: &mut Vec<TAtomic>) {

@@ -1,0 +1,40 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 39,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicStaticTraitProperty (as ClassWithProperties::$publicStaticTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicStaticTraitProperty matches Traits\\YetAnotherTrait::$publicStaticTra*Property]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 40,
+   "identifier": "disallowed.property",
+   "message": "Using ClassWithProperties::$publicStaticProperty is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 41,
+   "identifier": "disallowed.property",
+   "message": "Using ClassWithProperties::$privateStaticProperty is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 55,
+   "identifier": "disallowed.property",
+   "message": "Using ClassWithProperties::$publicStaticProperty is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 58,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicStaticTraitProperty (as ClassWithProperties::$publicStaticTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicStaticTraitProperty matches Traits\\YetAnotherTrait::$publicStaticTra*Property]",
+   "tip": null
+  }
+ ]
+}

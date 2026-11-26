@@ -1,4 +1,4 @@
-//! Rector's own fixtures for the ported rules, copied verbatim from rector-src 2.8.4 (`.oracle/rector`,
+//! Rector's own fixtures for the ported rules, copied verbatim from rector-src 2.9.2 (`.oracle/rector`,
 //! rules-tests/...) into tests/rector/<Rector class>/Fixture. Oracle/ holds extra inputs with what Rector 2.8.4
 //! (`.oracle/rector-bin`, the rule alone) wrote for them; Pun/ holds the cases where Pun keeps the meaning but not
 //! Rector's bytes, its expected output derived by hand. A fixture is `input -----\n expected`, or only the input when

@@ -6,6 +6,7 @@ use crate::rules::support::docblocks::doc_comment;
 use crate::rules::support::expressions::{named, text};
 use crate::rules::support::names::imported;
 use crate::rules::support::rewrites::{merge, remove_statements};
+use crate::rules::support::side_effects::has_side_effect;
 use crate::rules::support::statement_edits::{List, enclosing};
 use crate::syntax::is_this;
 use crate::syntax::{node_span, unparenthesize};
@@ -98,6 +99,12 @@ impl Rule for NoUnusedPrivateProperty {
                         Some((_, indices)) => indices.push(index),
                         None => lists.push((list, vec![index])),
                     }
+                }
+                Write::Kept(assignment, value) => {
+                    edits.push(Edit::new(
+                        node_span(assignment),
+                        text(ctx, value).to_string(),
+                    ));
                 }
                 Write::Value(assignment) => {
                     edits.push(Edit::new(
@@ -237,6 +244,14 @@ fn has_doctrine_tag(path: &[Node<'_, '_>], doc: &str) -> bool {
 enum Write<'a> {
     Statement(usize, List<'a>),
     Value(&'a Assignment<'a>),
+    Kept(&'a Assignment<'a>, &'a Expression<'a>),
+}
+
+fn uncast<'a>(expr: &'a Expression<'a>) -> &'a Expression<'a> {
+    match unparenthesize(expr) {
+        Expression::UnaryPrefix(u) if u.operator.is_cast() => uncast(u.operand),
+        e => e,
+    }
 }
 
 struct Fetches<'t, 'a> {
@@ -353,6 +368,11 @@ impl<'a> Fetches<'_, 'a> {
                 let Some(Node::Statement(statement)) = stack.get(i - 1) else {
                     return None;
                 };
+                // Rector 2.9.2 keeps the side effect of the assigned value, a `new` or a call, without its casts.
+                let value = uncast(assignment.rhs);
+                if has_side_effect(&stack[..*i], value) {
+                    return Some(Write::Kept(assignment, value));
+                }
                 let (list, index) = enclosing(self.source, statement, &stack[..i - 1]);
                 Some(Write::Statement(index, list))
             }

@@ -288,10 +288,7 @@ tests/Type/data/model-date-column-casts.php:12
 tests/Type/data/model-date-column-casts.php:13
 tests/Type/data/model-increment-each-l13-20.php
 tests/Type/data/model-increment-each-l13-3.php
-tests/Type/data/model-properties-l13-2.php
 tests/Type/data/model-properties-l13-2.php:11
-tests/Type/data/model-properties-l13.php
-tests/Type/data/model-properties-l13.php:11
 tests/Type/data/model-properties.php
 tests/Type/data/model-properties.php:40
 tests/Type/data/model-properties.php:92

@@ -1,0 +1,35 @@
+{
+ "level": 10,
+ "errors": [
+  {
+   "line": 51,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: StaticArity\\Same<int, string>",
+   "tip": null
+  },
+  {
+   "line": 52,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: StaticArity\\Fewer<int>",
+   "tip": null
+  },
+  {
+   "line": 53,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: StaticArity\\Swapped<int, string>",
+   "tip": null
+  },
+  {
+   "line": 82,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: StaticArity\\HasMany<int, string>",
+   "tip": null
+  },
+  {
+   "line": 83,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: StaticArity\\HasMany<int, string>",
+   "tip": null
+  }
+ ]
+}

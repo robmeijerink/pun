@@ -1,0 +1,27 @@
+{
+    "test": "Type/PunPaginatorThroughTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-paginator-through.php",
+            "declares": [
+                "punpaginatorthrough\\paginate"
+            ],
+            "asserts": [
+                30,
+                35,
+                40
+            ],
+            "errors": [
+                {
+                    "line": 23,
+                    "identifier": "return.type",
+                    "message": "Method PunPaginatorThrough\\Paginate::wrong() should return Illuminate\\Contracts\\Pagination\\LengthAwarePaginator<int, int> but returns Illuminate\\Pagination\\LengthAwarePaginator<int, string>.",
+                    "tip": null
+                }
+            ]
+        }
+    ]
+}

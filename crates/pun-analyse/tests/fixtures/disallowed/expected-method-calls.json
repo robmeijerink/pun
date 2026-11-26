@@ -1,0 +1,194 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Bar.php",
+   "line": 42,
+   "identifier": "disallowed.method",
+   "message": "Calling DateTimeImmutable::format() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 59,
+   "identifier": "disallowed.method",
+   "message": "Calling DateTimeZone::getLocation() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 80,
+   "identifier": "disallowed.method",
+   "message": "Calling DateTimeImmutable::format() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/methodCalls.php",
+   "line": 10,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/methodCalls.php",
+   "line": 11,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 10,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 11,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 14,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 22,
+   "identifier": "disallowed.method",
+   "message": "Calling Inheritance\\Base::x() (as Inheritance\\Sub::x()) is forbidden, Base::x*() methods are dangerous. [Inheritance\\Base::x() matches Inheritance\\Base::x*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 26,
+   "identifier": "disallowed.method",
+   "message": "Calling Traits\\TestTrait::x() (as Traits\\TestClass::x()) is forbidden, all TestTrait methods are dangerous. [Traits\\TestTrait::x() matches Traits\\TestTrait::*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 28,
+   "identifier": "disallowed.method",
+   "message": "Calling Traits\\TestTrait::y() (as Traits\\AnotherTestClass::y()) is forbidden, all TestTrait methods are dangerous. [Traits\\TestTrait::y() matches Traits\\TestTrait::*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 29,
+   "identifier": "disallowed.method",
+   "message": "Calling Traits\\AnotherTestClass::zzTop() is forbidden, method AnotherTestClass::zzTop() is dangerous.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 46,
+   "identifier": "disallowed.method",
+   "message": "Calling PhpOption\\None::getIterator() is forbidden, no PhpOption.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 52,
+   "identifier": "disallowed.method",
+   "message": "Calling PhpOption\\Some::getIterator() is forbidden, no PhpOption.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 55,
+   "identifier": "disallowed.method",
+   "message": "Calling DateTime::format() is forbidden, why too kay.",
+   "tip": "2038 is approaching fast"
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 60,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::movie() is forbidden, was good.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 61,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::movie() is forbidden, was good.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 62,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::Sequel() is forbidden, too. [Waldo\\Quux\\Blade::Sequel() matches Waldo\\Quux\\Blade::sequel()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 63,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::Sequel() is forbidden, too. [Waldo\\Quux\\Blade::Sequel() matches Waldo\\Quux\\Blade::sequel()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 64,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::trinity() is forbidden, holy trinity. [Waldo\\Quux\\Blade::trinity() matches Waldo\\Quux\\Blade::Trinity()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 65,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::trinity() is forbidden, holy trinity. [Waldo\\Quux\\Blade::trinity() matches Waldo\\Quux\\Blade::Trinity()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 68,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::andSorcery() is forbidden, use magic.",
+   "tip": "\u2022 Dexempo\n\u2022 Multo"
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 74,
+   "identifier": "disallowed.method",
+   "message": "Calling Interfaces\\BaseInterface::x() (as Interfaces\\Implementation::x()) is forbidden, BaseInterface::x*() methods are dangerous. [Interfaces\\BaseInterface::x() matches Interfaces\\BaseInterface::x*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 87,
+   "identifier": "disallowed.method",
+   "message": "Calling Interfaces\\BaseInterface::x() (as class@anonymous::x()) is forbidden, BaseInterface::x*() methods are dangerous. [Interfaces\\BaseInterface::x() matches Interfaces\\BaseInterface::x*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 91,
+   "identifier": "disallowed.method",
+   "message": "Calling Inheritance\\Base::x() (as class@anonymous::x()) is forbidden, Base::x*() methods are dangerous. [Inheritance\\Base::x() matches Inheritance\\Base::x*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 95,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 96,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  }
+ ]
+}

@@ -10,17 +10,3 @@ final class SomeClass
         return ['a', 'b'];
     }
 }
------
-<?php
-
-final class SomeClass
-{
-    /**
-     * @return
-     * @return array<int, string>
-     */
-    public function run()
-    {
-        return ['a', 'b'];
-    }
-}

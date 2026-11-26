@@ -35,18 +35,83 @@ fn files(dir: &Path, blade: bool) -> Vec<PathBuf> {
 
 pub(crate) struct Finder {
     pub(crate) paths: Vec<PathBuf>,
+    /// The view namespaces the providers register (`ns::view`), each with its directories.
+    hints: std::sync::Arc<Vec<(String, Vec<PathBuf>)>>,
+}
+
+/// ServiceProvider::loadViewsFrom($path, $namespace) calls whose path PHP resolves without running anything:
+/// `__DIR__ . '/../resources/views'` or a literal path.
+static LOAD_VIEWS_FROM: LazyLock<pcre2::bytes::Regex> = LazyLock::new(|| {
+    preg_compile(
+        r#"/->loadViewsFrom\(\s*(__DIR__\s*\.\s*)?(['"])([^'"$]*)\2\s*,\s*(['"])([^'"$]+)\4\s*\)/"#,
+    )
+    .expect("loadViewsFrom pattern")
+});
+
+/// The namespaces the app's and the discovered packages' providers register, as Larastan's booted application has
+/// them: FileViewFinder looks in the app's `resources/views/vendor/<namespace>` before the provider's directory
+/// (ServiceProvider::loadViewsFrom()). Read once per project root.
+fn hints(root: &Path) -> std::sync::Arc<Vec<(String, Vec<PathBuf>)>> {
+    static HINTS: LazyLock<
+        std::sync::Mutex<
+            std::collections::HashMap<PathBuf, std::sync::Arc<Vec<(String, Vec<PathBuf>)>>>,
+        >,
+    > = LazyLock::new(Default::default);
+    let mut cache = HINTS
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
+    cache
+        .entry(root.to_path_buf())
+        .or_insert_with(|| {
+            let mut providers = crate::php_files(&root.join("app/Providers"), &["php".to_string()]);
+            providers.extend(super::macros::discovered_providers(root));
+            let mut hints: Vec<(String, Vec<PathBuf>)> = Vec::new();
+            for provider in providers {
+                let (Ok(code), Some(dir)) = (std::fs::read(&provider), provider.parent()) else {
+                    continue;
+                };
+                for found in LOAD_VIEWS_FROM.captures_iter(&code).flatten() {
+                    let text = |i| {
+                        String::from_utf8_lossy(found.get(i).map_or(&b""[..], |m| m.as_bytes()))
+                            .into_owned()
+                    };
+                    let path = if found.get(1).is_some() {
+                        PathBuf::from(format!("{}{}", dir.display(), text(3)))
+                    } else {
+                        PathBuf::from(text(3))
+                    };
+                    let namespace = text(5);
+                    let vendor = root.join("resources/views/vendor").join(&namespace);
+                    match hints.iter_mut().find(|(n, _)| *n == namespace) {
+                        Some((_, paths)) => paths.push(path),
+                        None => hints.push((namespace, vec![vendor, path])),
+                    }
+                }
+            }
+            std::sync::Arc::new(hints)
+        })
+        .clone()
 }
 
 impl Finder {
     pub(crate) fn new(root: &Path) -> Finder {
         Finder {
             paths: vec![root.join("resources/views")],
+            hints: hints(root),
         }
     }
 
+    /// FileViewFinder::find(): `namespace::view` in the namespace's directories, any other name in the view paths.
     pub(crate) fn find(&self, name: &str) -> Option<PathBuf> {
-        let file = name.trim().replace('.', "/");
-        self.paths.iter().find_map(|path| {
+        let (paths, name) = match name.trim().split_once("::") {
+            Some((namespace, view)) => {
+                let (_, paths) = self.hints.iter().find(|(n, _)| n == namespace)?;
+                (paths.as_slice(), view)
+            }
+            None => (self.paths.as_slice(), name.trim()),
+        };
+        let file = name.replace('.', "/");
+        paths.iter().find_map(|path| {
             ["blade.php", "php", "css", "html"]
                 .iter()
                 .map(|e| path.join(format!("{file}.{e}")))

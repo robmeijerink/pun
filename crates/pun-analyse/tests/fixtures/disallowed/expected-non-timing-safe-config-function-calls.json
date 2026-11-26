@@ -1,0 +1,33 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/configs/nonTimingSafeCalls.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling hex2bin() is forbidden, it is not timing-safe, use sodium_hex2bin() instead.",
+   "tip": "ext-sodium is bundled with PHP since 7.2 but not always enabled, use ParagonIE\\ConstantTime\\Hex::decode() if not available"
+  },
+  {
+   "file": "src/configs/nonTimingSafeCalls.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling bin2hex() is forbidden, it is not timing-safe, use sodium_bin2hex() instead.",
+   "tip": "ext-sodium is bundled with PHP since 7.2 but not always enabled, use ParagonIE\\ConstantTime\\Hex::encode() if not available"
+  },
+  {
+   "file": "src/configs/nonTimingSafeCalls.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling base64_decode() is forbidden, it is not timing-safe, use sodium_base642bin() instead.",
+   "tip": "ext-sodium is bundled with PHP since 7.2 but not always enabled, use ParagonIE\\ConstantTime\\Base64::decode() if not available"
+  },
+  {
+   "file": "src/configs/nonTimingSafeCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling base64_encode() is forbidden, it is not timing-safe, use sodium_bin2base64() instead.",
+   "tip": "ext-sodium is bundled with PHP since 7.2 but not always enabled, use ParagonIE\\ConstantTime\\Base64::encode() if not available"
+  }
+ ]
+}

@@ -52,13 +52,14 @@ impl Rule for NoNegatedComparison {
             Node::Binary(identical)
                 if matches!(identical.operator, BinaryOperator::Identical(_)) =>
             {
-                if !is_bool(ancestors, identical.lhs) || !is_bool(ancestors, identical.rhs) {
-                    return;
-                }
                 let Expression::UnaryPrefix(not) = unparenthesize(identical.lhs) else {
                     return;
                 };
-                if !not.operator.is_not() {
+                // Rector 2.9.2 checks the negated operand: `!$a === $b` is `$a !== $b` only for a bool `$a`.
+                if !not.operator.is_not()
+                    || !is_bool(ancestors, not.operand)
+                    || !is_bool(ancestors, identical.rhs)
+                {
                     return;
                 }
                 (not.operand, identical.rhs)

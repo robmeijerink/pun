@@ -1,0 +1,43 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/ClassWithAttributes.php"
+		- "../src/AttributesEverywhere.php"
+		- "../src/Bar.php"
+	disallowedAttributes:
+		-
+			"attribute": 
+				- "Attributes\\AttributeEntity"
+			"allowParamsAnywhereAnyValue": 
+				-
+					"position": 1
+					"name": "repositoryClass"
+		-
+			"attribute": "#[\\Attributes\\AttributeClass()]"
+			"allowInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"
+		-
+			"attribute": "Attributes\\AttributeColumn"
+			"message": "use `utc_datetime_immutable` instead."
+			"allowExceptCaseInsensitiveParams": 
+				-
+					"name": "type"
+					"position": 2
+					"value": "datetime"
+				-
+					"name": "type"
+					"position": 2
+					"value": "datetime_immutable"
+			"errorTip": "Bar or Stringable"
+		-
+			"attribute": "\\Attributes\\AttributeColumn2"
+			"allowExceptInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"
+			"errorTip": 
+				- "DateTime"
+				- "or Immutable"

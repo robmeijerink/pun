@@ -1,4 +1,4 @@
-//! Rector 2.8.4's own fixtures for its named-args rules, copied verbatim from rector-src's rules-tests at 2.8.4
+//! Rector 2.9.2's own fixtures for its named-args rules, copied verbatim from rector-src's rules-tests at 2.9.2
 //! (CodeQuality/Rector/CallLike/..., CodeQuality/Rector/Attribute/...) into tests/rector/<Rector class>/Fixture (and
 //! its Source/). Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the rule alone,
 //! `phpVersion(80400)`) wrote for them. A fixture is `input -----\n expected`, or only the input when the rule must not

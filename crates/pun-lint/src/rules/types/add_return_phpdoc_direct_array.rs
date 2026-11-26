@@ -58,7 +58,9 @@ impl Rule for AddReturnPhpdocDirectArray {
         }
         let target = f.target(ctx);
         let mut info = target.info(ctx.source);
-        if is_useful_array_tag(info.return_tag().map(|t| &t.ty)) {
+        // Rector 2.9.2: skip an invalid @return tag, as adding a new one would never reach a fixed point.
+        if info.has_invalid_tag("@return") || is_useful_array_tag(info.return_tag().map(|t| &t.ty))
+        {
             return;
         }
         let place = Place {

@@ -1,0 +1,16 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/FirstClassCallableParamsAnywhere.php"
+	disallowedFunctionCalls:
+		-
+			"function": "crc32()"
+			"allowParamsAnywhere": 
+				"1": "a"
+		-
+			"function": "strtolower()"
+			"allowExceptParamsAnywhere": 
+				"1": "a"

@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 46,
+   "identifier": "disallowed.doWhile",
+   "message": "Using the do-while control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

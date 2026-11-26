@@ -1555,6 +1555,46 @@ fn intersect_atomic_types(
         return Some(narrower.clone());
     }
 
+    // TypeCombinator::intersect(): an object inside a subtracted object's class keeps the
+    // exclusion through unionWithSubtractedType(), so `File~RemoteDocument & Document` is
+    // `Document~RemoteDocument`, not never.
+    if let (TAtomic::Object(TObject::Named(n1)), TAtomic::Object(TObject::Named(n2))) = (type_1, type_2) {
+        for (subtracted, other) in [(n1, n2), (n2, n1)] {
+            let Some(excluded) = &subtracted.subtracted_type else {
+                continue;
+            };
+            // An intersection operand flattens into conjuncts there; only a plain class narrows here.
+            if other.has_intersection_types() {
+                continue;
+            }
+            let base = TAtomic::Object(TObject::Named(subtracted.clone().with_subtracted_type(None)));
+            let other_atomic = TAtomic::Object(TObject::Named(other.clone()));
+            if !is_atomic_intersection_contained_by(&other_atomic, &base, codebase) {
+                continue;
+            }
+            *intersection_performed = true;
+            if let [TAtomic::Object(TObject::Named(exclusion))] = excluded.types.as_ref()
+                && exclusion.subtracted_type.is_none()
+                && !exclusion.has_intersection_types()
+                && is_atomic_intersection_contained_by(
+                    &other_atomic,
+                    &TAtomic::Object(TObject::Named(exclusion.clone())),
+                    codebase,
+                )
+            {
+                return None;
+            }
+            let excluded = other.subtracted_type.as_ref().map_or_else(
+                || (**excluded).clone(),
+                |previous| combine_union_types(previous, excluded, codebase, combiner::CombinerOptions::default()),
+            );
+            let base = TUnion::from_atomic(TAtomic::Object(TObject::Named(other.clone().with_subtracted_type(None))));
+            return Some(TAtomic::Object(TObject::Named(
+                other.clone().with_subtracted_type(intersect_union_types(&base, &excluded, codebase)),
+            )));
+        }
+    }
+
     if let (TAtomic::Scalar(TScalar::ClassLikeString(TClassLikeString::Any { kind: TClassLikeStringKind::Class })),
         TAtomic::Scalar(TScalar::String(string)))
         | (TAtomic::Scalar(TScalar::String(string)),

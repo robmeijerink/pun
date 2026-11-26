@@ -1391,7 +1391,13 @@ fn method_signature<'a>(
                         t
                     }
                 };
-                let (docs, ret) = declared::reflected_phpdoc_signature(c, f, owner, &facts.name);
+                // a trait's abstract method is resolved in the class implementing it, with the trait's templates as
+                // the class's `@use` gives them
+                let (docs, ret) = (declaring.kind.is_trait()
+                    && matches!(implementing, Class::User(t) if t.name == declaring.name))
+                .then(|| declared::trait_phpdoc_signature(c, f, declaring, k))
+                .flatten()
+                .unwrap_or_else(|| declared::reflected_phpdoc_signature(c, f, owner, &facts.name));
                 let docs: Vec<Option<Type>> = f
                     .parameters
                     .iter()

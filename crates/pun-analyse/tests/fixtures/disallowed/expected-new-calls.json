@@ -1,0 +1,40 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 19,
+   "identifier": "disallowed.new",
+   "message": "Calling Inheritance\\Base::__construct() (as Inheritance\\Sub::__construct()) is forbidden, all your base are belong to us.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 32,
+   "identifier": "disallowed.new",
+   "message": "Calling Constructor\\ClassWithConstructor::__construct() is forbidden, class ClassWithConstructor should not be created.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 34,
+   "identifier": "disallowed.new",
+   "message": "Calling Constructor\\ClassWithoutConstructor::__construct() is forbidden, class ClassWithoutConstructor should not be created.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 36,
+   "identifier": "disallowed.new",
+   "message": "Calling Constructor\\ClassWithoutConstructor::__construct() is forbidden, class ClassWithoutConstructor should not be created.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCalls.php",
+   "line": 57,
+   "identifier": "disallowed.new",
+   "message": "Calling DateTime::__construct() is forbidden, no future.",
+   "tip": null
+  }
+ ]
+}

@@ -66,3 +66,49 @@ fn untouched_upstream_filter_regressions_at_level_nine() {
         assert_eq!(run(&project).unwrap(), Vec::new(), "{name}");
     }
 }
+
+#[test]
+fn filter_validate_boolean() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/filter-functions");
+    let mut project = Project::new(vec![root.join("boolean.php")], Vec::new());
+    project.php_version = pun_analyse::PhpVersion::from_id(80400);
+    project.level = 9;
+    let got: Vec<_> = run(&project)
+        .unwrap()
+        .into_iter()
+        .map(|error| (error.line, error.identifier, error.message))
+        .collect();
+    let want: Vec<_> = [
+        (16, "Dumped type: bool"),
+        (17, "Dumped type: bool"),
+        (18, "Dumped type: bool"),
+        (19, "Dumped type: bool"),
+        (20, "Dumped type: bool|null"),
+        (21, "Dumped type: bool|null"),
+        (22, "Dumped type: bool"),
+        (23, "Dumped type: bool|null"),
+        (24, "Dumped type: mixed"),
+        (25, "Dumped type: 'bad'|bool"),
+        (26, "Dumped type: bool"),
+        (27, "Dumped type: bool"),
+        (28, "Dumped type: true"),
+        (29, "Dumped type: false"),
+        (30, "Dumped type: false"),
+        (31, "Dumped type: null"),
+        (32, "Dumped type: false"),
+        (33, "Dumped type: array<string, bool>"),
+        (34, "Dumped type: array<bool>"),
+        (35, "Dumped type: bool|null"),
+        (36, "Dumped type: bool|null"),
+        (37, "Dumped type: bool"),
+        (38, "Dumped type: bool|null"),
+        (39, "Dumped type: bool|null"),
+        (40, "Dumped type: mixed"),
+        (41, "Dumped type: mixed"),
+        (42, "Dumped type: array<bool|null>|null"),
+    ]
+    .into_iter()
+    .map(|(line, message)| (line, "phpstan.dumpType".to_owned(), message.to_owned()))
+    .collect();
+    assert_eq!(got, want);
+}

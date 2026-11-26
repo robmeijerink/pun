@@ -49,6 +49,24 @@ impl TAlias {
             return Some(&type_alias.type_union);
         }
 
+        // Pun: a trait method analysed in the using class names the trait's alias (PHPStan resolves the trait's
+        // docblocks in the trait's own name scope); the using class's own docblocks never name it
+        if !class_like.imported_type_aliases.contains_key(&self.alias_name) {
+            let mut traits: Vec<_> = class_like.used_traits.iter().copied().collect();
+            let mut seen = Vec::new();
+            while let Some(name) = traits.pop() {
+                if seen.contains(&name) {
+                    continue;
+                }
+                seen.push(name);
+                let Some(t) = codebase.get_class_like(name.as_bytes()) else { continue };
+                if let Some(type_alias) = t.type_aliases.get(&self.alias_name) {
+                    return Some(&type_alias.type_union);
+                }
+                traits.extend(t.used_traits.iter().copied());
+            }
+        }
+
         let (source_class, type_alias, _) = class_like.imported_type_aliases.get(&self.alias_name)?;
 
         let type_metadata = if source_class == &self.class_name {

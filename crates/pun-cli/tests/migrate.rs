@@ -485,17 +485,29 @@ fn starter_beside_phpstan() {
 }
 
 /// A phpstan.neon without a level runs no rules (PHPStan: "No rules detected"): every analyse group is turned
-/// off and no check moves to [lint], so `pun analyse` says the same.
+/// off and no check moves to [lint], so `pun analyse` says the same, and the baseline note names only `pun analyse`.
 #[test]
 fn phpstan_without_a_level_runs_no_rules() {
     let d = project(
         "phpstan-no-level",
         &[
-            ("phpstan.neon", "parameters:\n    paths: [app]\n"),
+            (
+                "phpstan.neon",
+                "includes:\n    - phpstan-baseline.neon\nparameters:\n    paths: [app]\n",
+            ),
+            (
+                "phpstan-baseline.neon",
+                "parameters:\n    ignoreErrors: []\n",
+            ),
             ("app/A.php", "<?php\n\nundefined_fn();\n"),
         ],
     );
     let (out, _, code) = pun(&d, &["migrate", "--yes"]);
+    // No check became a lint rule, so only the analyse baseline is named.
+    assert!(
+        out.contains("phpstan-baseline.neon was not copied. Run `pun analyse --generate-baseline` for a Pun baseline.\n"),
+        "{out}"
+    );
     assert_eq!(
         (counts(&out).lines().next(), code),
         (
@@ -835,7 +847,7 @@ fn phpstan_baseline_extensions_options_and_ignores() {
     let Some(strict) = oracle("phpstan/vendor/phpstan/phpstan-strict-rules") else {
         return;
     };
-    let neon = "includes:\n    - phpstan-baseline.neon\n    - vendor/phpstan/phpstan-strict-rules/rules.neon\n    - vendor/nesbot/carbon/extension.neon\nparameters:\n    level: 9\n    paths:\n        - src\n    additionalConstructors:\n        - App\\Foo::init\n    treatPhpDocTypesAsCertain: false\n    ignoreErrors:\n        - '#Call to an undefined method#'\n";
+    let neon = "includes:\n    - phpstan-baseline.neon\n    - vendor/phpstan/phpstan-strict-rules/rules.neon\n    - vendor/nesbot/carbon/extension.neon\n    - vendor/phpstan/phpstan-mockery/extension.neon\nparameters:\n    level: 9\n    paths:\n        - src\n    additionalConstructors:\n        - App\\Foo::init\n    treatPhpDocTypesAsCertain: false\n    ignoreErrors:\n        - '#Call to an undefined method#'\n";
     let d = project(
         "phpstan-extras",
         &[
@@ -854,9 +866,15 @@ fn phpstan_baseline_extensions_options_and_ignores() {
                 "vendor/nesbot/carbon/lazy/Carbon/UnprotectedDatePeriod.php",
                 "<?php\n",
             ),
+            // phpstan/phpstan-mockery 2.0.0's extension.neon, its services only
+            (
+                "vendor/phpstan/phpstan-mockery/extension.neon",
+                "services:\n    -\n        class: PHPStan\\Mockery\\Type\\MockDynamicReturnTypeExtension\n        tags:\n            - phpstan.broker.dynamicStaticMethodReturnTypeExtension\n",
+            ),
+            // Locked, but phpstan.neon doesn't load it: its switch is off, as PHPStan runs none of its rules.
             (
                 "composer.lock",
-                r#"{"packages":[{"name":"nesbot/carbon","version":"3.15.1"}]}"#,
+                r#"{"packages":[{"name":"nesbot/carbon","version":"3.15.1"}],"packages-dev":[{"name":"spaze/phpstan-disallowed-calls","version":"v4.15.1"}]}"#,
             ),
         ],
     );
@@ -879,12 +897,20 @@ fn phpstan_baseline_extensions_options_and_ignores() {
         "{out}"
     );
     assert!(
-        out.contains("\n ! phpstan-baseline.neon was not copied. Run `pun analyse --generate-baseline` for a Pun baseline.\n"),
+        out.contains("\n ! phpstan-baseline.neon was not copied. Run `pun analyse --generate-baseline` and `pun lint --generate-baseline` for Pun baselines.\n"),
         "{out}"
     );
-    assert!(!out.contains("nesbot/carbon"), "{out}");
+    assert!(
+        !out.contains("nesbot/carbon") && !out.contains("phpstan-mockery"),
+        "{out}"
+    );
     let toml = read(&d, "pun.toml");
-    assert!(toml.contains("[extensions]\ncarbon = \"on\"\n"), "{toml}");
+    assert!(
+        toml.contains(
+            "[extensions]\ncarbon = \"on\"\nmockery = \"on\"\ndisallowed-calls = \"off\"\n\n"
+        ),
+        "{toml}"
+    );
     assert!(
         toml.contains(
             "\"control-flow/unhandled-match\" = { treat-php-doc-types-as-certain = false }\n"
@@ -897,7 +923,7 @@ fn phpstan_baseline_extensions_options_and_ignores() {
     );
 }
 
-/// rector.php read through Rector 2.8.4 (`.oracle/rector-bin`): its paths become `[lint] exclude` for the files
+/// rector.php read through Rector 2.9.2 (`.oracle/rector-bin`): its paths become `[lint] exclude` for the files
 /// outside them, a rule skipped for a path an override, and what Pun can't run is listed (a reason shared by more
 /// than three rules once, with the count).
 #[test]
@@ -984,6 +1010,20 @@ fn rector_paths_skips_and_unsupported_rules() {
             Some(2)
         )
     );
+    // Rector 2.9.0 removed `withSetProviders()`; `vendor/bin/rector` fails on it the same way.
+    std::fs::write(
+        d.join("rector.php"),
+        "<?php\n\nuse Rector\\Config\\RectorConfig;\nuse RectorLaravel\\Set\\LaravelSetProvider;\n\nreturn RectorConfig::configure()\n    ->withSetProviders(LaravelSetProvider::class)\n    ->withPaths([__DIR__.'/src']);\n",
+    )
+    .unwrap();
+    let (_, err, code) = pun(&d, &["migrate", "--yes"]);
+    assert_eq!(
+        (err.as_str(), code),
+        (
+            "x can't read rector.php with Rector: Call to undefined method Rector\\Configuration\\RectorConfigBuilder::withSetProviders() (Rector 2.9.2 has no such method, so `vendor/bin/rector` fails on this rector.php too)\n",
+            Some(2)
+        )
+    );
 }
 
 #[test]
@@ -1057,19 +1097,26 @@ fn leaves_composer_json_and_its_lock_alone() {
     assert!(err.contains("pun.toml exists and differs"), "{err}");
 }
 
-/// Rector prints "The per-version PHP set ... is deprecated" to stdout for each `SetList::PHP_8x` (2.8.4 in
-/// `.oracle/rector-bin`, and 2.8.5, the latest, alike); migrate reads its own JSON after the warnings.
+/// Rector prints "The per-version PHP set ... is deprecated" to stdout for each per-version set file (2.9.2 in
+/// `.oracle/rector-bin`, which removed the `SetList::PHP_8x` constants but keeps config/set/php8x.php); migrate reads
+/// its own JSON after the warnings.
 #[test]
 fn rector_warnings_on_stdout() {
     let Some(vendor) = oracle("rector-bin/vendor") else {
         return;
     };
-    let rector = "<?php\n\nuse Rector\\Config\\RectorConfig;\nuse Rector\\Set\\ValueObject\\SetList;\n\nreturn RectorConfig::configure()\n    ->withPaths([__DIR__.'/src'])\n    ->withSets([SetList::PHP_82, SetList::PHP_83, SetList::PHP_84]);\n";
+    let set = |v: &str| format!("__DIR__.'/vendor/rector/rector/config/set/php{v}.php'");
+    let rector = format!(
+        "<?php\n\nuse Rector\\Config\\RectorConfig;\n\nreturn RectorConfig::configure()\n    ->withPaths([__DIR__.'/src'])\n    ->withSets([{}, {}, {}]);\n",
+        set("82"),
+        set("83"),
+        set("84")
+    );
     let d = project(
         "rector-deprecated-sets",
         &[
             ("composer.json", "{\"require\":{\"php\":\"^8.4\"}}"),
-            ("rector.php", rector),
+            ("rector.php", &rector),
             ("src/a.php", "<?php\n"),
         ],
     );
@@ -1121,9 +1168,10 @@ fn rector_settings_without_an_equivalent_are_listed() {
     assert!(!out.contains("withIndent()"), "{out}");
 }
 
-/// The PHP 8.2 set read through Rector 2.8.4 (`.oracle/rector-bin`): `SetList::PHP_82` lists the set's four rules
-/// (`rector list-rules`), which become `[lint.rules]`, and `->withPhpSets(php82: true)` the `modernize` set, which
-/// runs them. `pun lint --fix` then writes what `rector process` with `SetList::PHP_82` wrote for the same file.
+/// The PHP 8.2 set read through Rector 2.9.2 (`.oracle/rector-bin`): config/set/php82.php (2.9.0 removed its
+/// `SetList::PHP_82` constant) lists the set's four rules (`rector list-rules`), which become `[lint.rules]`, and
+/// `->withPhpSets(php82: true)` the `modernize` set, which runs them. `pun lint --fix` then writes what
+/// `rector process` with that set file wrote for the same file.
 #[test]
 fn rector_php82_set_turns_on_the_php_8_2_rules() {
     let Some(vendor) = oracle("rector-bin/vendor") else {
@@ -1134,7 +1182,7 @@ fn rector_php82_set_turns_on_the_php_8_2_rules() {
     for (name, config, summary) in [
         (
             "rector-php82-set-list",
-            "use Rector\\Set\\ValueObject\\SetList;\n\nreturn RectorConfig::configure()\n    ->withPaths([__DIR__.'/src'])\n    ->withSets([SetList::PHP_82]);\n",
+            "\nreturn RectorConfig::configure()\n    ->withPaths([__DIR__.'/src'])\n    ->withSets([__DIR__.'/vendor/rector/rector/config/set/php82.php']);\n",
             " ok rector.php  -> [lint] N on, N off",
         ),
         (
@@ -1240,4 +1288,47 @@ fn phpstan_alone_beside_a_format_config() {
         )),
         "{out}"
     );
+}
+
+#[test]
+fn phpstan_type_coverage_parameters_become_rule_options() {
+    // tomasvotruba/type-coverage 2.5.1's config/extension.neon, without its type-perfect include
+    let extension =
+        include_str!("../../pun-analyse/tests/fixtures/type-coverage/conf/extension.neon");
+    let neon = "includes:\n    - vendor/tomasvotruba/type-coverage/config/extension.neon\nparameters:\n    level: 5\n    paths:\n        - src\n    type_coverage:\n        return_type: 80\n        param_type: 50\n        param: 70.5\n        measure: true\n        declare: 1\n";
+    let d = project(
+        "phpstan-type-coverage",
+        &[
+            ("phpstan.neon", neon),
+            ("src/a.php", "<?php\n"),
+            (
+                "vendor/tomasvotruba/type-coverage/config/extension.neon",
+                extension,
+            ),
+            (
+                "composer.lock",
+                r#"{"packages":[],"packages-dev":[{"name":"tomasvotruba/type-coverage","version":"2.5.1"}]}"#,
+            ),
+        ],
+    );
+    let (out, _, code) = pun(&d, &["migrate", "--yes"]);
+    assert_eq!(code, Some(0), "{out}");
+    assert!(
+        out.contains("   deprecated in tomasvotruba/type-coverage, with no effect\n     parameter type_coverage.declare\n"),
+        "{out}"
+    );
+    let toml = read(&d, "pun.toml");
+    assert!(
+        toml.contains("[extensions]\ntype-coverage = \"on\"\n"),
+        "{toml}"
+    );
+    // the alias `param` wins over `param_type`
+    for line in [
+        "\"type-coverage/constant\" = { measure = true }\n",
+        "\"type-coverage/param\" = { measure = true, min = 70.5 }\n",
+        "\"type-coverage/property\" = { measure = true }\n",
+        "\"type-coverage/return\" = { measure = true, min = 80 }\n",
+    ] {
+        assert!(toml.contains(line), "{line}{toml}");
+    }
 }

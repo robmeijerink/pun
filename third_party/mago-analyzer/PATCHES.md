@@ -4329,3 +4329,95 @@ called class before its declaring class, as the instance method resolver already
 a trait method's per-class copy there when the class inherits a PHPDoc for it (mago-codex's PATCHES.md, "Trait
 methods inheriting the using class's PHPDoc"), so `PostData::collect($rows)` takes the `BaseData` contract's
 conditional return type. A class without a copy still resolves to the declaring method.
+
+## Property fetches after `??`
+
+`expression/binary/null_coalesce.rs`: upstream 1.61 specifies only the root variable on the isset-success edge of
+`$o->p ?? $b`, while the right-hand edge pins `$o->p` to `null`, so after the join the fetch's only value is `null`.
+PHPStan's CoalesceHandler specifies the fetch on the isset-success edge too, and the join keeps its read type: after
+`$row->item_id ?? 'none'` on a `mixed` `$row`, `$row->item_id` stays `mixed`. Pun's `no-always-true-if` port read
+`!($row->item_id !== null)` in a loop as always true from the leftover `null`
+(`crates/pun-lint/tests/rector/RemoveAlwaysTrueIfConditionRector/Oracle/skip_coalesced_property_in_loop.php.inc`).
+## Unpacked appends that may add nothing
+
+`invocation/post_process.rs` `appends_only_possibly_empty_values()`: the prelude's `@param-out` for `array_push()` and
+`array_unshift()` always makes the array non-empty. PHPStan's
+`FuncCallScopeEffectsHelper::getArrayFunctionAppendingType()` instead marks each unpacked value optional when the
+unpacked array may be empty, so `array_unshift($pending, ...($tree[$node] ?? []))` leaves a possibly empty
+`$pending` possibly empty. When every value argument is unpacked from a possibly empty array and the array itself may
+be empty, the out type now also allows `array{}`. Without it, `while ($pending !== [])` around `array_shift()` was
+reported always true and the code after the loop unreachable (shipfastlabs/pun#38, item 1). Covered by
+`crates/pun-analyse/tests/unpacked_appends.rs`, whose expectations are PHPStan 2.3.5's.
+## `collection-of` returns that hold a template
+
+`invocation/resolver.rs` `resolve_union()`: a `collection-of` atom left in a call's resolved return type because its
+model is still a template (`HasMany<TRow, User>::get()` inside a method templated on `TRow of Model`) resolves through
+mago-codex's `expander::collection_of_unresolvable()`, as PHPStan's `ResolvedFunctionVariantWithOriginal` resolves
+late-resolvable types. Without it the return type was the unknown class `collection-of` (shipfastlabs/pun#38, item
+5). `pun-analyse/tests/fixtures/larastan-types/Type/PunTemplateRelationCollectionsTest.json` covers it.
+## `$this` returns take the `@phpstan-this-out` type
+
+`invocation/return_type_fetcher.rs`: a method whose return type is exactly `$this` and that declares a
+`@phpstan-this-out` type returns the this-out type, as PHPStan's
+`CalledOnTypeUnresolvedMethodPrototypeReflection` does. `LengthAwarePaginator<int, User>::through(fn ($user) =>
+$user->name)` then types as `LengthAwarePaginator<int, string>`, as Larastan's stub declares (shipfastlabs/pun#38,
+item 4). `generalize_template_arguments()` now generalizes a method template referenced anywhere
+inside a generic object of the return type (`Box<U>`, `static<TKey, TMapValue>`), covariant positions included, as
+ResolvedFunctionVariantWithOriginal's object callback does without a template argument frame; only under the template
+argument toggle does a covariant position keep the exact type. `through(fn (User $user): array => ['id' => $user->id])`
+is `LengthAwarePaginator<int, array{id: int}>` and `Box<covariant T>::map(fn () => 5)` is `Box<int>`.
+`pun-analyse/tests/fixtures/larastan-types/Type/PunPaginatorThroughTest.json` covers it.
+## Contract forwards find no properties
+
+`resolver/property.rs`: pun-analyse forwards a Laravel contract to its concrete class, and the auth contracts
+(`Authenticatable`, `CanResetPassword`, `Authorizable`) to the auth models, by adding them as mixins with the class's
+own span (`crates/pun-analyse/src/larastan/app.rs` `contract_mixins()`). Larastan's ContractsMethodsExtension and
+AuthsMethodsExtension find methods only, so a property lookup skips those mixins: `Authenticatable $user` has
+`$user->can()` from `App\User` but `$user->email` stays `property.notFound` (shipfastlabs/pun#57). A docblock
+`@mixin` carries its tag's span and is unaffected.
+`pun-analyse/tests/fixtures/larastan-types/Type/PunAuthContractsTest.json` covers it.
+## Match subjects that hold a synthetic variable
+
+`variable_flow/builder.rs` `expression()`: a `match` whose subject has no expression id (`$order?->kind`,
+`$order->kind ?? null`) compares a synthetic `$-tmp-match-` variable in its arms, and that variable carries the
+subject's span. Its flow was recorded under that span, replacing the subject's, so the subject's reads were lost and
+`$order` was reported `variable.unused`, where PHPStan's VariableFlowBuilder reads the subject expression
+(shipfastlabs/pun#48). The synthetic variable records no flow. `crates/pun-analyse/tests/match_subject_reads.rs`
+covers it.
+## Trait templates bound by the using class's `@use`
+
+`statement/function_like/mod.rs` `trait_context_templates()`, called from `expand_type_union()`: a trait method
+analysed in the context of its using class (`trait_context_class`) kept the trait's own templates, so with
+`@use HoldsRows<Apple>` a `list<TRow>` parameter stayed `list<TRow of object>` and the method template
+`TPicked of TRow` kept the trait template as its bound. PHPStan resolves the trait's PHPDoc with the using class's
+template type map. The expanded signature types now replace the trait's templates with the class's `@use` arguments
+(from `template_extended_parameters`), also inside the constraint of the method's own templates
+(shipfastlabs/pun#50). `crates/pun-analyse/tests/trait_use_templates.rs` covers it.
+## Trait overrides between a parameter and its documented ancestor
+
+`statement/function_like/mod.rs` `trait_context_parameter_type()`: a trait method analysed in its using class takes
+an untyped parameter's PHPDoc type from the method it overrides in the class's parents. When the nearest parent's
+method is itself an untyped trait override (`AppInvoice extends VendorInvoice`, each using a trait that overrides
+`Model::fireModelEvent()`), the walk stopped there and `$event` was `mixed`. PhpDocInheritanceResolver walks on to
+the original declaration, so the walk now continues past a parent whose method a trait declares without a PHPDoc type
+(shipfastlabs/pun#60). `crates/pun-analyse/tests/trait_override_chains.rs` covers it.
+## Instanceof narrowing of subtracted objects
+
+`reconciler/assertion_reconciler.rs` `intersect_atomic_with_atomic()`: two named classes that cannot form an
+interface intersection now go through mago-codex's `intersect_union_types()` when either carries a subtracted type
+(and neither is an object intersection), so
+`File~RemoteDocument` asserted `instanceof Document` becomes `Document~RemoteDocument` instead of never (laravel/ai
+`Mistral/Concerns/MapsAttachments.php` and `OpenRouter/Concerns/MapsAttachments.php`, whose `match (true)` arm
+`$a instanceof Document && $a instanceof StorableFile` follows `$a instanceof RemoteDocument`). mago-codex's PATCHES.md
+("Objects inside a subtracted object's class") holds the type operation and its PHPStan source.
+`crates/pun-analyse/tests/fixtures/object-intersections/subtraction.php` covers it.
+
+## PHPDoc union resolver for inline `@var`
+
+`settings.rs` adds `Settings::phpdoc_union_resolver` (`Option<PhpDocUnionResolver>`, a function pointer compared by
+address; `None` by default). `utils/docblock.rs`, where an inline `@var` tag's type is built: when the tag's PHPDoc type
+is a union of exactly two members that are not unions themselves, the resolver gets the built type before population
+and may return the type to use instead. Pun's mockery extension sets it to phpstan-mockery 2.0.0's
+TypeNodeResolverExtension, so `/** @var MockInterface|Foo $m */` is `MockInterface&Foo` as in PHPStan; property,
+parameter and return PHPDoc types are rewritten in the codebase instead. `crates/pun-analyse/tests/mockery.rs` (Probe.php
+line 93) covers it against PHPStan 2.3.5 with the extension.

@@ -1,0 +1,26 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/methodCallsDefinedIn.php",
+   "line": 9,
+   "identifier": "disallowed.new",
+   "message": "Calling Waldo\\Quux\\Blade::__construct() is forbidden. [Waldo\\Quux\\Blade::__construct() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCallsDefinedIn.php",
+   "line": 10,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::andSorcery() is forbidden. [Waldo\\Quux\\Blade::andSorcery() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/methodCallsDefinedIn.php",
+   "line": 11,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::server() is forbidden. [Waldo\\Quux\\Blade::server() matches *()]",
+   "tip": null
+  }
+ ]
+}

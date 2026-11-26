@@ -2570,6 +2570,73 @@
    ]
   },
   {
+   "name": "working-dir-get",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\"\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "-d",
+    "sub",
+    "config",
+    "name"
+   ],
+   "exit": 0,
+   "stdout": "acme/sub\n",
+   "stderr": "",
+   "after": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\"\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "working-dir-set-after",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\"\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "-d",
+    "sub",
+    "description",
+    "Hi"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\",\n    \"description\": \"Hi\"\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "working-dir-absolute",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\"\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "--working-dir=sub",
+    "config",
+    "--absolute",
+    "vendor-dir"
+   ],
+   "exit": 0,
+   "stdout": "{dir}/sub/vendor\n",
+   "stderr": "",
+   "after": {
+    "sub/composer.json": "{\n    \"name\": \"acme/sub\"\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
    "name": "set-cafile",
    "files": {
     "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",

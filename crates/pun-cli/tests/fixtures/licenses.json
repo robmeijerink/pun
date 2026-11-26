@@ -543,6 +543,72 @@
    "stderr": ""
   },
   {
+   "name": "quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.2.3\",\n            \"version_normalized\": \"1.2.3.0\",\n            \"type\": \"library\",\n            \"license\": [\n                \"MIT\"\n            ],\n            \"homepage\": \"https://alpha.example\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": ""
+   },
+   "args": [
+    "licenses",
+    "-q"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "quiet-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.2.3\",\n            \"version_normalized\": \"1.2.3.0\",\n            \"type\": \"library\",\n            \"license\": [\n                \"MIT\"\n            ],\n            \"homepage\": \"https://alpha.example\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": ""
+   },
+   "args": [
+    "licenses",
+    "--quiet",
+    "-f",
+    "json"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "verbose",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.2.3\",\n            \"version_normalized\": \"1.2.3.0\",\n            \"type\": \"library\",\n            \"license\": [\n                \"MIT\"\n            ],\n            \"homepage\": \"https://alpha.example\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": ""
+   },
+   "args": [
+    "licenses",
+    "-v"
+   ],
+   "exit": 0,
+   "stdout": "Name: acme/app\nVersion: 1.0.0\nLicenses: MIT\nDependencies:\n\nName       Version Licenses \nacme/alpha 1.2.3   MIT      \n",
+   "stderr": ""
+  },
+  {
+   "name": "no-ops",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"license\": \"MIT\"\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.2.3\",\n            \"version_normalized\": \"1.2.3.0\",\n            \"type\": \"library\",\n            \"license\": [\n                \"MIT\"\n            ],\n            \"homepage\": \"https://alpha.example\"\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": ""
+   },
+   "args": [
+    "licenses",
+    "--no-plugins",
+    "--no-scripts",
+    "--no-cache",
+    "-f",
+    "summary"
+   ],
+   "exit": 0,
+   "stdout": " --------- ------------------------ \n  License   Number of dependencies  \n --------- ------------------------ \n  MIT       1                       \n --------- ------------------------ \n\n",
+   "stderr": ""
+  },
+  {
    "name": "no-composer-json",
    "files": {},
    "args": [

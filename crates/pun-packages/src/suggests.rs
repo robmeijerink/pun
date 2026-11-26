@@ -27,6 +27,8 @@ pub struct Options {
     pub list: bool,
     /// `--no-dev`.
     pub no_dev: bool,
+    /// `--no-plugins`.
+    pub no_plugins: bool,
 }
 
 /// One suggestion: the package that suggests (its pretty name), the one it suggests, and why.
@@ -65,7 +67,14 @@ pub fn suggests(
     let root_id = *load(root_data, Origin::Root, &mut arena)?
         .last()
         .expect("the root");
-    let local = installed(&mut arena, root_id, lock_file, lock_display, vendor, false)?;
+    let local = installed(
+        &mut arena,
+        root_id,
+        lock_file,
+        lock_display,
+        vendor,
+        options.no_plugins,
+    )?;
     // `Locker::isLocked`: a lock with `packages`. Composer follows a JSON error with jsonlint's description of it
     // (context/PLAN.md §3).
     let lock = match std::fs::read(lock_file) {

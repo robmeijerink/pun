@@ -1015,6 +1015,87 @@
    }
   },
   {
+   "name": "quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/gamma\": \"*\"\n            },\n            \"suggest\": {\n                \"acme/zed\": \"For the zed feature\",\n                \"ext-gd\": \"For images (installed here)\",\n                \"ext-nope\": \"Not installed\",\n                \"acme/beta\": \"Installed, so left out\",\n                \"acme/alpha\": \"Itself\",\n                \"virtual/thing\": \"Provided by delta\",\n                \"acme/empty\": \"\",\n                \"Acme/Mixed\": \"Mixed case target\"\n            }\n        },\n        {\n            \"name\": \"acme/beta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/zed\": \"Beta wants zed too\",\n                \"acme/yak\": \"Line one\\nline two\\twith a tab <info>tag</info> and \\\\ backslash\"\n            }\n        },\n        {\n            \"name\": \"acme/gamma\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/transitive\": \"Only with --all\"\n            }\n        },\n        {\n            \"name\": \"acme/delta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"virtual/thing\": \"1.0\"\n            }\n        },\n        {\n            \"name\": \"Acme/Upper\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/from-upper\": \"Pretty name with capitals\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": "",
+    "vendor/acme/beta/.keep": "",
+    "vendor/acme/gamma/.keep": "",
+    "vendor/acme/delta/.keep": "",
+    "vendor/acme/upper/.keep": ""
+   },
+   "args": [
+    "suggests",
+    "-q"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "quiet-missing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/gamma\": \"*\"\n            },\n            \"suggest\": {\n                \"acme/zed\": \"For the zed feature\",\n                \"ext-gd\": \"For images (installed here)\",\n                \"ext-nope\": \"Not installed\",\n                \"acme/beta\": \"Installed, so left out\",\n                \"acme/alpha\": \"Itself\",\n                \"virtual/thing\": \"Provided by delta\",\n                \"acme/empty\": \"\",\n                \"Acme/Mixed\": \"Mixed case target\"\n            }\n        },\n        {\n            \"name\": \"acme/beta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/zed\": \"Beta wants zed too\",\n                \"acme/yak\": \"Line one\\nline two\\twith a tab <info>tag</info> and \\\\ backslash\"\n            }\n        },\n        {\n            \"name\": \"acme/gamma\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/transitive\": \"Only with --all\"\n            }\n        },\n        {\n            \"name\": \"acme/delta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"virtual/thing\": \"1.0\"\n            }\n        },\n        {\n            \"name\": \"Acme/Upper\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/from-upper\": \"Pretty name with capitals\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": "",
+    "vendor/acme/beta/.keep": "",
+    "vendor/acme/gamma/.keep": "",
+    "vendor/acme/delta/.keep": "",
+    "vendor/acme/upper/.keep": ""
+   },
+   "args": [
+    "suggests",
+    "-q",
+    "acme/nope"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "verbose",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/gamma\": \"*\"\n            },\n            \"suggest\": {\n                \"acme/zed\": \"For the zed feature\",\n                \"ext-gd\": \"For images (installed here)\",\n                \"ext-nope\": \"Not installed\",\n                \"acme/beta\": \"Installed, so left out\",\n                \"acme/alpha\": \"Itself\",\n                \"virtual/thing\": \"Provided by delta\",\n                \"acme/empty\": \"\",\n                \"Acme/Mixed\": \"Mixed case target\"\n            }\n        },\n        {\n            \"name\": \"acme/beta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/zed\": \"Beta wants zed too\",\n                \"acme/yak\": \"Line one\\nline two\\twith a tab <info>tag</info> and \\\\ backslash\"\n            }\n        },\n        {\n            \"name\": \"acme/gamma\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/transitive\": \"Only with --all\"\n            }\n        },\n        {\n            \"name\": \"acme/delta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"virtual/thing\": \"1.0\"\n            }\n        },\n        {\n            \"name\": \"Acme/Upper\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/from-upper\": \"Pretty name with capitals\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": "",
+    "vendor/acme/beta/.keep": "",
+    "vendor/acme/gamma/.keep": "",
+    "vendor/acme/delta/.keep": "",
+    "vendor/acme/upper/.keep": ""
+   },
+   "args": [
+    "suggests",
+    "-v",
+    "--list"
+   ],
+   "exit": 0,
+   "stdout": "Acme/Mixed\nacme/alpha\nacme/empty\nacme/root-wish\nacme/yak\nacme/zed\next-nope\n",
+   "stderr": ""
+  },
+  {
+   "name": "no-ops",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"acme/alpha\": \"*\",\n        \"acme/delta\": \"*\",\n        \"acme/upper\": \"*\"\n    },\n    \"require-dev\": {\n        \"acme/beta\": \"*\"\n    },\n    \"suggest\": {\n        \"acme/root-wish\": \"The root suggests too\",\n        \"ext-gd\": \"Installed\"\n    }\n}\n",
+    "vendor/composer/installed.json": "{\n    \"packages\": [\n        {\n            \"name\": \"acme/alpha\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"require\": {\n                \"acme/gamma\": \"*\"\n            },\n            \"suggest\": {\n                \"acme/zed\": \"For the zed feature\",\n                \"ext-gd\": \"For images (installed here)\",\n                \"ext-nope\": \"Not installed\",\n                \"acme/beta\": \"Installed, so left out\",\n                \"acme/alpha\": \"Itself\",\n                \"virtual/thing\": \"Provided by delta\",\n                \"acme/empty\": \"\",\n                \"Acme/Mixed\": \"Mixed case target\"\n            }\n        },\n        {\n            \"name\": \"acme/beta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/zed\": \"Beta wants zed too\",\n                \"acme/yak\": \"Line one\\nline two\\twith a tab <info>tag</info> and \\\\ backslash\"\n            }\n        },\n        {\n            \"name\": \"acme/gamma\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/transitive\": \"Only with --all\"\n            }\n        },\n        {\n            \"name\": \"acme/delta\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"provide\": {\n                \"virtual/thing\": \"1.0\"\n            }\n        },\n        {\n            \"name\": \"Acme/Upper\",\n            \"version\": \"1.0.0\",\n            \"version_normalized\": \"1.0.0.0\",\n            \"type\": \"library\",\n            \"suggest\": {\n                \"acme/from-upper\": \"Pretty name with capitals\"\n            }\n        }\n    ],\n    \"dev\": true,\n    \"dev-package-names\": []\n}\n",
+    "vendor/acme/alpha/.keep": "",
+    "vendor/acme/beta/.keep": "",
+    "vendor/acme/gamma/.keep": "",
+    "vendor/acme/delta/.keep": "",
+    "vendor/acme/upper/.keep": ""
+   },
+   "args": [
+    "suggests",
+    "--no-plugins",
+    "--no-scripts",
+    "--no-cache",
+    "--list"
+   ],
+   "exit": 0,
+   "stdout": "Acme/Mixed\nacme/alpha\nacme/empty\nacme/root-wish\nacme/yak\nacme/zed\next-nope\n",
+   "stderr": ""
+  },
+  {
    "name": "no-composer-json",
    "files": {},
    "args": [

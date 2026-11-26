@@ -120,6 +120,11 @@ CASES = [
     ('locked-without-lock', {'composer.json': j(ROOT_JSON)}, ['licenses', '--locked']),
     ('locked-without-packages-dev', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALPHA], None)}, ['licenses', '--locked']),
     ('locked-without-packages-dev-no-dev', {'composer.json': j(ROOT_JSON), 'composer.lock': lock([ALPHA], None)}, ['licenses', '--locked', '--no-dev']),
+    # Composer's global options.
+    ('quiet', project(packages=[ALPHA]), ['licenses', '-q']),
+    ('quiet-json', project(packages=[ALPHA]), ['licenses', '--quiet', '-f', 'json']),
+    ('verbose', project(packages=[ALPHA]), ['licenses', '-v']),
+    ('no-ops', project(packages=[ALPHA]), ['licenses', '--no-plugins', '--no-scripts', '--no-cache', '-f', 'summary']),
     # No composer.json.
     ('no-composer-json', {}, ['licenses']),
 ]

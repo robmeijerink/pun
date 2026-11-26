@@ -67,6 +67,9 @@ For `licenses`:
 | `--no-dev` | Leave out the packages only `require-dev` needs. |
 | `--locked` | Show the packages of `composer.lock`, not those installed in `vendor/`. |
 | `--ansi`, `--no-ansi` | Colour the output, with each package's name a link to its source or homepage, or don't; `--ansi` wins when both are given. By default each of stdout and stderr is coloured on a terminal. |
+| `-q`, `--quiet` | Print nothing. The exit code still tells. |
+| `--no-plugins` | Load no plugins: each package counts where Composer's own installer puts it, in `vendor/`. |
+| `-v`, `-vv`, `-vvv`, `--no-scripts`, `--no-cache` | Taken, as in Composer. They change nothing here. |
 
 For `suggests`:
 
@@ -79,6 +82,9 @@ For `suggests`:
 | `--list` | Show only the names of the suggested packages. |
 | `--no-dev` | With a `composer.lock`, leave out the packages only `require-dev` needs. |
 | `--ansi`, `--no-ansi` | Colour the output, or don't; `--ansi` wins when both are given. |
+| `-q`, `--quiet` | Print nothing, Composer's errors included. The exit code still tells. |
+| `--no-plugins` | Load no plugins: each package counts where Composer's own installer puts it, in `vendor/`. |
+| `-v`, `-vv`, `-vvv`, `--no-scripts`, `--no-cache` | Taken, as in Composer. They change nothing here. |
 
 ## What happens
 

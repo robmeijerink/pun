@@ -30,6 +30,21 @@ pub(crate) struct LicensesArgs {
     /// Don't colour the output.
     #[arg(long)]
     no_ansi: bool,
+    /// Print nothing; the exit code still tells.
+    #[arg(short = 'q', long)]
+    quiet: bool,
+    /// Composer's verbosity (-v, -vv, -vvv); Pun prints no debug output.
+    #[arg(short = 'v', long, action = clap::ArgAction::Count)]
+    verbose: u8,
+    /// Load no plugins: the packages count where Composer's own installer puts them, in the vendor dir.
+    #[arg(long)]
+    no_plugins: bool,
+    /// Composer's option to skip scripts; this command runs none.
+    #[arg(long)]
+    no_scripts: bool,
+    /// Composer's option to skip its cache; this command uses none.
+    #[arg(long)]
+    no_cache: bool,
 }
 
 pub(crate) fn run(a: &LicensesArgs, globals: &Globals) -> Result<Exit> {
@@ -48,8 +63,15 @@ pub(crate) fn run(a: &LicensesArgs, globals: &Globals) -> Result<Exit> {
         Options {
             no_dev: a.no_dev,
             locked: a.locked,
+            no_plugins: a.no_plugins,
         },
     )?;
+    // Composer checks the format once it has read the packages.
+    let format = Format::parse(&a.format)?;
+    // `-q` prints nothing.
+    if a.quiet {
+        return Ok(Exit::Success);
+    }
     let (out_color, err_color) = if a.ansi || a.no_ansi {
         (a.ansi, a.ansi)
     } else {
@@ -61,8 +83,7 @@ pub(crate) fn run(a: &LicensesArgs, globals: &Globals) -> Result<Exit> {
     for warning in root.warning.iter().chain(&report.warnings) {
         eprintln!("{}", Style::Warning.paint(warning, err_color));
     }
-    // Composer checks the format once it has read the packages.
-    match Format::parse(&a.format)? {
+    match format {
         Format::Text => print!("{}", report.text(out_color)),
         Format::Json => println!("{}", report.json()),
         Format::Summary => print!("{}", report.summary(out_color)),

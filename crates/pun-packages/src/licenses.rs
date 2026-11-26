@@ -36,6 +36,8 @@ pub struct Options {
     pub no_dev: bool,
     /// `--locked`.
     pub locked: bool,
+    /// `--no-plugins`.
+    pub no_plugins: bool,
 }
 
 /// A package as the report shows it.
@@ -73,7 +75,14 @@ pub fn report(
     let root_id = *load(root_data, Origin::Root, &mut arena)?
         .last()
         .expect("the root");
-    let local = installed(&mut arena, root_id, lock_file, lock_display, vendor, false)?;
+    let local = installed(
+        &mut arena,
+        root_id,
+        lock_file,
+        lock_display,
+        vendor,
+        options.no_plugins,
+    )?;
     let ids = if options.locked {
         // `Locker::isLocked`: a lock with `packages`. Composer follows a JSON error with jsonlint's description of
         // it (context/PLAN.md §3).

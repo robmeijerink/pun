@@ -41,6 +41,21 @@ pub(crate) struct SuggestsArgs {
     /// Don't colour the output.
     #[arg(long)]
     no_ansi: bool,
+    /// Print nothing; the exit code still tells.
+    #[arg(short = 'q', long)]
+    quiet: bool,
+    /// Composer's verbosity (-v, -vv, -vvv); Pun prints no debug output.
+    #[arg(short = 'v', long, action = clap::ArgAction::Count)]
+    verbose: u8,
+    /// Load no plugins: the packages count where Composer's own installer puts them, in the vendor dir.
+    #[arg(long)]
+    no_plugins: bool,
+    /// Composer's option to skip scripts; this command runs none.
+    #[arg(long)]
+    no_scripts: bool,
+    /// Composer's option to skip its cache; this command uses none.
+    #[arg(long)]
+    no_cache: bool,
 }
 
 pub(crate) fn run(a: &SuggestsArgs, globals: &Globals) -> Result<Exit> {
@@ -69,8 +84,17 @@ pub(crate) fn run(a: &SuggestsArgs, globals: &Globals) -> Result<Exit> {
             all: a.all,
             list: a.list,
             no_dev: a.no_dev,
+            no_plugins: a.no_plugins,
         },
     )?;
+    // `-q` prints nothing, Composer's errors included; the exit code still tells.
+    if a.quiet {
+        return Ok(if found.errors.is_empty() {
+            Exit::Success
+        } else {
+            Exit::Failure
+        });
+    }
     let (out_color, err_color) = if a.ansi || a.no_ansi {
         (a.ansi, a.ansi)
     } else {

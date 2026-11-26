@@ -110,6 +110,11 @@ CASES = [
     ('lock-invalid-json', {'composer.json': j({**ROOT_JSON, 'config': {'allow-plugins': {'acme/x': True}}}), 'composer.lock': '{"packages": [\n'}, ['suggests']),
     # Composer's warning about a root version it can't find.
     ('root-version-guessed', vendor_project(), ['suggests'], {'COMPOSER_ROOT_VERSION': None}),
+    # Composer's global options.
+    ('quiet', vendor_project(), ['suggests', '-q']),
+    ('quiet-missing', vendor_project(), ['suggests', '-q', 'acme/nope']),
+    ('verbose', vendor_project(), ['suggests', '-v', '--list']),
+    ('no-ops', vendor_project(), ['suggests', '--no-plugins', '--no-scripts', '--no-cache', '--list']),
     # No composer.json.
     ('no-composer-json', {}, ['suggests']),
 ]

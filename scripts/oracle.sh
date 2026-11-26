@@ -15,6 +15,8 @@
 #   .oracle/phpstan-src   phpstan-src at the tag 2.3.5 (Rule classes and tests; the PHPStan inventories).
 #   .oracle/phpstan       phpstan/phpstan 2.3.5 + larastan 3.14.0 + strict/deprecation rules, pinned by scripts/oracle-phpstan/composer.lock.
 #   .oracle/phpstan-phar  that PHAR extracted, for reading (export-phpstan-api-stub.php, export-phpdoc-parser-fixtures.php).
+#   .oracle/composer      composer.phar 2.11.2, the Composer the plugin host pins (crates/pun-packages/src/plugin_host.rs),
+#                         checked against its sha256. Binary: php .oracle/composer/composer.phar
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 PINT_REF=006bd7825eb01daf92959d060b89cd9514fe4253 # v1.32.1
@@ -54,10 +56,22 @@ mkdir -p "$root/.oracle/rector-ecosystem"
 cp "$root/scripts/oracle-rector-ecosystem/composer.json" "$root/scripts/oracle-rector-ecosystem/composer.lock" "$root/.oracle/rector-ecosystem/"
 (cd "$root/.oracle/rector-ecosystem" && composer install -q --no-interaction --no-progress)
 
+# Composer oracle (`pun composer`): the composer.phar the plugin host pins, checked against the same sha256.
+COMPOSER_VERSION=2.11.2
+COMPOSER_SHA256=dd158c0afd41d15fac89e1b4e47b5d42911fe316c3687cd5edac98319b25d028
+phar="$root/.oracle/composer/composer.phar"
+if [ "$(shasum -a 256 "$phar" 2>/dev/null | cut -d' ' -f1)" != "$COMPOSER_SHA256" ]; then
+  mkdir -p "$root/.oracle/composer"
+  curl -fsSL -o "$phar.tmp" "https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar"
+  [ "$(shasum -a 256 "$phar.tmp" | cut -d' ' -f1)" = "$COMPOSER_SHA256" ] || { echo "composer.phar: sha256 mismatch" >&2; rm -f "$phar.tmp"; exit 1; }
+  mv "$phar.tmp" "$phar"
+fi
+
 php "$root/.oracle/pint/builds/pint" --version
 php "$root/.oracle/phpstan/vendor/phpstan/phpstan/phpstan.phar" --version
 php "$root/.oracle/php-cs-fixer/php-cs-fixer" --version
 php "$root/.oracle/rector-bin/vendor/bin/rector" --version
+php "$phar" --version
 bundled=$(php -r 'Phar::loadPhar($argv[1], "p.phar"); foreach (json_decode(file_get_contents("phar://p.phar/vendor/composer/installed.json"), true)["packages"] as $p) if ($p["name"] === "friendsofphp/php-cs-fixer") echo $p["source"]["reference"];' "$root/.oracle/pint/builds/pint")
 [ "$bundled" = "$FIXER_REF" ] || { echo "PHAR bundles php-cs-fixer $bundled, expected $FIXER_REF" >&2; exit 1; }
 echo "oracle ok"

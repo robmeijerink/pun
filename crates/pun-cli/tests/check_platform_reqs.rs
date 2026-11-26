@@ -184,7 +184,7 @@ fn check_platform_reqs_matches_composer() {
 }
 
 /// A composer.json that exists but can't be read: Composer 2.11.2 stops with 'The file "./composer.json" is not
-/// readable.' (The fixture can't hold such a file.) Root reads it anyway, so the test then has nothing to check.
+/// readable.' (The fixture can't hold such a file.) Root reads it anyway, so the test is skipped there.
 #[test]
 fn unreadable_composer_json() {
     use std::os::unix::fs::PermissionsExt;
@@ -192,20 +192,25 @@ fn unreadable_composer_json() {
     let file = dir.join("composer.json");
     std::fs::write(&file, "{\"name\": \"acme/app\"}\n").unwrap();
     std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o000)).unwrap();
-    if std::fs::read(&file).is_err() {
-        let out = common::clean_env(&mut Command::new(PUN), &["PATH"])
+    let readable = std::fs::read(&file).is_ok();
+    let out = (!readable).then(|| {
+        common::clean_env(&mut Command::new(PUN), &["PATH"])
             .args(["composer", "check-platform-reqs"])
             .current_dir(&dir)
             .env("PUN_AGENT", "0")
             .output()
-            .unwrap();
-        let stderr = String::from_utf8_lossy(&out.stderr);
-        assert_eq!(out.status.code(), Some(2), "{stderr}");
-        assert!(
-            stderr.contains("The file \"./composer.json\" is not readable."),
-            "{stderr}"
-        );
-    }
+            .unwrap()
+    });
     std::fs::set_permissions(&file, std::fs::Permissions::from_mode(0o644)).unwrap();
     std::fs::remove_dir_all(&dir).unwrap();
+    let Some(out) = out else {
+        eprintln!("skipped: an unreadable file can still be read (running as root)");
+        return;
+    };
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert_eq!(out.status.code(), Some(2), "{stderr}");
+    assert!(
+        stderr.contains("The file \"./composer.json\" is not readable."),
+        "{stderr}"
+    );
 }

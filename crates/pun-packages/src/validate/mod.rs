@@ -518,7 +518,9 @@ fn json_decode(bytes: &[u8]) -> Option<Value> {
     Some(data)
 }
 
-/// How deep arrays and objects nest in `bytes`, strings skipped.
+/// How deep arrays and objects nest in `bytes`, strings skipped. [`json_decode`] must run this check before it calls
+/// `disable_recursion_limit()`: it is the only bound on the recursion after that, so a deeper document can't overflow
+/// the stack.
 fn nesting(bytes: &[u8]) -> usize {
     let (mut depth, mut deepest, mut string, mut escaped) = (0usize, 0, false, false);
     for &b in bytes {

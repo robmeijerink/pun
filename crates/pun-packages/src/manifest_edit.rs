@@ -1281,6 +1281,31 @@ mod tests {
         }
     }
 
+    /// What Composer 2.11.2's manipulator leaves of a section emptied or already empty: `removeLink` on an empty list
+    /// changes nothing, so the section stays; removing the last repository leaves an empty list, which
+    /// `removeMainKeyIfEmpty` takes out with its key.
+    #[test]
+    fn removes_emptied_sections_as_composer() {
+        type Edit = fn(&mut Manipulator) -> bool;
+        let cases: [(&str, Edit, &str); 2] = [
+            (
+                "{\n    \"name\": \"a/b\",\n    \"require\": [],\n    \"require-dev\": {\n        \"x/y\": \"*\"\n    }\n}\n",
+                |m| m.remove_link("require", "acme/x"),
+                "{\n    \"name\": \"a/b\",\n    \"require\": [],\n    \"require-dev\": {\n        \"x/y\": \"*\"\n    }\n}\n",
+            ),
+            (
+                "{\n    \"name\": \"a/b\",\n    \"repositories\": [\n        {\n            \"name\": \"foo\",\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/foo\"\n        }\n    ]\n}\n",
+                |m| m.remove_repository("foo"),
+                "{\n    \"name\": \"a/b\"\n}\n",
+            ),
+        ];
+        for (text, edit, expected) in cases {
+            let mut m = Manipulator::new(text);
+            assert!(edit(&mut m), "{text}");
+            assert_eq!(m.text(), expected, "{text}");
+        }
+    }
+
     /// The text Composer 2.11.2's `require -n --no-update` and `remove -n --no-update` write for the same
     /// composer.json.
     #[test]

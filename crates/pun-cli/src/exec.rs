@@ -174,14 +174,14 @@ pub(crate) fn run(a: &ExecArgs, globals: &Globals) -> Result<Exit> {
     // `interact`: in a terminal, without a binary or `--list`, Composer asks which binary to run.
     if binary.is_none() && !a.list && !line.list && !globals.no_interaction && !line.no_interaction
     {
-        let names: Vec<String> = binaries(&dirs.bin, &project.manifest)
+        let names: Vec<String> = binaries(&dirs.bin, &project.manifest, false)
             .into_iter()
             .map(|(name, _)| name)
             .collect();
         binary = select("Binary to run", &names)?.map(|i| names[i].clone());
     }
     let Some(binary) = binary.filter(|_| !a.list && !line.list) else {
-        let found = binaries(&dirs.bin, &project.manifest);
+        let found = binaries(&dirs.bin, &project.manifest, true);
         if found.is_empty() {
             bail!(
                 "No binaries found in composer.json or in bin-dir ({})",
@@ -219,8 +219,14 @@ pub(crate) fn run(a: &ExecArgs, globals: &Globals) -> Result<Exit> {
 }
 
 /// `ExecCommand::getBinaries`: the bin dir's files (PHP's `glob`, sorted, without dot files), then composer.json's
-/// `bin` (marked local), each by its file name, without a `.bat` right after the binary it wraps.
-fn binaries(bin_dir: &str, manifest: &Map<String, Value>) -> Vec<(String, bool)> {
+/// `bin` (marked local), each by its file name, without a `.bat` right after the binary it wraps. `for_display`
+/// (`--list`) compares the local ones with ` (local)` already appended, so `bin/x.bat (local)` never matches
+/// `bin/x (local).bat` and both stay.
+fn binaries(
+    bin_dir: &str,
+    manifest: &Map<String, Value>,
+    for_display: bool,
+) -> Vec<(String, bool)> {
     let mut names: Vec<String> = std::fs::read_dir(bin_dir)
         .into_iter()
         .flatten()
@@ -245,7 +251,7 @@ fn binaries(bin_dir: &str, manifest: &Map<String, Value>) -> Vec<(String, bool)>
     let mut previous: Option<String> = None;
     let mut out = vec![];
     for (bin, local) in found {
-        if previous.as_ref().is_some_and(|p| bin == format!("{p}.bat")) {
+        if !(for_display && local) && previous.as_ref().is_some_and(|p| bin == format!("{p}.bat")) {
             continue;
         }
         // PHP's `basename`.

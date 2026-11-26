@@ -773,6 +773,27 @@
    "stderr": ""
   },
   {
+   "name": "list-root-bin-bat",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\",\n        \"bin/mine.bat\"\n    ]\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n",
+    "bin/mine.bat": "@echo off\n"
+   },
+   "executable": [
+    "bin/mine",
+    "bin/mine.bat"
+   ],
+   "args": [
+    "exec",
+    "--list"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- mine (local)\n- mine.bat (local)\n",
+   "stderr": ""
+  },
+  {
    "name": "list-without-binary",
    "files": {
     "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",

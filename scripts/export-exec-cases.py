@@ -96,6 +96,9 @@ CASES = [
     case('script-reference-verbose-no-args', project(bins={'vendor/bin/tool': TOOL}, manifest={**ROOT_JSON, 'scripts': {'go': 'tool'}}), ['exec', '-v', '@go']),
     case('root-bin-bat', project(bins={'bin/mine.bat': '@echo off\n'}, manifest={**ROOT_JSON, 'bin': ['bin/mine.bat']}), ['exec', 'mine.bat'], stderr_tail=True),
     case('list-short', project(bins={'vendor/bin/tool': TOOL}), ['exec', '-l']),
+    # The list compares the root's binaries with ` (local)` appended, so a .bat beside one of them stays.
+    case('list-root-bin-bat', project(bins={'bin/mine': LOCAL_SH, 'bin/mine.bat': '@echo off\n'},
+                                      manifest={**ROOT_JSON, 'bin': ['bin/mine', 'bin/mine.bat']}), ['exec', '--list']),
     case('list-without-binary', project(bins={'vendor/bin/tool': TOOL}), ['exec']),
     case('list-with-binary', project(bins={'vendor/bin/tool': TOOL}), ['exec', '--list', 'tool']),
     case('list-root-bin-only', project(manifest={**ROOT_JSON, 'bin': 'bin/mine'}), ['exec', '--list']),

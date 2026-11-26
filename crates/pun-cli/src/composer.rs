@@ -22,7 +22,7 @@ pub(crate) struct Globals {
     /// Run in this directory instead of the current one.
     #[arg(short = 'd', long, value_name = "DIR", global = true)]
     pub(crate) working_dir: Option<PathBuf>,
-    /// Ask no questions: `run-script` without a script name is then an error.
+    /// Ask no questions. Composer takes it on every command; none of Pun's asks any yet.
     #[arg(short = 'n', long, global = true)]
     no_interaction: bool,
 }

@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Rules/ConstantTypeCoverageRule/Fixture/UnknownConstantType.php",
+   "line": 9,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 5 possible constant types, only 3 - 60.0 % actually have it. Add more constant types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/ConstantTypeCoverageRule/Source/ParentBlockingClass.php",
+   "line": 9,
+   "identifier": "typeCoverage.constantTypeCoverage",
+   "message": "Out of 5 possible constant types, only 3 - 60.0 % actually have it. Add more constant types to get over 80 %",
+   "tip": null
+  }
+ ]
+}

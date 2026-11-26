@@ -1,5 +1,5 @@
-//! Rector 2.8.4's own fixtures for its configured rules in no set, copied verbatim from rector-src's rules-tests at
-//! 2.8.4 into tests/rector/<Rector class>/Fixture (and its Source/), each run with the configuration of its
+//! Rector 2.9.2's own fixtures for its configured rules in no set, copied verbatim from rector-src's rules-tests at
+//! 2.9.2 into tests/rector/<Rector class>/Fixture (and its Source/), each run with the configuration of its
 //! config/configured_rule.php. Oracle/ holds extra inputs with what Rector 2.8.4 (`.oracle/rector-bin`, the rule
 //! alone with the configuration below, `phpVersion(80400)`) wrote for them; the classes they name were on
 //! `withAutoloadPaths` (WrapReturnRector/Source/OracleLib.php). A fixture is `input -----\n expected`, or only the

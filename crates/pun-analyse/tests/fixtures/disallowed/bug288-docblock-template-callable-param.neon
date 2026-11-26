@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/bug288-docblock-template-callable-param.neon

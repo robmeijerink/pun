@@ -1,0 +1,13 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/bugs/Bug383RuleWithDefinedInSkipsBuiltinClasses.php"
+	disallowedMethodCalls:
+		-
+			"method": "*"
+			"definedIn": 
+				- "src/Blade*"
+				- "phar://*"

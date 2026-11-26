@@ -1,0 +1,9 @@
+includes:
+    - conf/extension.neon
+parameters:
+    level: 0
+    paths: [Pun]
+    tmpDir: /tmp/pun-type-coverage-oracle-measure
+    type_coverage:
+        measure: true
+        constant: 0

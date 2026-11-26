@@ -1,0 +1,40 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/configs/looseCalls.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling in_array() is forbidden, set the third parameter $strict to `true` to also check the types to prevent type juggling bugs.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/looseCalls.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling in_array() is forbidden, set the third parameter $strict to `true` to also check the types to prevent type juggling bugs.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/looseCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden, set the $flags parameter to `ENT_QUOTES` to also convert single quotes to entities to prevent some HTML injection bugs.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/looseCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden, set the $flags parameter to `ENT_QUOTES` to also convert single quotes to entities to prevent some HTML injection bugs.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/looseCalls.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden, set the $flags parameter to `ENT_QUOTES` to also convert single quotes to entities to prevent some HTML injection bugs.",
+   "tip": null
+  }
+ ]
+}

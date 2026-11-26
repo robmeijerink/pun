@@ -223,6 +223,24 @@ where
         );
     }
 
+    // ResolvedFunctionVariantWithOriginal: a late-resolvable `collection-of` resolves even while it holds a template
+    if resulting_union.types.iter().any(|atomic| {
+        matches!(atomic, TAtomic::Object(TObject::Named(named)) if named.name.as_bytes() == expander::COLLECTION_OF)
+    }) {
+        let atomics = resulting_union
+            .types
+            .iter()
+            .flat_map(|atomic| match atomic {
+                TAtomic::Object(TObject::Named(named)) if named.name.as_bytes() == expander::COLLECTION_OF => {
+                    expander::collection_of_unresolvable(context.codebase, named)
+                        .map_or_else(|| vec![atomic.clone()], |resolved| resolved.types.into_owned())
+                }
+                atomic => vec![atomic.clone()],
+            })
+            .collect::<Vec<_>>();
+        resulting_union.types = Cow::Owned(atomics);
+    }
+
     resulting_union
 }
 

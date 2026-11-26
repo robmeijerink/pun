@@ -1383,6 +1383,12 @@ pub(super) fn method(c: &mut Checker, m: &Method, method: &str) {
     let class = declared::original_name(k);
     let parsed = &doc.doc;
     let mut scope = declared::scope_at(c, m.span(), Some(k));
+    if let Some(t) = c
+        .in_trait()
+        .and_then(|t| c.codebase.get_class_like(t.as_bytes()))
+    {
+        scope.templates.extend(declared::trait_templates(c, t, k));
+    }
     add_templates(
         &mut scope,
         &parsed.templates,

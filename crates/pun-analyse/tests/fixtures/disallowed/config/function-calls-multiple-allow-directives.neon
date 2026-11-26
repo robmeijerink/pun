@@ -1,0 +1,29 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/AttributeClass.php"
+		- "../src/AttributeFunctions.php"
+	disallowedFunctionCalls:
+		-
+			"function": "md5()"
+			"allowInInstanceOf": 
+				- "\\Attributes\\Nowhere"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Attribute2"
+		-
+			"function": "sha1()"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"value": "no-match"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Attribute2"
+		-
+			"function": "strtolower()"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Nowhere"
+			"allowInMethodsWithAttributes": 
+				- "Attribute11"

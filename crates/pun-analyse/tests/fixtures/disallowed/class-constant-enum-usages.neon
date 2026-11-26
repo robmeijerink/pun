@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/class-constant-enum-usages.neon

@@ -110,10 +110,10 @@ final class GeneratedConfig
     ),
     'version' => '3.15.1',
   ),
-  'phpstan/phpstan-mockery' => 
+  'phpstan/phpstan-webmozart-assert' => 
   array (
-    'install_path' => '/p/vendor/phpstan/phpstan-mockery',
-    'relative_install_path' => '../../phpstan-mockery',
+    'install_path' => '/p/vendor/phpstan/phpstan-webmozart-assert',
+    'relative_install_path' => '../../phpstan-webmozart-assert',
     'extra' => 
     array (
       'includes' => 
@@ -155,7 +155,7 @@ fn reads_level_paths_ignores_and_includes() {
             ("vendor/larastan/larastan/extension.neon", ""),
             ("vendor/foo/bar/rules.neon", ""),
             ("vendor/phpstan/phpstan/conf/extra.neon", ""),
-            ("vendor/phpstan/phpstan-mockery/extension.neon", ""),
+            ("vendor/phpstan/phpstan-webmozart-assert/extension.neon", ""),
             ("vendor/nesbot/carbon/extension.neon", ""),
             ("vendor/phpstan/phpstan-strict-rules/rules.neon", ""),
             (
@@ -197,7 +197,7 @@ fn reads_level_paths_ignores_and_includes() {
         [
             "build/custom.neon",
             "foo/bar",
-            "phpstan/phpstan-mockery",
+            "phpstan/phpstan-webmozart-assert",
             "parameter additionalConstructors",
             "parameter checkBenevolentUnionTypes",
             "parameter checkMissingTypehints",
@@ -284,6 +284,66 @@ fn reads_level_paths_ignores_and_includes() {
         ),
         "{}",
         parts.render()
+    );
+}
+
+#[test]
+fn turns_on_the_extensions_phpstan_loads() {
+    let neon = "includes:\n    - vendor/phpstan/phpstan-mockery/extension.neon\n    - vendor/tomasvotruba/type-coverage/config/extension.neon\nparameters:\n    level: 5\n";
+    let d = project(
+        neon,
+        &[
+            ("vendor/phpstan/phpstan-mockery/extension.neon", ""),
+            (
+                "vendor/tomasvotruba/type-coverage/config/extension.neon",
+                "",
+            ),
+        ],
+    );
+    let p = from_phpstan(&d, &d.join("phpstan.neon")).unwrap();
+    assert!(p.unsupported.is_empty(), "{:?}", p.unsupported);
+    // What composer.lock turned on: carbon stays on, and disallowed-calls goes off, as PHPStan doesn't load it.
+    let mut parts = Parts {
+        extensions: "carbon = \"on\"\ndisallowed-calls = \"on\"\n".into(),
+        ..Parts::default()
+    };
+    compose(&d, &mut parts, &p).unwrap();
+    assert_eq!(
+        parts.extensions,
+        "carbon = \"on\"\nmockery = \"on\"\ndisallowed-calls = \"off\"\ntype-coverage = \"on\"\n"
+    );
+    let cfg = crate::from_toml(&d, &parts.render()).unwrap();
+    let on: Vec<&str> = cfg.extensions.iter().map(|e| e.id).collect();
+    assert_eq!(on, ["carbon", "mockery", "type-coverage"]);
+}
+
+#[test]
+fn migrates_mockery_union_conversion() {
+    // Pun always converts, so `true` needs no pun.toml line and `false` is the one it can't do.
+    let run = |value: bool| {
+        let neon = format!(
+            "includes:\n    - vendor/phpstan/phpstan-mockery/extension.neon\nparameters:\n    level: 5\n    mockery:\n        convertUnionToIntersectionType: {value}\n"
+        );
+        let d = project(
+            &neon,
+            // phpstan-mockery 2.0.0's extension.neon, its parameters only
+            &[(
+                "vendor/phpstan/phpstan-mockery/extension.neon",
+                "parameters:\n    mockery:\n        convertUnionToIntersectionType: true\nparametersSchema:\n    mockery: structure([\n        convertUnionToIntersectionType: bool()\n    ])\n",
+            )],
+        );
+        from_phpstan(&d, &d.join("phpstan.neon"))
+            .unwrap()
+            .unsupported
+    };
+    assert!(run(true).is_empty(), "{:?}", run(true));
+    assert_eq!(
+        run(false),
+        [(
+            "parameter mockery.convertUnionToIntersectionType".to_string(),
+            "Pun's mockery extension always reads `MockInterface|Foo` as `MockInterface&Foo`"
+                .to_string()
+        )]
     );
 }
 
@@ -791,5 +851,103 @@ services:
     let d = project("parameters:\n    level: 0\n    phpVersion: null\n", &[]);
     let p = from_phpstan(&d, &d.join("phpstan.neon")).unwrap();
     assert_eq!((p.php_version, p.unsupported), (None, vec![]));
+    std::fs::remove_dir_all(d).unwrap();
+}
+
+#[test]
+fn carries_disallowed_calls_lists_into_rule_options() {
+    use pun_phpstan::Value as V;
+    let ext = "vendor/spaze/phpstan-disallowed-calls";
+    let neon = format!(
+        "includes:
+    - {ext}/extension.neon
+    - {ext}/disallowed-dangerous-calls.neon
+parameters:
+    level: 0
+    filesRootDir: %currentWorkingDirectory%/app
+    disallowedFunctionCalls:
+        -
+            function: 'var_dump()'
+            allowIn: ['Legacy/*', '*/tests/*']
+            errorIdentifier: no.dump
+        -
+            function: 'Foo\\bar()'
+            definedIn: 'lib/*.php'
+            allowParamsAnywhere:
+                2: 1
+    ignoreErrors:
+        - identifier: no.dump
+          path: app/Models/User.php
+"
+    );
+    let d = project(
+        &neon,
+        &[
+            (
+                &format!("{ext}/extension.neon"),
+                include_str!("../../../pun-analyse/tests/fixtures/disallowed/extension.neon"),
+            ),
+            (
+                &format!("{ext}/disallowed-dangerous-calls.neon"),
+                include_str!(
+                    "../../../pun-analyse/tests/fixtures/disallowed/config/bundled-dangerous.neon"
+                ),
+            ),
+        ],
+    );
+    let p = from_phpstan(&d, &d.join("phpstan.neon")).unwrap();
+    assert!(p.extensions.contains("spaze/phpstan-disallowed-calls"));
+    // filesRootDir is folded into the paths, so it is no unsupported parameter
+    assert!(p.unsupported.is_empty(), "{:?}", p.unsupported);
+    let mut parts = Parts::default();
+    compose(&d, &mut parts, &p).unwrap();
+    let text = parts.render();
+    assert!(text.contains("disallowed-calls = \"on\""), "{text}");
+    let cfg = crate::from_toml(&d, &text).unwrap();
+    let rule = (cfg.analyse.rules.iter())
+        .find(|r| r.id == "analyse/disallowed/function")
+        .unwrap();
+    let calls = rule.options["calls"].as_array().unwrap();
+    // the dangerous config's 20 entries, then the project's own
+    assert_eq!(calls.len(), 22, "{text}");
+    assert_eq!(calls[0]["function"], "apache_setenv()");
+    assert_eq!(
+        calls[20],
+        serde_json::json!({
+            "function": "var_dump()",
+            "allow-in": ["app/Legacy/*", "*/tests/*"],
+            "error-identifier": "no.dump",
+        })
+    );
+    assert_eq!(
+        calls[21],
+        serde_json::json!({
+            "function": "Foo\\bar()",
+            "defined-in": "app/lib/*.php",
+            "allow-params-anywhere": {"2": 1},
+        })
+    );
+    let ignore = &cfg.analyse.ignore[0];
+    assert_eq!(ignore.rule.as_deref(), Some("analyse/disallowed/function"));
+    assert_eq!(ignore.identifier.as_deref(), Some("no.dump"));
+    // back to PHPStan's camelCase keys for the rules
+    let parameters = cfg.analyse.parameters(&d);
+    let calls = parameters
+        .get_str("disallowedFunctionCalls")
+        .and_then(V::as_array)
+        .unwrap();
+    let own = calls.values().nth(20).and_then(V::as_array).unwrap();
+    assert_eq!(own.get_str("errorIdentifier"), Some(&V::str("no.dump")));
+    let params = (calls.values().last().and_then(V::as_array))
+        .and_then(|e| e.get_str("allowParamsAnywhere"))
+        .and_then(V::as_array)
+        .unwrap();
+    assert_eq!(params.get_str("2"), Some(&V::Int(1)));
+    assert_eq!(
+        own.get_str("allowIn")
+            .and_then(V::as_array)
+            .map(pun_phpstan::Array::len),
+        Some(2)
+    );
     std::fs::remove_dir_all(d).unwrap();
 }

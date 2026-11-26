@@ -1,0 +1,33 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/ControlStructuresRequireInclude.php",
+   "line": 18,
+   "identifier": "disallowed.includeOnce",
+   "message": "Using the include_once control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ControlStructuresRequireInclude.php",
+   "line": 28,
+   "identifier": "disallowed.require",
+   "message": "Using the require control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ControlStructuresRequireInclude.php",
+   "line": 29,
+   "identifier": "disallowed.requireOnce",
+   "message": "Using the require_once control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ControlStructuresRequireInclude.php",
+   "line": 30,
+   "identifier": "disallowed.include",
+   "message": "Using the include control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

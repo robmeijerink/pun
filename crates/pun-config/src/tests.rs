@@ -830,7 +830,15 @@ fn extensions() {
     let shown = c.show();
     assert_eq!(
         shown["extensions"],
-        json!({"laravel": "on", "pest": "off", "phpunit": "off", "carbon": "off"})
+        json!({
+            "laravel": "on",
+            "pest": "off",
+            "phpunit": "off",
+            "carbon": "off",
+            "mockery": "off",
+            "disallowed-calls": "off",
+            "type-coverage": "off"
+        })
     );
     // Left out of [extensions], an extension is off even with its package locked.
     let c = load_(&[("pun.toml", types), ("composer.lock", LARAVEL_LOCK)]).unwrap();
@@ -841,7 +849,7 @@ fn extensions() {
     let e = |toml: &str| format!("{:#}", load_(&[("pun.toml", toml)]).unwrap_err());
     assert!(
         e("[extensions]\nsymfony = \"on\"\n").ends_with(
-            "pun.toml: [extensions] `symfony` is not an extension: expected `laravel`, `pest`, `phpunit`, `carbon`"
+            "pun.toml: [extensions] `symfony` is not an extension: expected `laravel`, `pest`, `phpunit`, `carbon`, `mockery`, `disallowed-calls`, `type-coverage`"
         )
     );
     assert!(
@@ -874,6 +882,23 @@ fn extensions() {
         (false, vec![])
     );
     assert_eq!(bootstrap(types), (false, vec![]));
+    // `mockery` sets what phpstan-mockery's extension.neon sets; off, the parameter is absent.
+    let mockery = |toml: &str| {
+        let root = dir(&[("pun.toml", toml)]);
+        let parameters = load(&root, &Options::default())
+            .unwrap()
+            .analyse
+            .parameters(&root);
+        (parameters
+            .get_str("mockery")
+            .and_then(pun_phpstan::Value::as_array))
+        .and_then(|m| m.get_str("convertUnionToIntersectionType").cloned())
+    };
+    assert_eq!(
+        mockery("[extensions]\nmockery = \"on\"\n"),
+        Some(pun_phpstan::Value::Bool(true))
+    );
+    assert_eq!(mockery("[extensions]\nmockery = \"off\"\n"), None);
     assert!(e("[extensions]\nlaravel = \"auto\"\n").contains(
         "[extensions] `laravel` = \"auto\" was removed: an extension is on only when pun.toml says so"
     ));
@@ -1014,6 +1039,11 @@ fn show() {
     assert_eq!(v["analyse"]["rules"]["undefined/function"], "on");
     assert_eq!(v["analyse"]["preset"], "basic");
     assert!(v["analyse"].get("baseline").is_none());
+    assert!(v["lint"].get("baseline").is_none());
+    let d = dir(&[("pun.toml", "[lint]\nbaseline = \"lint.toml\"\n")]);
+    let c = load(&d, &Options::default()).unwrap();
+    assert_eq!(c.lint.baseline.as_deref(), Some("lint.toml"));
+    assert_eq!(c.show()["lint"]["baseline"], "lint.toml");
     let d = dir(&[(
         "pun.toml",
         "[analyse]\nbaseline = \"b.toml\"\nstubs = [\"stubs/A.stub\"]\nscan = [\"stubs\", \"helpers.php\"]\nbootstrap = [\"tests/bootstrap.php\"]\n[[analyse.ignore]]\nrule = \"undefined/method\"\nmessage = \"#^Call#\"\ncount = 2\n",
@@ -1218,6 +1248,15 @@ fn files_paths_stay_in_the_project() {
     );
     std::fs::write(
         root.join("pun.toml"),
+        "[lint]\nbaseline = \"../outside/lint.toml\"\n",
+    )
+    .unwrap();
+    assert_eq!(
+        err(&root, Options::default()),
+        format!("{at}: [lint] baseline: \"../outside/lint.toml\" is outside the project")
+    );
+    std::fs::write(
+        root.join("pun.toml"),
         "[files]\npaths = [\"app\", \"later\"]\n",
     )
     .unwrap();
@@ -1329,6 +1368,14 @@ fn pun_toml_errors() {
         (
             "[analyse.rules]\n\"laravel/no-env-outside-config\" = { config-directories = \"config\" }\n",
             "[analyse.rules] `laravel/no-env-outside-config`: config-directories = \"config\": expected a list of strings",
+        ),
+        (
+            "[analyse.rules]\n\"type-coverage/return\" = { min = \"high\" }\n",
+            "[analyse.rules] `type-coverage/return`: min = \"high\": expected a number",
+        ),
+        (
+            "[analyse.rules]\n\"disallowed/function\" = { calls = [\"var_dump()\"] }\n",
+            "[analyse.rules] `disallowed/function`: calls = [\"var_dump()\"]: expected a list of tables",
         ),
         (
             "[format.rules]\n\"strings/single-quote\" = \"yes\"\n",
@@ -2056,6 +2103,26 @@ fn analyse_parameters() {
     assert_eq!(
         p.get_str("deprecationRulesInstalled"),
         Some(&V::Bool(false))
+    );
+}
+
+#[test]
+fn disallowed_entries_keep_their_numbers() {
+    use pun_phpstan::Value as V;
+    let toml = "[extensions]\ndisallowed-calls = \"on\"\n\n[analyse.rules.\"disallowed/function\"]\ncalls = [{ function = \"f()\", allow-params-anywhere = { 1 = 2, 2 = 1.5 } }]\n";
+    let d = dir(&[("pun.toml", toml)]);
+    let on = load(&d, &Options::default())
+        .unwrap()
+        .analyse
+        .parameters(&d);
+    let entry = (on.get_str("disallowedFunctionCalls").and_then(V::as_array))
+        .and_then(|l| l.values().next())
+        .and_then(V::as_array)
+        .unwrap();
+    let params = (entry.get_str("allowParamsAnywhere").and_then(V::as_array)).unwrap();
+    assert_eq!(
+        (params.get_str("1"), params.get_str("2")),
+        (Some(&V::Int(2)), Some(&V::Float(1.5)))
     );
 }
 

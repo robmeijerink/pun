@@ -1,0 +1,75 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/pun-coverage"
+	disallowedFunctionCalls:
+		-
+			"function": "PunCoverage\\covA()"
+			"allowIn":
+				- "*/pun-coverage/allowed.php"
+		-
+			"function": "PunCoverage\\covB()"
+			"message": "first"
+		-
+			"function": "PunCoverage\\covB()"
+			"message": "second"
+		-
+			"function": "PunCoverage\\covC()"
+			"allowIn":
+				- "src/pun-coverage/allowed.php"
+			"allowParamsInAllowed":
+				"2": 2
+			"allowParamsInAllowedAnyValue":
+				"2": 1
+		-
+			"function": "PunCoverage\\covFlags()"
+			"allowParamFlagsAnywhere":
+				"1": 1
+		-
+			"function": "PunCoverage\\Fns\\covListA()"
+			"allowParamFlagsAnywhere":
+				-
+					"position": 1
+					"typeString": "int"
+	disallowedMethodCalls:
+		-
+			"method": "PunCoverage\\Base::instanceMethod()"
+		-
+			"method": "PDO::query()"
+		-
+			"method": "PunCoverage\\Base::__construct()"
+		-
+			"method": "PunCoverage\\WithMissingParent::__construct()"
+		-
+			"method": "PunCoverage\\Unknown::__construct()"
+			"definedIn": "src/*"
+	disallowedStaticCalls:
+		-
+			"method": "PunCoverage\\Base::staticMethod()"
+	disallowedNamespaces:
+		-
+			"namespace": "PunCoverage\\Fns\\Thing"
+			"excludeWithAttribute":
+				- "PunCoverage\\AttrOne"
+		-
+			"namespace": "PunCoverage\\Unknown"
+			"excludeWithAttribute":
+				- "PunCoverage\\AttrOne"
+	disallowedAttributes:
+		-
+			"attribute": "PunCoverage\\Attr*"
+	disallowedConstants:
+		-
+			"class": "PunCoverage\\Base"
+			"constant": "SHARED"
+	disallowedProperties:
+		-
+			"property": "PunCoverage\\Base::$stat"
+		-
+			"property": "PunCoverage\\Base::$inst"
+		-
+			"property": "PunCoverage\\Base::$stat"
+			"message": "a later entry replaces the earlier one"

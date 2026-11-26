@@ -15,6 +15,7 @@ function f($a, $b, $c) {
 function f($a, $b, $c) {
     if ($a) {
         echo 1;
+    } /* x */ elseif ($b) {
     } /* y */ elseif ($c) {
         echo 2;
     }

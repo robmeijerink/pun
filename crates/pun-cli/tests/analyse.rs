@@ -1225,3 +1225,64 @@ fn scan_and_bootstrap_files_declare_symbols() {
         (String::new(), String::new(), Some(0))
     );
 }
+
+/// tomasvotruba/type-coverage 2.5.1 (`.oracle/phpstan/vendor/tomasvotruba/type-coverage`): its errors in every
+/// format, measure mode's errors without a file, and nothing when only some of the configured paths are analysed.
+#[test]
+fn type_coverage_matches_phpstan() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.oracle/phpstan/vendor");
+    let (Ok(bin), Ok(extension)) = (
+        root.join("bin/phpstan").canonicalize(),
+        root.join("tomasvotruba/type-coverage/config/extension.neon")
+            .canonicalize(),
+    ) else {
+        return;
+    };
+    let bin = bin.to_str().unwrap();
+    for (name, parameters, rules) in [
+        ("min", "return_type: 100", "min = 100"),
+        ("measure", "measure: true", "measure = true"),
+    ] {
+        let d = project(
+            "analyse",
+            &format!("type-coverage-{name}"),
+            &[
+                (
+                    "phpstan.neon",
+                    &format!(
+                        "includes:\n    - {}\nparameters:\n    level: 0\n    paths:\n        - src\n    type_coverage:\n        {parameters}\n",
+                        extension.display()
+                    ),
+                ),
+                (
+                    "pun.toml",
+                    &format!(
+                        "[extensions]\ntype-coverage = \"on\"\n\n[analyse]\npreset = \"phpstan/level_0\"\npaths = [\"src\"]\n\n[analyse.rules]\n\"type-coverage/return\" = {{ {rules} }}\n"
+                    ),
+                ),
+                (
+                    "src/One.php",
+                    "<?php\n\nfinal class One\n{\n    public function a()\n    {\n    }\n}\n",
+                ),
+                (
+                    "src/Two.php",
+                    "<?php\n\nfinal class Two\n{\n    public function b(): void\n    {\n    }\n}\n",
+                ),
+            ],
+        );
+        for paths in [&[][..], &["src/One.php"][..]] {
+            for f in FORMATS {
+                let format = format!("--error-format={f}");
+                let mut args = vec![format.as_str()];
+                args.extend(paths);
+                let want = run(
+                    &d,
+                    &[bin, "analyse", "--no-progress", "-c", "phpstan.neon"],
+                    &args,
+                );
+                let got = run(&d, &[PUN, "analyse"], &args);
+                assert_eq!(got, want, "{name} {paths:?} {f}");
+            }
+        }
+    }
+}

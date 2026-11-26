@@ -1,0 +1,82 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 8,
+   "identifier": "disallowed.property",
+   "message": "Using Fiction\\Pulp\\Royale::$whopper is forbidden, not sold here.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 10,
+   "identifier": "disallowed.property",
+   "message": "Using Fiction\\Pulp\\Royale::$whopper is forbidden, not sold here.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 13,
+   "identifier": "disallowed.property",
+   "message": "Using Fiction\\Pulp\\Royale::$whopper is forbidden, not sold here.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 15,
+   "identifier": "disallowed.property",
+   "message": "Using DateInterval::$d is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 18,
+   "identifier": "disallowed.property",
+   "message": "Using Inheritance\\Base::$property (as Inheritance\\Sub::$property) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 21,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicTraitProperty (as Traits\\TestClass::$publicTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicTraitProperty matches Traits\\YetAnotherTrait::$public*Property]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 36,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicTraitProperty (as ClassWithProperties::$publicTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicTraitProperty matches Traits\\YetAnotherTrait::$public*Property]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 37,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$protectedTraitProperty (as ClassWithProperties::$protectedTraitProperty) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 38,
+   "identifier": "disallowed.property",
+   "message": "Using ClassWithProperties::$privateProperty is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 39,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicStaticTraitProperty (as ClassWithProperties::$publicStaticTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicStaticTraitProperty matches Traits\\YetAnotherTrait::$public*Property]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/propertyUsages.php",
+   "line": 58,
+   "identifier": "disallowed.property",
+   "message": "Using Traits\\YetAnotherTrait::$publicStaticTraitProperty (as ClassWithProperties::$publicStaticTraitProperty) is forbidden. [Traits\\YetAnotherTrait::$publicStaticTraitProperty matches Traits\\YetAnotherTrait::$public*Property]",
+   "tip": null
+  }
+ ]
+}

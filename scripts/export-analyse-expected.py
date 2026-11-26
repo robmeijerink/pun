@@ -19,7 +19,8 @@ out = subprocess.run([os.path.join(root, ".oracle/phpstan/vendor/bin/phpstan"), 
                       "--error-format=json", "--no-progress"], cwd=os.path.join(root, "crates/pun-analyse"),
                      capture_output=True, text=True, env=env)
 data = json.loads(out.stdout)
-errors = [{"file": os.path.relpath(f, d), "line": m["line"], "identifier": m.get("identifier"),
+# A collected-data rule's error without a file (type-coverage's measure mode) is in PHPStan's "N/A" entry
+errors = [{"file": f if f == "N/A" else os.path.relpath(f, d), "line": m["line"], "identifier": m.get("identifier"),
            "message": m["message"], "tip": m.get("tip")}
           for f, v in sorted(data["files"].items()) for m in v["messages"]]
 json.dump({"general": data["errors"], "errors": errors}, open(f"{d}/expected-{neon}.json", "w"), indent=1)

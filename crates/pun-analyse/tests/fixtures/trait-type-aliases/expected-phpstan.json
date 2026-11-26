@@ -1,0 +1,23 @@
+{
+ "level": 10,
+ "errors": [
+  {
+   "line": 29,
+   "identifier": "class.notFound",
+   "message": "PHPDoc tag @var for variable $node contains unknown class TraitTypeAliases\\Node.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "line": 31,
+   "identifier": "class.notFound",
+   "message": "Access to offset 'name' on an unknown class TraitTypeAliases\\Node.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "line": 31,
+   "identifier": "return.type",
+   "message": "Method TraitTypeAliases\\Catalog::first() should return string but returns mixed.",
+   "tip": null
+  }
+ ]
+}

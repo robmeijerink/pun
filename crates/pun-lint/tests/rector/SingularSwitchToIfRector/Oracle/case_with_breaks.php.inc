@@ -40,7 +40,7 @@ function a($value)
                 break 2;
             // last
         }
-        if ($v === $v + 1) {
+        if ($v == $v + 1) {
             echo 2;
             break 2;
             echo 3;

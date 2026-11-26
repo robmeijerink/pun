@@ -2300,7 +2300,14 @@ pub(in super::super) fn match_subject_types(
     run: &super::super::infer::Run<'_, '_>,
 ) -> (HashMap<Span, TUnion>, Vec<Span>) {
     let (file, program) = (run.file, run.program);
-    struct Matches(Vec<(Span, usize, usize, usize)>, usize);
+    // The subject's type is read from a copy whose arms are `default => 1`, so arm conditions don't narrow it. A
+    // rewritten match yields `1` to the code after it, so one copy rewrites at most one match of each depth in
+    // each function-like body; a later match's subject still sees an earlier match's real result (#38 item 3).
+    struct Matches {
+        found: Vec<(Span, usize, usize, usize, Option<Span>)>,
+        depth: usize,
+        bodies: Vec<Span>,
+    }
     impl<'ast, 'arena> MutWalker<'ast, 'arena, ()> for Matches {
         fn walk_in_match(&mut self, m: &'ast Match<'arena>, (): &mut ()) {
             if !m.arms.is_empty() {
@@ -2308,26 +2315,73 @@ pub(in super::super) fn match_subject_types(
                     m.left_brace.end.offset as usize,
                     m.right_brace.start.offset as usize,
                 );
-                self.0.push((m.expression.span(), start, end, self.1));
+                let body = self.bodies.last().copied();
+                self.found
+                    .push((m.expression.span(), start, end, self.depth, body));
             }
-            self.1 += 1;
+            self.depth += 1;
         }
         fn walk_out_match(&mut self, _: &'ast Match<'arena>, (): &mut ()) {
-            self.1 -= 1;
+            self.depth -= 1;
+        }
+        fn walk_in_function(&mut self, f: &'ast Function<'arena>, (): &mut ()) {
+            self.bodies.push(f.span());
+        }
+        fn walk_out_function(&mut self, _: &'ast Function<'arena>, (): &mut ()) {
+            self.bodies.pop();
+        }
+        fn walk_in_method(&mut self, m: &'ast Method<'arena>, (): &mut ()) {
+            self.bodies.push(m.span());
+        }
+        fn walk_out_method(&mut self, _: &'ast Method<'arena>, (): &mut ()) {
+            self.bodies.pop();
+        }
+        fn walk_in_closure(&mut self, c: &'ast Closure<'arena>, (): &mut ()) {
+            self.bodies.push(c.span());
+        }
+        fn walk_out_closure(&mut self, _: &'ast Closure<'arena>, (): &mut ()) {
+            self.bodies.pop();
+        }
+        fn walk_in_arrow_function(&mut self, f: &'ast ArrowFunction<'arena>, (): &mut ()) {
+            self.bodies.push(f.span());
+        }
+        fn walk_out_arrow_function(&mut self, _: &'ast ArrowFunction<'arena>, (): &mut ()) {
+            self.bodies.pop();
         }
     }
-    let mut matches = Matches(Vec::new(), 0);
+    let mut matches = Matches {
+        found: Vec::new(),
+        depth: 0,
+        bodies: Vec::new(),
+    };
     matches.walk_program(program, &mut ());
     let mut types = HashMap::new();
     let mut unknown = Vec::new();
-    if matches.0.is_empty() {
+    if matches.found.is_empty() {
         return (types, unknown);
     }
-    let deepest = matches.0.iter().map(|m| m.3).max().unwrap_or_default();
-    for depth in 0..=deepest {
+    let mut seen: HashMap<(usize, Option<Span>), usize> = HashMap::new();
+    let passes: Vec<(usize, usize)> = matches
+        .found
+        .iter()
+        .map(|&(_, _, _, depth, body)| {
+            let index = seen.entry((depth, body)).or_default();
+            *index += 1;
+            (depth, *index - 1)
+        })
+        .collect();
+    let mut order: Vec<(usize, usize)> = passes.clone();
+    order.sort_unstable();
+    order.dedup();
+    for pass in order {
         let mut contents = file.contents.to_vec();
         let mut subjects = Vec::new();
-        for &(subject, s, e, _) in matches.0.iter().filter(|m| m.3 == depth) {
+        for (&(subject, s, e, ..), _) in matches
+            .found
+            .iter()
+            .zip(&passes)
+            .filter(|(_, p)| **p == pass)
+        {
             let mut arms = file.contents[s..e]
                 .iter()
                 .map(|b| if *b == b'\n' { b'\n' } else { b' ' })

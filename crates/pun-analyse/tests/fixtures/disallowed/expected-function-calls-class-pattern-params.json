@@ -1,0 +1,47 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternAllowed() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternDisallowed() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternDisallowed() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternAllowed() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternAllowed() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsClassPatternParams.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\classPatternPrecedence() is forbidden.",
+   "tip": null
+  }
+ ]
+}

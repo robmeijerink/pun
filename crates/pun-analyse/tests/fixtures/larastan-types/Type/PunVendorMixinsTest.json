@@ -1,0 +1,18 @@
+{
+    "test": "Type/PunVendorMixinsTest",
+    "configs": [
+        "tests/Type/data/config-with-migrations.neon"
+    ],
+    "cases": [
+        {
+            "file": "tests/Type/data/pun-vendor-mixins.php",
+            "declares": [
+                "punvendormixincalls\\counts"
+            ],
+            "asserts": [
+                11
+            ],
+            "errors": []
+        }
+    ]
+}

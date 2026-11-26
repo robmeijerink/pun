@@ -1,0 +1,509 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Bar.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling dom_import_simplexml() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 56,
+   "identifier": "disallowed.function",
+   "message": "Calling simplexml_load_string() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Bar.php",
+   "line": 76,
+   "identifier": "disallowed.function",
+   "message": "Calling dom_import_simplexml() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling str_starts_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling str_ends_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 16,
+   "identifier": "disallowed.function",
+   "message": "Calling str_contains() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling str_starts_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 28,
+   "identifier": "disallowed.function",
+   "message": "Calling str_ends_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 31,
+   "identifier": "disallowed.function",
+   "message": "Calling str_contains() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 42,
+   "identifier": "disallowed.function",
+   "message": "Calling str_starts_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 43,
+   "identifier": "disallowed.function",
+   "message": "Calling str_starts_with() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 59,
+   "identifier": "disallowed.function",
+   "message": "Calling ltrim() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 70,
+   "identifier": "disallowed.function",
+   "message": "Calling ltrim() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 71,
+   "identifier": "disallowed.function",
+   "message": "Calling ltrim() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarInstanceOfWithParams.php",
+   "line": 82,
+   "identifier": "disallowed.function",
+   "message": "Calling ltrim() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 16,
+   "identifier": "disallowed.function",
+   "message": "Calling str_repeat() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 27,
+   "identifier": "disallowed.function",
+   "message": "Calling str_repeat() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling str_repeat() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 49,
+   "identifier": "disallowed.function",
+   "message": "Calling str_repeat() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 60,
+   "identifier": "disallowed.function",
+   "message": "Calling str_repeat() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/BarWildcard.php",
+   "line": 70,
+   "identifier": "disallowed.function",
+   "message": "Calling str_pad() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() (as waldo()) is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 59,
+   "identifier": "disallowed.function",
+   "message": "Calling setcookie() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 60,
+   "identifier": "disallowed.function",
+   "message": "Calling setcookie() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 64,
+   "identifier": "disallowed.function",
+   "message": "Calling header() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 65,
+   "identifier": "disallowed.function",
+   "message": "Calling header() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 69,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 70,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 82,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 83,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsExceptWithParams.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling pow() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCallsExceptWithParams.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling intdiv() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden, use logger instead.",
+   "tip": "See docs"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling print_R() is forbidden, nope. [print_R() matches print_r()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling printf() is forbidden.",
+   "tip": "\u2022 See docs\n\u2022 Press F"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() (as waldo()) is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling shell_exec() is forbidden. [shell_exec() matches shell_*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling exec() is forbidden. [exec() matches exe*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 25,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, nope.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 46,
+   "identifier": "disallowed.backtick",
+   "message": "Using the backtick operator (`...`) is forbidden because shell_exec() is forbidden. [shell_exec() matches shell_*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 49,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, MD4 very bad.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 50,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, MD5 bad.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 51,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, MD5 bad.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 52,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, SHA-1 bad soon\u2122.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 53,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, SHA-1 bad SOON\u2122.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 59,
+   "identifier": "disallowed.function",
+   "message": "Calling setcookie() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 64,
+   "identifier": "disallowed.function",
+   "message": "Calling header() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 69,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 70,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 71,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 72,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 73,
+   "identifier": "disallowed.function",
+   "message": "Calling htmlspecialchars() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 76,
+   "identifier": "disallowed.function",
+   "message": "Calling array_filter() is forbidden, callback parameter must be given.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 83,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\mocky() is forbidden, mocking Blade is not allowed.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 91,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 102,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, nope.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 103,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, nope.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 106,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, nope.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 107,
+   "identifier": "disallowed.function",
+   "message": "Calling Print_R() is forbidden, nope. [Print_R() matches print_r()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 110,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 111,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 114,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 115,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 117,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\waldo() is forbidden, whoa, a namespace.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 118,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo() is forbidden, whoa, a namespace. [Foo\\Bar\\Waldo() matches Foo\\Bar\\waldo()]",
+   "tip": null
+  }
+ ]
+}

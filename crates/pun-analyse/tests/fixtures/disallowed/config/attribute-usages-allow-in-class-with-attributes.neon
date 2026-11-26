@@ -1,0 +1,42 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/AttributeClass.php"
+		- "../src/AttributeFunctions.php"
+		- "../src/AttributeNamespacedFunctions.php"
+	disallowedAttributes:
+		-
+			"attribute": "\\Attributes\\Attribute4"
+			"allowInClassWithAttributes": 
+				- "\\Attributes\\Attribute2"
+		-
+			"attribute": "\\Attributes\\Attribute5"
+			"disallowInClassWithAttributes": 
+				- "\\Attributes\\Attribute3"
+		-
+			"attribute": "Attribute12"
+			"allowInFunctionsWithAttributes": 
+				- "Attribute10"
+		-
+			"attribute": "Attribute13"
+			"allowExceptInFunctionsWithAttributes": 
+				- "Attribute11"
+		-
+			"attribute": "Attribute7"
+			"allowInClassWithMethodAttributes": 
+				- "Attribute8"
+		-
+			"attribute": "Attribute8"
+			"allowExceptInClassWithMethodAttributes": 
+				- "Attribute7"
+		-
+			"attribute": "Attribute9"
+			"allowInClassWithMethodAttributes": 
+				- "Attribute7"
+		-
+			"attribute": "Attribute10"
+			"allowExceptInClassWithMethodAttributes": 
+				- "Attribute7"

@@ -1,0 +1,15 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/firstClassCallable.php"
+		- "../src/disallowed-allow/firstClassCallable.php"
+	disallowedStaticCalls:
+		-
+			"method": "Fiction\\Pulp\\Royale::withoutCheese"
+			"message": "a Quarter Pounder without Cheese!"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

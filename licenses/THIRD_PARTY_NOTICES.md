@@ -283,7 +283,8 @@ Pun's source ports the behaviour of the projects below, and the repository's tes
 | [Laravel Pint](https://github.com/laravel/pint) 1.32 | `crates/pun-fixers`, `crates/pun-config/presets`, `crates/pun-cli` | `crates/pun-fixers/tests/cases` (its output) |
 | [PHPStan](https://github.com/phpstan/phpstan-src) 2.3.5 | `crates/pun-phpstan`, `crates/pun-analyse` | `crates/pun-analyse/tests/fixtures/rules`, `levels` and `nsrt`, `crates/pun-phpstan/tests/fixtures` |
 | [Larastan](https://github.com/larastan/larastan) 3.14.0 | `crates/pun-analyse`, which also bundles its `stubs` (`crates/pun-analyse/data/larastan-stubs`, with its license file) | `crates/pun-analyse/tests/fixtures/larastan` and `larastan-types` |
-| [Rector](https://github.com/rectorphp/rector-src) 2.8.4, with [rector-phpunit](https://github.com/rectorphp/rector-phpunit) | `crates/pun-lint` | `crates/pun-lint/tests/rector`, `rector-phpunit-stubs`, `doctrine-stubs` |
+| [phpstan-mockery](https://github.com/phpstan/phpstan-mockery) 2.0.0 | `crates/pun-analyse`, which also bundles its `stubs/MockInterface.stub` (`crates/pun-analyse/data/phpstan-mockery`, with its license file) | `crates/pun-analyse/tests/fixtures/mockery/src` |
+| [Rector](https://github.com/rectorphp/rector-src) 2.9.2, with [rector-phpunit](https://github.com/rectorphp/rector-phpunit) | `crates/pun-lint` | `crates/pun-lint/tests/rector`, `rector-phpunit-stubs`, `doctrine-stubs` |
 | [rector-laravel](https://github.com/driftingly/rector-laravel) 2.7.3 | `crates/pun-lint` | `crates/pun-lint/tests/rector`, `rector-laravel-stubs` |
 | [pest-plugin-rector](https://github.com/pestphp/pest-plugin-rector) | `crates/pun-lint` | `crates/pun-lint/tests/rector` |
 | [nette/neon, nette/schema, nette/di](https://github.com/nette) | `crates/pun-phpstan` | `crates/pun-phpstan/tests/fixtures` |
@@ -293,11 +294,13 @@ Pun's source ports the behaviour of the projects below, and the repository's tes
 | [Composer](https://github.com/composer/composer) 2.11.2, with [class-map-generator](https://github.com/composer/class-map-generator) 1.9 | `crates/pun-packages`, which also ships Composer's `ClassLoader.php` and `InstalledVersions.php` unchanged in every `vendor/composer` it writes (`crates/pun-packages/assets`, with Composer's license file) | `crates/pun-packages/tests/fixtures` (its output) |
 
 `crates/pun-analyse/tests/fixtures/larastan-types/root/vendor` holds trimmed copies of the Composer packages
-Larastan's tests load. Each package directory there carries its own license file.
+Larastan's tests load. Each package directory there carries its own license file. So does
+`crates/pun-analyse/tests/fixtures/mockery/vendor/mockery/mockery`, the trimmed Mockery 1.6.15 (BSD-3-Clause) that the
+phpstan-mockery fixture reads.
 
 ### MIT license
 
-PHP-CS-Fixer, Laravel Pint, PHPStan, Larastan, Rector, rector-phpunit, rector-laravel, pest-plugin-rector, Composer
+PHP-CS-Fixer, Laravel Pint, PHPStan, Larastan, phpstan-mockery, Rector, rector-phpunit, rector-laravel, pest-plugin-rector, Composer
 and class-map-generator are under the MIT license, with these copyright notices:
 
 ```text
@@ -305,6 +308,7 @@ PHP-CS-Fixer:        Copyright (c) 2012+ Fabien Potencier, Dariusz Rumiński
 Laravel Pint:        Copyright (c) Taylor Otwell
 PHPStan:             Copyright (c) 2016 Ondřej Mirtes
                      Copyright (c) 2025 PHPStan s.r.o.
+phpstan-mockery:     Copyright (c) 2016 Ondřej Mirtes
 Larastan:            Copyright (c) Can Vural <can9119@gmail.com>, Nuno Maduro <enunomaduro@gmail.com>,
 Rector:              Copyright (c) 2017-present Tomas Votruba (https://tomasvotruba.com)
 rector-phpunit:      Copyright (c) 2017-present Tomáš Votruba (https://tomasvotruba.cz)

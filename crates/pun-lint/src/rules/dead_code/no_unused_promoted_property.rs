@@ -63,33 +63,39 @@ impl Rule for NoUnusedPromotedProperty {
         }
         let mut removed = vec![false; params.len()];
         let mut edits = Vec::new();
-        for (i, param) in params.iter().enumerate() {
+        // Rector 2.9.2 removes trailing params only: removing an earlier one would shift the callers' arguments.
+        let mut trailing = true;
+        for (i, param) in params.iter().enumerate().rev() {
             if !param
                 .modifiers
                 .iter()
                 .any(|m| matches!(m, Modifier::Private(_)))
             {
+                trailing = false;
                 continue;
             }
             let name = &param.variable.name[1..];
             if fetched(node, name) {
+                trailing = false;
                 continue;
             }
             let read = any_node(
                 Node::MethodBody(&constructor.body),
                 &|n| matches!(n, Node::Variable(Variable::Direct(v)) if v.name == param.variable.name),
             );
-            if read {
+            if read || !trailing {
                 let first = node_span(param.modifiers.first().unwrap()).start;
                 let next = match &param.hint {
                     Some(hint) => node_span(hint).start,
                     None => node_span(&param.variable).start,
                 };
                 edits.push(Edit::new(Span::new(first, next), ""));
+                trailing = false;
             } else {
                 removed[i] = true;
             }
         }
+        edits.reverse();
         if removed.contains(&true) {
             let from = member_from(members, left_brace, index);
             edits.extend(remove_params(ctx, constructor, from, &removed));

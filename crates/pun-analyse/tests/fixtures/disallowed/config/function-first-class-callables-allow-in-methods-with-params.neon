@@ -1,0 +1,20 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/RoyaleAllowInFirstClassCallable.php"
+	disallowedFunctionCalls:
+		-
+			"function": "crc32()"
+			"allowInMethods": 
+				- "Fiction\\Pulp\\RoyaleAllowInFirstClassCallable::methodA()"
+			"allowParamsInAllowed": 
+				"1": "a"
+		-
+			"function": "strtolower()"
+			"allowInMethods": 
+				- "Fiction\\Pulp\\RoyaleAllowInFirstClassCallable::methodA()"
+			"allowExceptParamsInAllowed": 
+				"1": "a"

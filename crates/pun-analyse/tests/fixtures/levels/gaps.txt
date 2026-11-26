@@ -260,7 +260,6 @@
 9 Methods/CallMethodsRuleTest::testReadOnlyPropertyPassedByReference
 9 Methods/CallMethodsRuleTest::testRecursiveIteratorIterator
 9 Methods/CallStaticMethodsRuleTest::testBug12558
-9 Methods/CallStaticMethodsRuleTest::testBug13267
 9 Methods/CallStaticMethodsRuleTest::testBug2164
 9 Methods/CallStaticMethodsRuleTest::testBug3641
 9 Methods/CallStaticMethodsRuleTest::testBugWrongMethodNameWithTemplateMixed
@@ -660,14 +659,12 @@
 4 Comparison/BooleanAndConstantConditionRuleTest::testBug5743
 # offsetAccess.notFound: `count($a) === 2` does not narrow Mago's union of array shapes to the two-key one
 # an-isset: IssetRule and EmptyRule over IssetCheck; the differences come from Mago's scope, not from the rules:
-# array_push() with a spread argument always yields a non-empty array (FuncCallScopeEffectsHelper's
-# getArrayFunctionAppendingType() keeps it possibly empty)
+# array_push() of a spread empty array (`...[]`) yields a possibly empty array, where
+# FuncCallScopeEffectsHelper's getArrayFunctionAppendingType() keeps it exactly `array{}`
 1 Variables/EmptyRuleTest::testBug6974
 1 Variables/EmptyRuleTest::testBug6974TreatPhpDocTypesAsCertain
-1 Variables/EmptyRuleTest::testBug7424
 4 Variables/EmptyRuleTest::testBug6974
 4 Variables/EmptyRuleTest::testBug6974TreatPhpDocTypesAsCertain
-4 Variables/EmptyRuleTest::testBug7424
 # a falsy isset() of an offset that is always set and not nullable makes the key optional (`dim?: 1`) instead of
 # making the branch impossible, so the later message describes the array differently
 4 Variables/IssetRuleTest::testRule

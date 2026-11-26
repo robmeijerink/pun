@@ -1,0 +1,40 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/ClassLikeLabels.php",
+   "line": 22,
+   "identifier": "disallowed.class",
+   "message": "Class ClassLikeLabels\\SomeClass is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassLikeLabels.php",
+   "line": 22,
+   "identifier": "disallowed.interface",
+   "message": "Interface ClassLikeLabels\\SomeInterface is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassLikeLabels.php",
+   "line": 24,
+   "identifier": "disallowed.interface",
+   "message": "Interface ClassLikeLabels\\SomeInterface is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassLikeLabels.php",
+   "line": 25,
+   "identifier": "disallowed.trait",
+   "message": "Trait ClassLikeLabels\\SomeTrait is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/ClassLikeLabels.php",
+   "line": 26,
+   "identifier": "disallowed.class",
+   "message": "Class ClassLikeLabels\\SomeClass is forbidden.",
+   "tip": null
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/methodCallsDefinedIn.php"
+		- "../src/disallowed-allow/methodCallsDefinedIn.php"
+	disallowedMethodCalls:
+		-
+			"method": "*"
+			"definedIn": "src/Bl*"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

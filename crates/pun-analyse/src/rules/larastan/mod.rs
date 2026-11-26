@@ -351,6 +351,7 @@ impl crate::AnalyseExtension for Larastan {
             &self.bootstrap_files,
             &project.analysed,
             &project.scanned,
+            &project.autoloaded,
             &self.root,
             codebase,
             &self.app,

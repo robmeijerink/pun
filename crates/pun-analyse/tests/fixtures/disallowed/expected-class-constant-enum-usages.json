@@ -1,0 +1,47 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/Enums.php",
+   "line": 16,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\Enum::ENUM_CONST is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 17,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\Enum::Foo is forbidden, use Baz instead.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 18,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\Enum::Bar is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 31,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\BackedEnum::ENUM_CONST is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 32,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\BackedEnum::Waldo is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/Enums.php",
+   "line": 33,
+   "identifier": "disallowed.classConstant",
+   "message": "Using Enums\\BackedEnum::Quux is forbidden.",
+   "tip": null
+  }
+ ]
+}

@@ -1,0 +1,1056 @@
+{
+ "cases": [
+  {
+   "name": "binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "a",
+    "b c"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: a b c\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "binary-dashdash",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "--",
+    "--x",
+    "a b",
+    "it's"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 3: --x a b it's\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "binary-unknown-option",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "--x"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The \"--x\" option does not exist."
+   ]
+  },
+  {
+   "name": "binary-no-args",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 0: \ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "binary-with-words",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool x",
+    "y"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: x y\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "binary-exit-code",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/fail": "#!/bin/sh\necho \"failing\" >&2\nexit 3\n"
+   },
+   "executable": [
+    "vendor/bin/fail"
+   ],
+   "args": [
+    "exec",
+    "fail"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 3,
+   "stdout": "",
+   "stderr": "failing\nScript fail handling the __exec_command event returned with error code 3\n"
+  },
+  {
+   "name": "binary-not-found",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "nope"
+   ],
+   "cwd": "",
+   "stderr_tail": true,
+   "exit": 127,
+   "stdout": "",
+   "stderr": "sh: nope: command not found\nScript nope handling the __exec_command event returned with error code 127\n"
+  },
+  {
+   "name": "binary-not-executable",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": true,
+   "exit": 126,
+   "stdout": "",
+   "stderr": "sh: {dir}/vendor/bin/tool: Permission denied\nScript tool handling the __exec_command event returned with error code 126\n"
+  },
+  {
+   "name": "global-before",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "-n",
+    "exec",
+    "tool",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: a\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "global-after",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-n",
+    "tool",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: a\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-q",
+    "tool",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "quiet-failing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/fail": "#!/bin/sh\necho \"failing\" >&2\nexit 3\n"
+   },
+   "executable": [
+    "vendor/bin/fail"
+   ],
+   "args": [
+    "exec",
+    "fail",
+    "--quiet"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 3,
+   "stdout": "",
+   "stderr": "Script fail handling the __exec_command event returned with error code 3\n"
+  },
+  {
+   "name": "verbose",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-v",
+    "tool",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: a\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": "> __exec_command: tool 'a'\n"
+  },
+  {
+   "name": "verbose-after",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "a",
+    "-vv"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: a\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": "> __exec_command: tool 'a'\n"
+  },
+  {
+   "name": "no-interaction-after-binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "a",
+    "-n",
+    "--no-interaction",
+    "b"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: a b\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "options-after-binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "a",
+    "--no-plugins",
+    "--no-scripts",
+    "--no-cache",
+    "--no-ansi",
+    "b"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: a b\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-after-binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-l"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- tool\n",
+   "stderr": ""
+  },
+  {
+   "name": "unknown-short-option",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-x"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The \"-x\" option does not exist."
+   ]
+  },
+  {
+   "name": "short-option-cluster",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-nl"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- tool\n",
+   "stderr": ""
+  },
+  {
+   "name": "dash-alone",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: -\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "script-reference",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"scripts\": {\n        \"go\": \"tool from-go\"\n    }\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "@go",
+    "x"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: from-go x\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": "> tool from-go 'x'\n"
+  },
+  {
+   "name": "script-reference-verbose",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"scripts\": {\n        \"go\": [\n            \"tool from-go\",\n            \"Composer\\\\Config::disableProcessTimeout\"\n        ]\n    }\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-v",
+    "@go",
+    "x"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 2: from-go x\ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": "> __exec_command (x): @go\n> go: tool from-go 'x'\n> go: Composer\\Config::disableProcessTimeout\n"
+  },
+  {
+   "name": "script-reference-quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"scripts\": {\n        \"go\": [\n            \"tool from-go\",\n            \"@nope\"\n        ]\n    }\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-q",
+    "@go"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "",
+   "stderr": "You made a reference to a non-existent script @nope\n"
+  },
+  {
+   "name": "working-dir",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "sub/vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "sub/vendor/bin/tool"
+   ],
+   "args": [
+    "-d",
+    "sub",
+    "exec",
+    "tool",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 1: a\ndev=\npath={dir}/sub/vendor/bin\npwd={dir}/sub\n",
+   "stderr": ""
+  },
+  {
+   "name": "working-dir-after",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "sub/vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "sub/vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-d",
+    "sub"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 0: \ndev=\npath={dir}/sub/vendor/bin\npwd={dir}/sub\n",
+   "stderr": ""
+  },
+  {
+   "name": "bin-dir-config",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"config\": {\n        \"bin-dir\": \"tools\"\n    }\n}\n",
+    "tools/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "tools/tool"
+   ],
+   "args": [
+    "exec",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 0: \ndev=\npath={dir}/tools\npwd={dir}\n",
+   "stderr": ""
+  },
+  {
+   "name": "list",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\",\n        \"scripts/second.php\"\n    ]\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n",
+    "vendor/bin/tool.bat": "@echo off\n",
+    "vendor/bin/fail": "#!/bin/sh\necho \"failing\" >&2\nexit 3\n",
+    "vendor/bin/other.bat": "@echo off\n"
+   },
+   "executable": [
+    "vendor/bin/tool",
+    "vendor/bin/tool.bat",
+    "vendor/bin/fail",
+    "vendor/bin/other.bat"
+   ],
+   "args": [
+    "exec",
+    "--list"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- fail\n- other.bat\n- tool\n- mine (local)\n- second.php (local)\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ]\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "--list",
+    "--ansi"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "\u001b[33mAvailable binaries:\u001b[39m\n\u001b[32m- tool\u001b[39m\n\u001b[32m- mine (local)\u001b[39m\n",
+   "stderr": ""
+  },
+  {
+   "name": "failing-ansi",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/fail": "#!/bin/sh\necho \"failing\" >&2\nexit 3\n"
+   },
+   "executable": [
+    "vendor/bin/fail"
+   ],
+   "args": [
+    "exec",
+    "fail",
+    "--ansi"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 3,
+   "stdout": "",
+   "stderr": "failing\n\u001b[37;41mScript fail handling the __exec_command event returned with error code 3\u001b[39;49m\n"
+  },
+  {
+   "name": "working-dir-option-value",
+   "files": {
+    "sub/composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "sub/vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "sub/vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "--working-dir=sub",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 0: \ndev=\npath={dir}/sub/vendor/bin\npwd={dir}/sub\n",
+   "stderr": ""
+  },
+  {
+   "name": "working-dir-missing-value",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-d"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The \"--working-dir\" option requires a value."
+   ]
+  },
+  {
+   "name": "flag-with-value",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "--list=1"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The \"--list\" option does not accept a value."
+   ]
+  },
+  {
+   "name": "list-quiet",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "--list",
+    "-q"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "name": "working-dir-not-found",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "tool",
+    "-d",
+    "nope"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Invalid working directory specified, nope does not exist."
+   ]
+  },
+  {
+   "name": "script-reference-verbose-no-args",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"scripts\": {\n        \"go\": \"tool\"\n    }\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-v",
+    "@go"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "tool 0: \ndev=\npath={dir}/vendor/bin\npwd={dir}\n",
+   "stderr": "> __exec_command: @go\n> go: tool\n"
+  },
+  {
+   "name": "root-bin-bat",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine.bat\"\n    ]\n}\n",
+    "bin/mine.bat": "@echo off\n"
+   },
+   "executable": [
+    "bin/mine.bat"
+   ],
+   "args": [
+    "exec",
+    "mine.bat"
+   ],
+   "cwd": "",
+   "stderr_tail": true,
+   "exit": 127,
+   "stdout": "",
+   "stderr": "sh: call: command not found\nScript mine.bat handling the __exec_command event returned with error code 127\n"
+  },
+  {
+   "name": "list-short",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "-l"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- tool\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-root-bin-bat",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\",\n        \"bin/mine.bat\"\n    ]\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n",
+    "bin/mine.bat": "@echo off\n"
+   },
+   "executable": [
+    "bin/mine",
+    "bin/mine.bat"
+   ],
+   "args": [
+    "exec",
+    "--list"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- mine (local)\n- mine.bat (local)\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-without-binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- tool\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-with-binary",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n",
+    "vendor/bin/tool": "#!/bin/sh\necho \"tool $#: $*\"\necho \"dev=$COMPOSER_DEV_MODE\"\necho \"path=${PATH%%:*}\"\necho \"pwd=$(pwd)\"\n"
+   },
+   "executable": [
+    "vendor/bin/tool"
+   ],
+   "args": [
+    "exec",
+    "--list",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- tool\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-root-bin-only",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": \"bin/mine\"\n}\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "--list"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "Available binaries:\n- mine (local)\n",
+   "stderr": ""
+  },
+  {
+   "name": "list-empty",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\"\n}\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "--list"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "No binaries found in composer.json or in bin-dir ({dir}/vendor/bin)"
+   ]
+  },
+  {
+   "name": "list-empty-bin-dir-config",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"config\": {\n        \"bin-dir\": \"tools\"\n    }\n}\n"
+   },
+   "executable": [],
+   "args": [
+    "exec"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "No binaries found in composer.json or in bin-dir ({dir}/tools)"
+   ]
+  },
+  {
+   "name": "root-bin-sh",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ]\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "mine",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine a\n",
+   "stderr": ""
+  },
+  {
+   "name": "root-bin-env",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ]\n}\n",
+    "bin/mine": "#!/usr/bin/env sh\necho \"mine env $*\"\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "mine",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine env a\n",
+   "stderr": ""
+  },
+  {
+   "name": "root-bin-php",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine.php\"\n    ]\n}\n",
+    "bin/mine.php": "<?php echo \"mine php \", implode(\" \", array_slice($argv, 1)), \"\\n\";\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "mine.php",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine php a\n",
+   "stderr": ""
+  },
+  {
+   "name": "root-bin-string",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": \"bin/mine\"\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "mine",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine a\n",
+   "stderr": ""
+  },
+  {
+   "name": "root-bin-by-path",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ]\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n"
+   },
+   "executable": [],
+   "args": [
+    "exec",
+    "bin/mine",
+    "a"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine a\n",
+   "stderr": ""
+  },
+  {
+   "name": "run-script-root-bin",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ],\n    \"scripts\": {\n        \"go\": \"mine\"\n    }\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\n"
+   },
+   "executable": [],
+   "args": [
+    "run-script",
+    "go",
+    "--",
+    "x"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 0,
+   "stdout": "mine x\n",
+   "stderr": "> mine 'x'\n"
+  },
+  {
+   "name": "run-script-root-bin-with-words",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"bin\": [\n        \"bin/mine\"\n    ],\n    \"scripts\": {\n        \"go\": \"mine y\"\n    }\n}\n",
+    "bin/mine": "#!/bin/sh\necho \"mine $*\"\nexit 0\n"
+   },
+   "executable": [
+    "bin/mine"
+   ],
+   "args": [
+    "run-script",
+    "go"
+   ],
+   "cwd": "",
+   "stderr_tail": true,
+   "exit": 127,
+   "stdout": "",
+   "stderr": "> mine y\nsh: mine: command not found\nScript mine y handling the go event returned with error code 127\n"
+  },
+  {
+   "name": "timeout",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"version\": \"1.0.0\",\n    \"config\": {\n        \"process-timeout\": 1\n    }\n}\n",
+    "vendor/bin/slow": "#!/bin/sh\nsleep 3\necho done\n"
+   },
+   "executable": [
+    "vendor/bin/slow"
+   ],
+   "args": [
+    "exec",
+    "slow"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "The process \"slow\" exceeded the timeout of 1 seconds."
+   ]
+  },
+  {
+   "name": "no-composer-json",
+   "files": {},
+   "executable": [],
+   "args": [
+    "exec",
+    "tool"
+   ],
+   "cwd": "",
+   "stderr_tail": false,
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "message": [
+    "Composer could not find a composer.json file in {dir}",
+    "To initialize a project, please create a composer.json file. See https://getcomposer.org/basic-usage"
+   ]
+  }
+ ]
+}

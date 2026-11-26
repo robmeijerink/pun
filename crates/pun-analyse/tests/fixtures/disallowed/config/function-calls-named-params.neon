@@ -1,0 +1,44 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCallsNamedParams.php"
+		- "../src/disallowed-allow/functionCallsNamedParams.php"
+	disallowedFunctionCalls:
+		-
+			"function": "Foo\\Bar\\Waldo\\foo()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhereAnyValue": 
+				-
+					"position": 2
+					"name": "value"
+			"allowParamsInAllowedAnyValue": 
+				-
+					"position": 4
+					"name": "path"
+		-
+			"function": "Foo\\Bar\\Waldo\\bar()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhereAnyValue": 
+				- 1
+				- 2
+		-
+			"function": "Foo\\Bar\\Waldo\\baz()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": 
+				"2": "VALUE"
+		-
+			"function": "Foo\\Bar\\Waldo\\waldo()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": 
+				"value": "VALUE"

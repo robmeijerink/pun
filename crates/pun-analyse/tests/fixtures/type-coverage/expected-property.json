@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Rules/PropertyTypeCoverageRule/Fixture/UnknownPropertyType.php",
+   "line": 9,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 7 possible property types, only 5 - 71.4 % actually have it. Add more property types to get over 80 %",
+   "tip": null
+  },
+  {
+   "file": "Rules/PropertyTypeCoverageRule/Source/ParentBlockingClass.php",
+   "line": 9,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 7 possible property types, only 5 - 71.4 % actually have it. Add more property types to get over 80 %",
+   "tip": null
+  }
+ ]
+}

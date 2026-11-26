@@ -1,0 +1,26 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 12,
+   "identifier": "disallowed.else",
+   "message": "Using the else control structure is forbidden, what else?",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 14,
+   "identifier": "disallowed.else",
+   "message": "Using the else control structure is forbidden, what else?",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 22,
+   "identifier": "disallowed.else",
+   "message": "Using the else control structure is forbidden, what else?",
+   "tip": null
+  }
+ ]
+}

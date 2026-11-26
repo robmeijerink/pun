@@ -1,0 +1,26 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/RoyaleAllowInFirstClassCallable.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/RoyaleAllowInFirstClassCallable.php",
+   "line": 18,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/RoyaleAllowInFirstClassCallable.php",
+   "line": 19,
+   "identifier": "disallowed.function",
+   "message": "Calling strtolower() is forbidden.",
+   "tip": null
+  }
+ ]
+}

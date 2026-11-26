@@ -102,7 +102,10 @@ fn should_skip(
     let facts = facts(ctx);
     let span = node_span(&node);
     // use cheap checks first
-    if has_closure_with_variadic_args(&facts, span, ancestors) || is_assigned_to(span, ancestors) {
+    if has_closure_with_variadic_args(&facts, span, ancestors)
+        || is_assigned_to(span, ancestors)
+        || is_rebound(span, ancestors)
+    {
         return true;
     }
     let params: Vec<_> = params.parameters.iter().collect();
@@ -277,6 +280,20 @@ fn has_closure_with_variadic_args(facts: &Facts, span: Span, ancestors: &[Node<'
         (f.variants.iter().flat_map(|v| &v.params))
             .any(|p| p.ty == "callable" || (p.ty.starts_with("callable(") && p.ty.contains("...")))
     })
+}
+
+/// Rector 2.9.2's `IS_REBOUND_CLOSURE`: `(fn () => ...)->call($object)` or `->bindTo(...)` rebinds `$this`.
+fn is_rebound(span: Span, ancestors: &[Node<'_, '_>]) -> bool {
+    ancestors
+        .iter()
+        .rev()
+        .find(|a| !matches!(a, Node::Expression(_) | Node::Parenthesized(_)))
+        .is_some_and(|a| {
+            matches!(a, Node::MethodCall(call)
+                if node_span(unparenthesize(call.object)) == span
+                    && matches!(&call.method, ClassLikeMemberSelector::Identifier(id)
+                        if id.value.eq_ignore_ascii_case(b"call") || id.value.eq_ignore_ascii_case(b"bindto")))
+        })
 }
 
 /// `IS_ASSIGNED_TO`: the value of a plain `=` assignment.

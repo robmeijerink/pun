@@ -19,15 +19,10 @@ pub(crate) fn final_class<'a>(node: Node<'a, '_>) -> Option<&'a Class<'a>> {
 }
 
 pub(crate) fn is_protected(modifiers: &Sequence<'_, Modifier<'_>>) -> bool {
+    // Rector 2.9.2 privatizes `protected protected(set)` too; `make_private` drops the set visibility.
     modifiers
         .iter()
         .any(|m| matches!(m, Modifier::Protected(_)))
-        && !modifiers.iter().any(|m| {
-            matches!(
-                m,
-                Modifier::PublicSet(_) | Modifier::ProtectedSet(_) | Modifier::PrivateSet(_)
-            )
-        })
 }
 
 pub(crate) fn make_private(source: &str, modifiers: &Sequence<'_, Modifier<'_>>) -> Edit {

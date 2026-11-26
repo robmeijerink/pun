@@ -1,0 +1,243 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling md5() is forbidden, use hash() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling sha1() is forbidden, use hash() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 5,
+   "identifier": "arguments.count",
+   "message": "Function sha1 invoked with 0 parameters, 1-2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling md5_file() is forbidden, use hash_file() with at least SHA-256 for secure hash.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 6,
+   "identifier": "arguments.count",
+   "message": "Function md5_file invoked with 0 parameters, 1-2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling sha1_file() is forbidden, use hash_file() with at least SHA-256 for secure hash.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 7,
+   "identifier": "arguments.count",
+   "message": "Function sha1_file invoked with 0 parameters, 1-2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, use hash() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 8,
+   "identifier": "arguments.count",
+   "message": "Function hash invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling hash() is forbidden, use hash() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 9,
+   "identifier": "arguments.count",
+   "message": "Function hash invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 10,
+   "identifier": "arguments.count",
+   "message": "Function hash invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling hash_file() is forbidden, use hash_file() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 11,
+   "identifier": "arguments.count",
+   "message": "Function hash_file invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling hash_file() is forbidden, use hash_file() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 12,
+   "identifier": "arguments.count",
+   "message": "Function hash_file invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 13,
+   "identifier": "arguments.count",
+   "message": "Function hash_file invoked with 1 parameter, 2-4 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling hash_init() is forbidden, use hash_init() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling hash_init() is forbidden, use hash_init() with at least SHA-256 for secure hash, or password_hash() for passwords.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function mysql_query not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 18,
+   "identifier": "function.notFound",
+   "message": "Function mysql_unbuffered_query not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 19,
+   "identifier": "disallowed.function",
+   "message": "Calling mysqli_query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 19,
+   "identifier": "arguments.count",
+   "message": "Function mysqli_query invoked with 0 parameters, 2-3 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 20,
+   "identifier": "disallowed.function",
+   "message": "Calling mysqli_multi_query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 20,
+   "identifier": "arguments.count",
+   "message": "Function mysqli_multi_query invoked with 0 parameters, 2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 21,
+   "identifier": "disallowed.function",
+   "message": "Calling mysqli_real_query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 21,
+   "identifier": "arguments.count",
+   "message": "Function mysqli_real_query invoked with 0 parameters, 2 required.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 23,
+   "identifier": "disallowed.method",
+   "message": "Calling mysqli::query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 24,
+   "identifier": "disallowed.method",
+   "message": "Calling mysqli::multi_query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 25,
+   "identifier": "disallowed.method",
+   "message": "Calling mysqli::real_query() is forbidden, use PDO::prepare() with variable binding/parametrized queries to prevent SQL Injection vulnerability.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 27,
+   "identifier": "disallowed.function",
+   "message": "Calling rand() is forbidden, it is not a cryptographically secure generator, use random_int() instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 28,
+   "identifier": "disallowed.function",
+   "message": "Calling mt_rand() is forbidden, it is not a cryptographically secure generator, use random_int() instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 29,
+   "identifier": "disallowed.function",
+   "message": "Calling lcg_value() is forbidden, it is not a cryptographically secure generator, use random_int() instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/insecureCalls.php",
+   "line": 30,
+   "identifier": "disallowed.function",
+   "message": "Calling uniqid() is forbidden, it is not a cryptographically secure generator, use random_bytes() instead.",
+   "tip": null
+  }
+ ]
+}

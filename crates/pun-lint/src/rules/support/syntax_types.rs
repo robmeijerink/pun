@@ -239,10 +239,15 @@ fn int_value(ancestors: &[Node<'_, '_>], expr: &Expression<'_>) -> bool {
 
 pub(crate) type NonTyped<'f> = &'f dyn Fn(&Expression<'_>, Option<&Method<'_>>) -> bool;
 
+/// `initialized(class, class's ancestors, name)`: a typed property without a default is set in the constructor.
+pub(crate) type Initialized<'f> =
+    &'f dyn for<'x, 'y> Fn(Node<'x, 'y>, &[Node<'x, 'y>], &[u8]) -> bool;
+
 pub(crate) fn is_array_property(
     ancestors: &[Node<'_, '_>],
     expr: &Expression<'_>,
     non_typed: NonTyped<'_>,
+    initialized: Initialized<'_>,
 ) -> bool {
     let name = match unparenthesize(expr) {
         Expression::Access(Access::Property(PropertyAccess {
@@ -257,16 +262,31 @@ pub(crate) fn is_array_property(
         })) => &v.name[1..],
         _ => return false,
     };
-    own_property_is_array(ancestors, name, non_typed)
+    own_property_is_array(ancestors, name, non_typed, initialized)
 }
 
-fn own_property_is_array(ancestors: &[Node<'_, '_>], name: &[u8], non_typed: NonTyped<'_>) -> bool {
-    let Some((class, members)) = ancestors.iter().rev().find_map(|n| match n {
-        Node::Class(c) => Some((*n, &c.members)),
-        Node::AnonymousClass(c) => Some((*n, &c.members)),
-        _ => None,
-    }) else {
+fn own_property_is_array(
+    ancestors: &[Node<'_, '_>],
+    name: &[u8],
+    non_typed: NonTyped<'_>,
+    initialized: Initialized<'_>,
+) -> bool {
+    let Some((at, class, members)) =
+        ancestors
+            .iter()
+            .enumerate()
+            .rev()
+            .find_map(|(i, n)| match n {
+                Node::Class(c) => Some((i, *n, &c.members)),
+                Node::AnonymousClass(c) => Some((i, *n, &c.members)),
+                _ => None,
+            })
+    else {
         return false;
+    };
+    // Rector 2.9.2: reading an uninitialized typed property throws, while `empty()` returns true.
+    let set = |item: &PropertyItem<'_>| {
+        matches!(item, PropertyItem::Concrete(_)) || initialized(class, &ancestors[..at], name)
     };
     members.iter().any(|m| match m {
         ClassLikeMember::Property(Property::Plain(p)) => {
@@ -274,7 +294,7 @@ fn own_property_is_array(ancestors: &[Node<'_, '_>], name: &[u8], non_typed: Non
                 return false;
             };
             match &p.hint {
-                Some(hint) => matches!(hint, Hint::Array(_)),
+                Some(hint) => matches!(hint, Hint::Array(_)) && set(item),
                 None => {
                     matches!(item, PropertyItem::Concrete(c)
                             if matches!(unparenthesize(c.value), Expression::Array(_) | Expression::LegacyArray(_)))
@@ -283,7 +303,7 @@ fn own_property_is_array(ancestors: &[Node<'_, '_>], name: &[u8], non_typed: Non
             }
         }
         ClassLikeMember::Property(Property::Hooked(p)) => {
-            matches!(p.hint, Some(Hint::Array(_))) && &p.item.variable().name[1..] == name
+            matches!(p.hint, Some(Hint::Array(_))) && &p.item.variable().name[1..] == name && set(&p.item)
         }
         ClassLikeMember::Method(method) if method.name.value.eq_ignore_ascii_case(b"__construct") => {
             method.parameter_list.parameters.iter().any(|p| {

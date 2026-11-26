@@ -1,0 +1,14 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/TypesEverywhere.php"
+		- "../src/DnfTypesEverywhere.php"
+		- "../src/TypedClassConstants.php"
+	disallowedNamespaces:
+		-
+			"class": "Waldo\\Quux\\Blade"
+			"message": "do androids dream of electric sheep?"
+			"disallowInParamTypes": true

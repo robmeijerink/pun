@@ -710,6 +710,20 @@ where
 
                 return Some(first_type);
             }
+
+            // Pun: `File~RemoteDocument` narrowed to `Document` keeps the exclusion, as in
+            // PHPStan's TypeCombinator::intersect() (mago-codex's PATCHES.md).
+            if (first_object.subtracted_type.is_some() || second_object.subtracted_type.is_some())
+                && !first_object.has_intersection_types()
+                && !second_object.has_intersection_types()
+            {
+                return intersect_union_types(
+                    &TUnion::from_atomic(first_type.clone()),
+                    &TUnion::from_atomic(second_type.clone()),
+                    context.codebase,
+                )
+                .map(|narrowed| narrowed.get_single_owned());
+            }
         }
         (
             TAtomic::Scalar(TScalar::ClassLikeString(TClassLikeString::OfType { kind, constraint })),

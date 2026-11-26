@@ -1,0 +1,47 @@
+{
+ "level": 6,
+ "errors": [
+  {
+   "line": 24,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: list<string>",
+   "tip": null
+  },
+  {
+   "line": 38,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: list<string>",
+   "tip": null
+  },
+  {
+   "line": 42,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: list<string>",
+   "tip": null
+  },
+  {
+   "line": 46,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: non-empty-list<string>",
+   "tip": null
+  },
+  {
+   "line": 50,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: non-empty-list<string>",
+   "tip": null
+  },
+  {
+   "line": 55,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: list<string>",
+   "tip": null
+  },
+  {
+   "line": 59,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: non-empty-list<string>",
+   "tip": null
+  }
+ ]
+}

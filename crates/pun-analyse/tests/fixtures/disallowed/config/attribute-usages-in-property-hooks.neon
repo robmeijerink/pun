@@ -1,0 +1,16 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/PropertyHooks.php"
+	disallowedAttributes:
+		-
+			"attribute": "PropertyHooks\\DisallowedAttribute"
+			"allowInMethodsWithAttributes": 
+				- "PropertyHooks\\AllowAttribute"
+		-
+			"attribute": "PropertyHooks\\AllowedExceptAttribute"
+			"allowExceptInMethodsWithAttributes": 
+				- "PropertyHooks\\DenyAttribute"

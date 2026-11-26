@@ -43,6 +43,21 @@ impl Rule for NoDuplicateCaseBody {
         let mut body: Vec<Option<usize>> = (0..cases.len())
             .map(|i| (!lists[i].is_empty()).then_some(i))
             .collect();
+        // Rector 2.9.2's `resolveFallThroughCasesKeys()`: a case with code that the previous case with code runs into.
+        let mut fall_through: Vec<usize> = Vec::new();
+        let mut previous_falls = false;
+        for (i, list) in lists.iter().enumerate() {
+            let Some(last) = list.stmts.last() else {
+                continue;
+            };
+            if previous_falls {
+                fall_through.push(i);
+            }
+            previous_falls = !matches!(
+                last,
+                Statement::Break(_) | Statement::Return(_) | Statement::Continue(_)
+            ) && !matches!(last, Statement::Expression(e) if matches!(e.expression, Expression::Throw(_)));
+        }
         let mut result: Vec<usize> = Vec::new();
         let mut processed: Vec<usize> = Vec::new();
         let mut changed = false;
@@ -65,6 +80,11 @@ impl Rule for NoDuplicateCaseBody {
                     without_stmts.push(inner);
                     continue;
                 };
+                // Moving a case reached by fall-through would change what the previous case runs into.
+                if fall_through.contains(&inner) {
+                    without_stmts.clear();
+                    continue;
+                }
                 if are_equal_and_with_break(ctx, &lists[outer_body], &lists[inner_body]) {
                     for &w in &without_stmts {
                         equal_cases.push(w);

@@ -1,0 +1,3 @@
+includes:
+	- extension.neon
+	- config/bug383-rule-with-defined-in-skips-builtin-functions.neon

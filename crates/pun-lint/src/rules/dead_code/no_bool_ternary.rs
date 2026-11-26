@@ -2,7 +2,7 @@ use crate::problem::{Edit, Fix, Safety};
 use mago_syntax::cst::*;
 
 use crate::rules::complexity::no_boolean_literal_compare::truth;
-use crate::rules::support::expressions::inverse;
+use crate::rules::support::expressions::safe_inverse;
 use crate::rules::support::syntax_types::is_bool;
 use crate::syntax::{node_span, unparenthesize};
 use crate::{Context, OptionsError, Report, Rule};
@@ -57,7 +57,7 @@ impl Rule for NoBoolTernary {
                 if then && !r#else {
                     text(condition)
                 } else {
-                    let Some(inverse) = inverse(&b.operator) else {
+                    let Some(inverse) = safe_inverse(ctx, &b.operator, b.lhs, b.rhs) else {
                         return;
                     };
                     format!("{} {inverse} {}", text(b.lhs), text(b.rhs))
@@ -70,8 +70,8 @@ impl Rule for NoBoolTernary {
                 Expression::UnaryPrefix(u) if matches!(u.operator, UnaryPrefixOperator::Not(_)) => {
                     cast(ancestors, u.operand, &text)
                 }
-                _ if is_bool(ancestors, condition) => format!("!{}", wrapped(condition, &text)),
-                _ => format!("!(bool) {}", wrapped(condition, &text)),
+                // Rector 2.9.2 drops the `(bool)` cast: `!` already gives a bool.
+                _ => format!("!{}", wrapped(condition, &text)),
             },
             _ => return,
         };

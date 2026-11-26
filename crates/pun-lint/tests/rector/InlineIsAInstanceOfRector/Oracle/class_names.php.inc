@@ -66,8 +66,8 @@ trait T
 {
     public function t(object $o)
     {
-        $a = $o instanceof \App\T;
-        $b = $o instanceof \App\T;
+        $a = $o instanceof self;
+        $b = $o instanceof static;
     }
 }
 
@@ -82,19 +82,19 @@ final class C extends Unknown
         $e = is_a($o, parent::class);
         $f = is_a($open->foo(), Open::class);
         $g = is_a($open->bar(), Open::class);
-        $h = ($n ?? $open) instanceof \App\Open;
-        $i = ($open ?? $n) instanceof \App\Open;
+        $h = ($n ?? $open) instanceof Open;
+        $i = ($open ?? $n) instanceof Open;
         $j = is_a($open ?? $open, Open::class);
-        $k = $o instanceof \App\C;
-        $l = -($o instanceof \App\C);
-        $m = @($o instanceof \App\C);
+        $k = $o instanceof static;
+        $l = -($o instanceof static);
+        $m = @($o instanceof static);
         $p = $o instanceof \App\Open;
-        $q = $o instanceof \App\Open;
+        $q = $o instanceof namespace\Open;
         $r = is_a($n?->foo(), Open::class);
         $s = is_a($open::make(), Open::class);
-        $t = $o instanceof \App\Open;
-        $u = $o instanceof \App\Open;
-        $v = $o instanceof \App\Open;
+        $t = $o instanceof Open;
+        $u = $o instanceof Open;
+        $v = $o instanceof Open;
         $w = is_a($o, \stdclass::class);
     }
 }

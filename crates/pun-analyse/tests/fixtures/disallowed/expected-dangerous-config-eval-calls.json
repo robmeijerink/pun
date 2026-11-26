@@ -1,0 +1,152 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling apache_setenv() is forbidden, might overwrite existing variables.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling dl() is forbidden, removed from most SAPIs, might load untrusted code.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 6,
+   "identifier": "disallowed.eval",
+   "message": "Calling eval() is forbidden, eval is evil, please write more code and do not use eval().",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling extract() is forbidden, do not use extract() and especially not on untrusted data.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling posix_getpwuid() is forbidden, might reveal system user information.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling posix_kill() is forbidden, do not send signals to processes from the script.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling posix_mkfifo() is forbidden, do not create named pipes in the script.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling posix_mknod() is forbidden, do not create special files in the script.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling highlight_file() is forbidden, might reveal source code or config files.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling show_source() is forbidden, might reveal source code or config files (alias of highlight_file()).",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling pfsockopen() is forbidden, use fsockopen() to create non-persistent socket connections.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, use some logger instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling print_r() is forbidden, use some logger instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 18,
+   "identifier": "disallowed.function",
+   "message": "Calling proc_nice() is forbidden, changes the priority of the current process.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 19,
+   "identifier": "disallowed.function",
+   "message": "Calling putenv() is forbidden, might overwrite existing variables.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 20,
+   "identifier": "disallowed.function",
+   "message": "Calling socket_create_listen() is forbidden, do not accept new socket connections in the PHP script.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 21,
+   "identifier": "disallowed.function",
+   "message": "Calling socket_listen() is forbidden, do not accept new socket connections in the PHP script.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 22,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden, use some logger instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 23,
+   "identifier": "disallowed.function",
+   "message": "Calling var_export() is forbidden, use some logger instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 25,
+   "identifier": "disallowed.function",
+   "message": "Calling var_export() is forbidden, use some logger instead.",
+   "tip": null
+  },
+  {
+   "file": "src/configs/dangerousCalls.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling phpinfo() is forbidden, might reveal session id or other tokens in cookies.",
+   "tip": "see https://www.michalspacek.com/stealing-session-ids-with-phpinfo-and-how-to-stop-it and use e.g. spaze/phpinfo instead"
+  }
+ ]
+}

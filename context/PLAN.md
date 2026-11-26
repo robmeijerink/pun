@@ -18,7 +18,7 @@ The latest release is v0.3.2.
 - **Priorities, in order:** (1) release tags reach Packagist (§3 Step 5); (2) finish analyse level 0 and levels 1-10;
   (3) the 17 new lint rules; (4) `pun check` in one pass; (5) perf rounds.
 - **Waiting on Pushpak:** the `needs Pushpak` rows in §3 (audit 26, the Packagist hook, `[phpstan-parameters]`,
-  Laravel attributes batch 8, and the others marked so).
+  Laravel attributes batch 8, the six rules Rector 2.9.2 deprecates, and the others marked so).
 
 ## 1. This folder
 
@@ -209,6 +209,17 @@ All from Pushpak unless marked "assistant's call"; dated 2026-10-17 unless given
   `Carbon\DatePeriodBase`. It also gives every class that implements `CarbonInterface` the macros that
   `X::macro('name', ...)` calls register in the analysed, scanned and bootstrap files. Pun reads those calls
   statically, as it reads Larastan's.
+- **phpstan-mockery is built in** (Pushpak, 2026-11-25): `[extensions] mockery = "on"`. `pun init` and
+  `pun migrate` write it when composer.lock locks mockery/mockery or phpstan/phpstan-mockery, and `pun migrate` also
+  when phpstan.neon includes phpstan-mockery. It has no rules and no pun.toml options.
+- **spaze/phpstan-disallowed-calls is built in** (Pushpak, 2026-11-25): `[extensions] disallowed-calls = "on"` runs
+  the `disallowed` analyse group. Its neon parameters are rule options (`[phpstan-parameters]`), not an
+  `[extensions.<x>]` table. `pun migrate` writes the switch from phpstan.neon: `"on"` when PHPStan loads the package,
+  `"off"` when it doesn't and composer.lock locks it, so Pun reports nothing PHPStan didn't.
+- **tomasvotruba/type-coverage is built in** (Pushpak, 2026-11-25): `[extensions] type-coverage = "on"` runs the
+  `type-coverage` analyse group, with its parameters as rule options and migrate's switch as for disallowed-calls.
+  `pun analyse` keeps an error without an identifier (its measure mode) and one whose identifier an extension's
+  config entry names (`Project::extension_identifiers`, for disallowed-calls' `errorIdentifier`).
 
 ### Engines
 
@@ -339,6 +350,9 @@ Done: the gate passed at ea7a84bc2d4c4f4b90ad177d911e6ade3accf253.
 | Work | Status |
 | --- | --- |
 | analyse 3: finish level 0 and the level-2 class rules (counts in §0). Not yet: `debug/dump-scope` and `debug/dump-native-type` | todo |
+| analyse mockery: port phpstan-mockery 2.0.0 into `crates/pun-analyse/src/mockery.rs` (the switch, migrate and oracle are in). Ported; four probe lines still differ (`MockInterface\|mixed`, `\|callable`, `\|array<int>` in Pun's own PHPDoc resolution, and Mockery's `list{}` conditional without the extension): `tests/fixtures/mockery/gaps.txt` | done |
+| analyse disallowed-calls follow-up: mago-syntax parses a statement that starts with `Enum::Foo;` (a class named `Enum`) as an enum declaration, so the `disallowed/*` rules (and every rule) never see the access; 13 lines in `crates/pun-analyse/tests/fixtures/disallowed/gaps.txt` | todo |
+| analyse type-coverage: the seven rector/type-perfect rules type-coverage 2.5.1 bundles (`packages/type-perfect`, off by default, `type_perfect.*` switches) are not ported; the four coverage rules are (`rules/type_coverage.rs`) | todo |
 | analyse Mago 1.61 loop memo: re-enable `statement/loop/memo.rs` (the nested-loop speedup), disabled in the 1.61.0 bump because a hit replays only issues, expression types and assignment targets; its key or replay needs Pun's native lane, `variable_state` and observation artifacts (third_party/mago-analyzer/PATCHES.md "Mago 1.61.0 merge adaptations") | todo |
 | analyse Mago 1.61 parity: on a 60-file Symfony sample at level 9 against PHPStan 2.3.5, the bump brought 37 regressions: 13 lost true positives (e.g. `nullCoalesce.variable` on `??=`, `identical.alwaysFalse`) and 24 new false positives (e.g. `variable.undefined`, `instanceof.alwaysFalse` between mixed and Closure). That sample ran before the 1.61 fix commits up to 386b4efc2. Next: rerun it and fix what is left toward PHPStan | todo |
 | analyse static return coercion: `rules/types/returns.rs` reads a named object returned from a `static` method as `static`, so `return $instance` of type `Foo` from `Foo::create(): static` is accepted; PHPStan reports `return.type` (GAPS in tests/coverage.rs, trait-private-members) | todo |
@@ -459,6 +473,7 @@ Left for 1.0: the rule docs content (below), name checks, signing and publishing
 
 | Work | Status |
 | --- | --- |
+| Rector 2.9.2 deprecates six rules Pun ports (their refactor() throws): `NewlineAfterStatementRector` (`lint/style/require-statement-padding`, lint-strict preset; also out of Rector's coding-style set), `FuncCallToConstFetchRector` (`lint/refactor/replace-function-with-constant`, out of coding-style too), `RenameStringRector`, `StaticCallToNewRector`, `WrapReturnRector` and `AttributeKeyToClassConstFetchRector` (`lint/refactor/rename-string`, `replace-static-with-new`, `wrap-return`, `replace-attribute-value-with-constant`). §2 "One-to-one with upstream" says a rule upstream deprecates is not supported. Kept for now as `pun_only` rules, with the Rector entries `unsupported`. The other option: delete the six rules (a pun.toml naming one becomes a config error) | needs Pushpak |
 | tests: crates/pun-phpstan/tests/php.rs `php_helpers` fails on macOS on two error offsets (`/a)/` gives 2, PHP 1; `/(?<1a>x)/` gives 4, PHP 3); the linked pcre2 likely differs from PHP's PCRE2 | todo |
 | CI: CLI polish item 7 (`script` check in CI, skip message in tests/migrate.rs) | todo (stopped by Pushpak) |
 | harness: lint and analyse modes (plan/foundations.md §2 Build 2-3; pun-harness has only `format`) | todo |
@@ -503,6 +518,7 @@ Left for 1.0: the rule docs content (below), name checks, signing and publishing
 | packages: finish steps 8 and 9 (plan/packages.md): `pun update` against `composer update` on every corpus project and 20 recorded partial updates, `vcs`, `git` and `artifact` repositories, and the root `filter.summary-url` | todo |
 | packages: resolver memory (227 MB on pinkary against Composer's 166 MB): the arena keeps all 19,799 versions of the pool after the optimizer leaves the solver 1,789 | todo |
 | packages: `check-platform-reqs` follow-up: a composer.json, installed.json or composer.lock that isn't valid JSON gets only the first line of Composer's message, without jsonlint's description of the error; and composer.json isn't checked against Composer's schema (only "not an object" is). Once `pun composer validate` (its jsonlint and schema ports) lands, read the files through it: the `FIRST_LINE_ONLY` and `NEEDS_THE_SCHEMA` cases in crates/pun-cli/tests/check_platform_reqs.rs, and the `FIRST_LINE_ONLY` ones of licenses.rs and suggests.rs (`licenses` and `suggests` read the lock the same way). Also left: Composer's global options other than `-d` and `-n` (`-q`, `--ansi`, `--no-plugins`, ...) before the command's name; the debug lines of `-vv` and `-vvv`; global plugins in `COMPOSER_HOME`; and the order of several plugin warnings (`PackageSorter`) | todo |
+| packages: `php::float` writes a number from 1e17 up in full (`100000000000000000000`) where PHP's `json_encode` writes `1.0e+20`, so a composer.json with such a number in `extra` gets another content hash than Composer's (crates/pun-packages/src/lock.rs `content_hash`); the same writer makes installed.json and the lock. Port PHP's float output (`serialize_precision` -1) and check each writer against Composer | todo |
 | packages: workspace follow-ups (plan/packages.md §7.1): the stale-lock check counting members' requirements, `--workspace` for run-script, check, format, lint and analyse, and the validate checks for diverging constraints | todo |
 | packages: the rest of plan/packages.md step 7: the package, installer, pool and download events through the plugin host, custom installer paths (composer/installers), plugin commands, the allow-plugins prompt, and the extension-installer and phpcodesniffer-composer-installer ports | todo |
 | extensions (plan/extensions.md Migration): 5.4 (node callbacks and `finish` in `AnalyseExtension`) is next, then 6 (mapping fragments) with 7 (the `crates/pun-ext-*` crates) | doing |

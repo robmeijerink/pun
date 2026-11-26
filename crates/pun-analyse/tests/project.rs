@@ -341,3 +341,32 @@ fn reported_identifiers_and_general_errors() {
         ]
     );
 }
+
+#[test]
+fn extension_identifiers_are_reported() {
+    // An identifier an extension's config entry names (disallowed-calls' `errorIdentifier`) is kept though no rule
+    // claims it: the trait's error is reported and the comment ignores the other, as PHPStan does (in its order).
+    let file = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/project/reported/a.php");
+    let mut project = Project::new(vec![file], Vec::new());
+    project.reported = Some(std::sync::Arc::new(|id: &str| id != "function.notFound"));
+    project.extension_identifiers = ["function.notFound".to_string()].into();
+    let analysis = pun_analyse::analyse_project(&project).unwrap();
+    let got: Vec<_> = (analysis.errors.iter())
+        .map(|e| (e.line, e.identifier.as_str(), e.message.as_str()))
+        .collect();
+    assert_eq!(
+        got,
+        [
+            (
+                17,
+                "class.notFound",
+                "Instantiated class ReportedMissing not found."
+            ),
+            (
+                7,
+                "function.notFound",
+                "Function missing_in_trait not found."
+            ),
+        ]
+    );
+}

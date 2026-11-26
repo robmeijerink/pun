@@ -348,6 +348,7 @@ impl<'ast, 'arena> MutWalker<'ast, 'arena, ()> for Checker<'_, 'arena> {
         declarations::constant(self, k);
         constants::class_constant(self, k);
         missing_types::class_constant(self, k);
+        type_coverage::constant(self, k);
         phpdoc_types::class_constant(self, k);
         types::class_constant(self, k);
         attributes::check(
@@ -427,6 +428,7 @@ impl<'ast, 'arena> MutWalker<'ast, 'arena, ()> for Checker<'_, 'arena> {
         let end = mago_span::Position::new(program.source_text.len() as u32);
         phpdoc_tags::nop(self, Span::new(program.file_id, end, end));
         self.pop_frame();
+        disallowed::check(self, program);
     }
     fn walk_in_namespace(&mut self, n: &'ast Namespace<'arena>, (): &mut ()) {
         let name = n.name.as_ref().map(|id| self.resolved(id));

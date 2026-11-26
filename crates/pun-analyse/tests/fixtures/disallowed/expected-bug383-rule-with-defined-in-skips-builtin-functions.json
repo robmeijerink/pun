@@ -1,0 +1,61 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 14,
+   "identifier": "disallowed.function",
+   "message": "Calling __() is forbidden. [__() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 15,
+   "identifier": "disallowed.function",
+   "message": "Calling MyNamespace\\__() is forbidden. [MyNamespace\\__() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 16,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden. [Foo\\Bar\\Waldo\\foo() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden. [Foo\\Bar\\Waldo\\config() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 36,
+   "identifier": "disallowed.function",
+   "message": "Calling __() is forbidden. [__() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 37,
+   "identifier": "disallowed.function",
+   "message": "Calling MyNamespace\\__() is forbidden. [MyNamespace\\__() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 38,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\foo() is forbidden. [Foo\\Bar\\Waldo\\foo() matches *()]",
+   "tip": null
+  },
+  {
+   "file": "src/bugs/Bug383RuleWithDefinedInSkipsBuiltinFunctions.php",
+   "line": 39,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden. [Foo\\Bar\\Waldo\\config() matches *()]",
+   "tip": null
+  }
+ ]
+}

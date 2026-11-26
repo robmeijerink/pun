@@ -184,7 +184,7 @@ function arrays($a): array
     return (array) $a;
 }
 
-function objects($a): \stdClass
+function objects($a): object
 {
     return (object) $a;
 }

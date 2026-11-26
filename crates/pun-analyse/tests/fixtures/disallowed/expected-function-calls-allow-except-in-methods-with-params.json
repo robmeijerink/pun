@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/RoyaleExceptWithParams.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/RoyaleExceptWithParams.php",
+   "line": 13,
+   "identifier": "disallowed.function",
+   "message": "Calling strtolower() is forbidden.",
+   "tip": null
+  }
+ ]
+}

@@ -34,6 +34,9 @@ impl Rule for AddReturnTypeFromCast {
         let Some(r#type) = cast_type(body) else {
             return;
         };
+        if r#type == "object" && ctx.php_version.id() < 70200 {
+            return;
+        }
         let scope = class_scope(ancestors);
         let place = Place {
             facts: &facts(ctx),
@@ -88,7 +91,8 @@ fn cast_of(expr: &Expression<'_>) -> Option<&'static str> {
         }
         UnaryPrefixOperator::BoolCast(..) | UnaryPrefixOperator::BooleanCast(..) => scalar("bool"),
         UnaryPrefixOperator::ArrayCast(..) => Some("array"),
-        UnaryPrefixOperator::ObjectCast(..) => Some("\\stdClass"),
+        // Rector 2.9.2: `(object)` passes an object through unchanged, so only `object` is safe.
+        UnaryPrefixOperator::ObjectCast(..) => Some("object"),
         _ => None,
     }
 }

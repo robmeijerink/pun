@@ -16,6 +16,7 @@ pun lint                         # report problems
 pun lint --fix                   # apply fixes
 pun lint -A lint/style           # turn a group off for this run
 pun lint --max-warnings 10       # fail on more than 10 warnings
+pun lint --generate-baseline     # accept current problems
 ```
 
 ## Options
@@ -23,6 +24,7 @@ pun lint --max-warnings 10       # fail on more than 10 warnings
 | Option | Description |
 | --- | --- |
 | `--fix` | Apply the fixes. Skips rules with `fix = "off"`. |
+| `--generate-baseline [<file>]` | Save every current problem to a baseline and exit 0. Default file: `[lint] baseline`, else `pun-lint-baseline.toml`. When a file fails (a syntax error, say), nothing is written and the run says so. |
 | `-A`, `--allow <rule>` | Turn a rule or group off. |
 | `-W`, `--warn <rule>` | Turn a rule or group on as a warning. |
 | `-D`, `--deny <rule>` | Turn a rule or group on as an error. |
@@ -41,6 +43,7 @@ Lint also takes the file options of [`pun format`](/docs/commands/format#options
 - Checks each file and prints the problems.
 - With `--fix`, edits the files. It does not format them, so use `pun check --fix` for both.
 - Only `error` rules fail the run. `warn` rules only report.
+- Hides problems listed in the baseline (`[lint] baseline`), after `@pun-ignore` comments. Each entry is a file, rule, message and count, without a line, so moving code keeps it hidden. Entries nothing matches any more get a note. `--fix` still fixes what the baseline hides. Without `--fix`, a file's diff leaves out the changes of the rules the baseline hides there.
 - Reads standard input (`-` or `--stdin-filename`) only with `--fix`, and prints the fixed code. Without `--fix`, standard input is a run error (exit 2): pass the files to check instead.
 - Skips Blade, `vendor/`, `bootstrap/cache`, `build`, `node_modules` and `storage`.
 
@@ -54,6 +57,11 @@ preset = "recommended"
 "style/no-short-ternary" = "off"
 ```
 
+```toml pun.toml
+[lint]
+baseline = "pun-lint-baseline.toml"
+```
+
 To ignore one line, add `// @pun-ignore <rule> -- <reason>`. See [ignore comments](/docs/configuration/ignore-comments).
 
 ## Limitations
@@ -62,6 +70,8 @@ To ignore one line, add `// @pun-ignore <rule> -- <reason>`. See [ignore comment
 - A group turns on only the rules Pun has. Naming a Planned rule directly is a config error.
 - Rules from PHP-CS-Fixer accept only `@pun-ignore-file`, not line or region ignores.
 - An overriding method gets a return type only when both classes are in `vendor/`, or both are outside it.
+- Rules from PHP-CS-Fixer report a file, not each place they would change, so their baseline entries count files: a new problem in a file the baseline lists for that rule stays hidden.
+- The lint baseline is separate from `[analyse] baseline`. `pun check` reads both.
 
 ## Exit codes
 

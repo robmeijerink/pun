@@ -1,0 +1,48 @@
+{
+ "phpstan": "2.3.5",
+ "level": 10,
+ "errors": [
+  {
+   "file": "rows.php",
+   "line": 66,
+   "identifier": "missingType.generics",
+   "message": "Class TraitUseTemplates\\Crate uses generic trait TraitUseTemplates\\HoldsRows but does not specify its types: TRow"
+  },
+  {
+   "file": "rows.php",
+   "line": 82,
+   "identifier": "method.childParameterType",
+   "message": "Parameter #1 $rows (list<TraitUseTemplates\\Pear>) of method TraitUseTemplates\\WrongBasket::describe() should be compatible with parameter $rows (list<TraitUseTemplates\\Apple>) of method TraitUseTemplates\\HoldsRows::describe()"
+  },
+  {
+   "file": "rows.php",
+   "line": 90,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: TraitUseTemplates\\Apple"
+  },
+  {
+   "file": "rows.php",
+   "line": 91,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: TraitUseTemplates\\Apple|null"
+  },
+  {
+   "file": "rows.php",
+   "line": 92,
+   "identifier": "phpstan.dumpType",
+   "message": "Dumped type: object|null"
+  },
+  {
+   "file": "rows.php",
+   "line": 93,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $rows of method TraitUseTemplates\\Basket::hold() expects list<TraitUseTemplates\\Apple>, array{TraitUseTemplates\\Pear} given."
+  },
+  {
+   "file": "rows.php (in context of class TraitUseTemplates\\WrongBasket)",
+   "line": 30,
+   "identifier": "argument.type",
+   "message": "Parameter #1 $rows of method TraitUseTemplates\\WrongBasket::describe() expects list<TraitUseTemplates\\Pear>, list<TraitUseTemplates\\Apple> given."
+  }
+ ]
+}

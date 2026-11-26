@@ -25,13 +25,14 @@ pun check --format=github
 | `--fix` | Apply format and lint fixes. Analyse never edits files. |
 | `--concise` | One line per problem. |
 
-Check also takes the options of [`pun format`](/docs/commands/format#options) and [`pun lint`](/docs/commands/lint#options).
+Check also takes the options of [`pun format`](/docs/commands/format#options) and [`pun lint`](/docs/commands/lint#options), except `--generate-baseline`.
 
 ## What happens
 
 - Runs format, then lint, then analyse.
 - Prints the results grouped by command, then one summary line.
 - Without `--fix`, changes nothing.
+- Hides lint problems listed in `[lint] baseline` and analyse errors listed in `[analyse] baseline`. Make them with `pun lint --generate-baseline` and `pun analyse --generate-baseline`. A diff leaves out the lint changes the baseline hides.
 - Reads standard input (`-` or `--stdin-filename`) only with `--fix`. Without `--fix`, standard input is a run error (exit 2).
 
 ```text

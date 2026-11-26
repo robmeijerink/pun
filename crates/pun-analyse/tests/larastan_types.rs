@@ -41,6 +41,31 @@
 //! to an `object{...}` shape and a template bound to one: `@property` tags only with `__get`, Larastan's model
 //! columns and key, native, protected and static properties, and the property types) has its assertions and errors
 //! from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a Laravel 13 app with the same `users` table.
+//! Type/PunNullsafeRelationsTest.json (a relation property read through `?->`, then a method chain and `??`) has
+//! its assertions from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a Laravel 13 app.
+//! Type/PunNullableModelColumnsTest.json (a migration column read with `->` on a nullable model, as from
+//! `Collection::first()`) has its assertions and errors from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a
+//! Laravel 13 app with the same `users` table.
+//! Type/PunTemplateRelationCollectionsTest.json (`get()` on a `HasMany` whose related model is a template, a
+//! `collection-of` holding the template) has its assertion from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a
+//! Type/PunPaginatorThroughTest.json (`through()` on the paginators, whose `@return $this` reads its
+//! `@phpstan-this-out`) has its assertions and errors from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a
+//! Laravel 13 app.
+//! Type/PunAuthContractsTest.json (methods on the Authenticatable, CanResetPassword and Authorizable contracts found
+//! on the auth model, as AuthsMethodsExtension finds them) has its assertions and errors from PHPStan 2.3.7 with
+//! Larastan 3.15.0 at level 8 in a Laravel 13 app whose first auth model also extends `Illuminate\Foundation\Auth\User`.
+//! Type/PunUntypedFactoriesTest.json (`Model::factory()` of a model whose untyped `newFactory()` and unbound
+//! HasFactory name no concrete factory, which ModelFactoryDynamicStaticMethodReturnTypeExtension types as an
+//! ErrorType) has its assertions and errors from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a Laravel 13 app.
+//! Type/PunTableAttributeTest.json (Laravel 13's `#[Table]` naming a model's table, named or positional, inherited by a
+//! subclass, and a declared `$table` winning over it) has its assertions and errors from PHPStan 2.3.7 with Larastan
+//! 3.15.0 at level 8 in a Laravel 13 app with a `users` table.
+//! Type/PunPackageViewsTest.json (`namespace::view` names a provider registers with `loadViewsFrom()`, here
+//! root/vendor/orchestra/testbench-core/laravel/app/Providers/PunViewsServiceProvider.php) has its errors from PHPStan
+//! 2.3.7 with Larastan 3.15.0 at level 8 in a Laravel 13 app whose registered provider loads the same views.
+//! Type/PunVendorMixinsTest.json (a mixin a discovered package's provider registers, its class found through the
+//! package's PSR-4 autoload: root/vendor/pun/vendor-mixins, listed in root/vendor/composer/installed.json) has its
+//! assertion from PHPStan 2.3.7 with Larastan 3.15.0 at level 8 in a Laravel 13 app with the same package installed.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};

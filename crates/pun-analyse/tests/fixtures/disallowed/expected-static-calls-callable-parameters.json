@@ -1,0 +1,810 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 23,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 24,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 25,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 26,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 28,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 29,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 40,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 41,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 42,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 43,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 45,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 46,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 47,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 49,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 50,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 51,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 52,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 54,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 55,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 56,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 57,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 63,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 64,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 65,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 66,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 69,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 70,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 71,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 72,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 73,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 74,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 75,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 76,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 77,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 78,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 79,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 80,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 81,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 82,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 84,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 85,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 86,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 87,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 88,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 89,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 90,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 91,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 92,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 93,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 94,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 95,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 96,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 97,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 99,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 100,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 101,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 102,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 103,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 104,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 105,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 106,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 107,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 108,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 109,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 110,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 111,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 112,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 113,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 114,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 115,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 117,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 118,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 119,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 120,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 121,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 122,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 123,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 124,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 125,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 126,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 127,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 128,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 129,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 130,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 131,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 132,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 155,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceCall() (as CallbacksPlusPlus::interfaceCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 156,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceStaticCall() (as CallbacksPlusPlus::interfaceStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 157,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitCall() (as CallbacksPlusPlus::traitCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 158,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitStaticCall() (as CallbacksPlusPlus::traitStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 160,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceCall() (as CallbacksPlusPlus::interfaceCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 161,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceStaticCall() (as CallbacksPlusPlus::interfaceStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 162,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitCall() (as CallbacksPlusPlus::traitCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 163,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitStaticCall() (as CallbacksPlusPlus::traitStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 165,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceCall() (as CallbacksPlusPlus::interfaceCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 166,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksInterface::interfaceStaticCall() (as CallbacksPlusPlus::interfaceStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 167,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitCall() (as CallbacksPlusPlus::traitCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 168,
+   "identifier": "disallowed.method",
+   "message": "Calling CallbacksTrait::traitStaticCall() (as CallbacksPlusPlus::traitStaticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 176,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 177,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 178,
+   "identifier": "disallowed.function",
+   "message": "Calling var_dump() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 179,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 180,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 181,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 182,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 183,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 184,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::call() (as Callbacks2::call()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 185,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 186,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 187,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 188,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 189,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 190,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 191,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/callableParameters.php",
+   "line": 192,
+   "identifier": "disallowed.method",
+   "message": "Calling Callbacks::staticCall() (as Callbacks2::staticCall()) is forbidden.",
+   "tip": null
+  }
+ ]
+}

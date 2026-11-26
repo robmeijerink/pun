@@ -1,0 +1,20 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/AttributeMethods.php"
+	disallowedAttributes:
+		-
+			"attribute": "AttributeMethods\\SomeAttribute"
+			"allowInMethods": 
+				- "*::action*()"
+		-
+			"attribute": "AttributeMethods\\AnotherAttribute"
+			"allowExceptInMethods": 
+				- "*::forbidden*()"
+		-
+			"attribute": "AttributeMethods\\FuncAttribute"
+			"allowInFunctions": 
+				- "AttributeMethods\\allowed*()"

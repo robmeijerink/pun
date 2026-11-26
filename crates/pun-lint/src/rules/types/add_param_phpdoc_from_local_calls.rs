@@ -142,7 +142,10 @@ fn local_method_calls<'ast, 'arena>(
                 Node::PartialApplication(PartialApplication::Method(c)) => {
                     (Caller::Object(c.object), &c.method, None)
                 }
-                Node::PartialApplication(PartialApplication::StaticMethod(_)) => return,
+                // Rector 2.9.2 resolves the class of `self::method(...)` too
+                Node::PartialApplication(PartialApplication::StaticMethod(c)) => {
+                    (Caller::Class(c.class), &c.method, None)
+                }
                 _ => return,
             };
             let ClassLikeMemberSelector::Identifier(id) = selector else {

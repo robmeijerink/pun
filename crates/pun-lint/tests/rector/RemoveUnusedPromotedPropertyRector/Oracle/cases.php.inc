@@ -89,11 +89,14 @@ final class Mixed
 {
     /**
      * @param int $a
+     * @param int $b
      */
     public function __construct(
         private int $a,
+        int $b,
         protected int $c,
         int $d,
+        int &$e,
         private int $f = 1,
     ) {
         echo $d;

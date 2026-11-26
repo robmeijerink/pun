@@ -36,12 +36,16 @@ impl Rule for NoConstantCondition {
         let view = if_view(source, r#if);
         let empty_else = view.else_.as_ref().is_some_and(|(l, _)| l.is_empty());
         let else_ = view.else_.as_ref().filter(|_| !empty_else);
-        let kept: Vec<usize> = (0..view.elseifs.len())
-            .filter(|&i| {
-                let (condition, list, _) = &view.elseifs[i];
-                !list.is_empty() || has_side_effect(ancestors, condition)
-            })
-            .collect();
+        // Rector 2.9.2: an empty elseif still stops later branches, so only trailing ones go, and only without an else.
+        let mut k = view.elseifs.len();
+        while else_.is_none() && k > 0 {
+            let (condition, list, _) = &view.elseifs[k - 1];
+            if !list.is_empty() || has_side_effect(ancestors, condition) {
+                break;
+            }
+            k -= 1;
+        }
+        let kept: Vec<usize> = (0..k).collect();
         let elseifs_changed = kept.len() != view.elseifs.len();
         let (list, index) = enclosing(source, s, ancestors);
         let span = node_span(s);
@@ -49,7 +53,10 @@ impl Rule for NoConstantCondition {
         let commented = list.with_comments(ctx, index).start != span.start;
         let dead =
             view.stmts.is_empty() && !commented && !has_side_effect(ancestors, view.condition);
-        let edits = if !dead || (!kept.is_empty() && else_.is_some()) {
+        // An empty `if` merges into a single elseif after it; a trailing else, or later elseifs, would then run when
+        // the original's empty `if` caught the case.
+        let merge = dead && (kept.is_empty() || (kept.len() == 1 && else_.is_none()));
+        let edits = if !merge {
             if !empty_else && !elseifs_changed {
                 return;
             }
@@ -64,22 +71,14 @@ impl Rule for NoConstantCondition {
             } else {
                 kept_edits(ctx, span.start, &view, &kept, empty_else)
             }
-        } else if let Some((&first, rest)) = kept.split_first() {
+        } else if let Some(&first) = kept.first() {
             let (condition, first_list, _) = &view.elseifs[first];
             let condition = format!(
                 "{} && {}",
                 inverted_condition(source, view.condition),
                 and_operand(source, condition)
             );
-            let mut text = format!("if ({condition}) {}", braced(ctx, first_list, indent));
-            for &i in rest {
-                text.push(' ');
-                text.push_str(&elseif_text(ctx, &view, i, indent));
-            }
-            if let Some((else_list, else_span)) = else_ {
-                text.push(' ');
-                text.push_str(&else_text(ctx, &view, else_list, *else_span, indent));
-            }
+            let text = format!("if ({condition}) {}", braced(ctx, first_list, indent));
             vec![Edit::new(span, text)]
         } else if let Some((else_list, _)) = else_ {
             let condition = inverted_condition(source, view.condition);
@@ -115,16 +114,6 @@ fn and_operand(source: &str, expr: &Expression<'_>) -> String {
     } else {
         text.to_string()
     }
-}
-
-fn elseif_text(ctx: &crate::Context<'_>, view: &IfView<'_>, i: usize, indent: &str) -> String {
-    let source = ctx.source;
-    let (condition, list, span) = &view.elseifs[i];
-    if view.colon {
-        let condition = &source[range(unparenthesize(condition))];
-        return format!("elseif ({condition}) {}", braced(ctx, list, indent));
-    }
-    source[span.start..span.end].to_string()
 }
 
 fn else_text(

@@ -37,9 +37,12 @@ impl<'a> Checker<'a, '_> {
             .filter_map(|n| self.codebase.get_class_like(n.as_bytes()))
     }
 
+    /// The `@mixin` types a property lookup reads. A mixin with the class's own span is Pun's forward of a Laravel
+    /// contract (larastan/app.rs `contract_mixins()`), which Larastan's ContractsMethodsExtension and
+    /// AuthsMethodsExtension give methods only.
     pub(super) fn mixins(&self, k: &'a ClassLikeMetadata) -> Vec<Type> {
         self.lineage(k)
-            .flat_map(|a| a.mixins.iter())
+            .flat_map(|a| a.mixins.iter().filter(move |m| m.span != a.span))
             .map(|m| self.to_phpstan(&m.type_union))
             .collect()
     }

@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/namespaceUsagesExcludeAttribute.php",
+   "line": 17,
+   "identifier": "new.interface",
+   "message": "Cannot instantiate interface NoBigDeal\\PrivateClass.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/namespaceUsagesExcludeAttribute.php",
+   "line": 17,
+   "identifier": "disallowed.class",
+   "message": "Class NoBigDeal\\PrivateClass is forbidden, no private modules. [NoBigDeal\\PrivateClass matches NoBigDeal\\*]",
+   "tip": null
+  }
+ ]
+}

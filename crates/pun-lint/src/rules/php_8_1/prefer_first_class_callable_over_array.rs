@@ -1,4 +1,4 @@
-//! Rector 2.8.4's `ArrayToFirstClassCallableRector`, with `ArrayCallableMethodMatcher` and the array context the
+//! Rector 2.9.2's `ArrayToFirstClassCallableRector`, with `ArrayCallableMethodMatcher` and the array context the
 //! `ContextNodeVisitor` and `CallLikeReflectionNodeVisitor` decorate.
 
 use mago_codex::metadata::CodebaseMetadata;
@@ -7,7 +7,7 @@ use mago_codex::ttype::atomic::TAtomic;
 use mago_codex::ttype::atomic::object::TObject;
 use mago_syntax::cst::{
     Access, Argument, ArrayElement, ClassLikeConstantSelector, ClassLikeMemberSelector, Expression,
-    Literal, MagicConstant, Node, NodeKind, Statement, Variable,
+    FunctionLikeReturnTypeHint, Hint, Literal, MagicConstant, Node, NodeKind, Statement, Variable,
 };
 
 use crate::problem::{Edit, Safety};
@@ -191,6 +191,9 @@ fn skipped_context(
         .iter()
         .rev()
         .find(|a| !matches!(a, Node::Expression(_)));
+    if is_return_not_accepting_closure(ctx, ancestors) {
+        return true;
+    }
     match parent {
         // `processArrayInSerializedCallableKey`
         Some(Node::KeyValueArrayElement(element)) => {
@@ -202,6 +205,55 @@ fn skipped_context(
         }
         _ => false,
     }
+}
+
+/// `IS_RETURN_NOT_ACCEPTING_CLOSURE`: the array is returned (`return [...]`, or an arrow function's body) from a
+/// function-like whose native return type takes an array but not a `Closure`.
+fn is_return_not_accepting_closure(ctx: &Context<'_>, ancestors: &[Node<'_, '_>]) -> bool {
+    let mut up = ancestors
+        .iter()
+        .rev()
+        .filter(|a| !matches!(a, Node::Expression(_) | Node::Parenthesized(_)));
+    let hint = match up.next() {
+        Some(Node::ArrowFunction(f)) => f.return_type_hint.as_ref(),
+        Some(Node::Return(_) | Node::Statement(Statement::Return(_))) => {
+            match ancestors.iter().rev().find(|a| {
+                matches!(
+                    a,
+                    Node::Function(_) | Node::Method(_) | Node::Closure(_) | Node::ArrowFunction(_)
+                )
+            }) {
+                Some(Node::Function(f)) => f.return_type_hint.as_ref(),
+                Some(Node::Method(m)) => m.return_type_hint.as_ref(),
+                Some(Node::Closure(c)) => c.return_type_hint.as_ref(),
+                _ => None,
+            }
+        }
+        _ => return false,
+    };
+    let Some(FunctionLikeReturnTypeHint { hint, .. }) = hint else {
+        return false;
+    };
+    let hint = match hint {
+        Hint::Nullable(n) => n.hint,
+        h => h,
+    };
+    let mut names = Vec::new();
+    let mut stack = vec![hint];
+    while let Some(h) = stack.pop() {
+        match h {
+            Hint::Union(u) => stack.extend([u.right, u.left]),
+            Hint::Intersection(_) | Hint::Parenthesized(_) => return false,
+            Hint::Identifier(id) => names.push(
+                resolve_class_name(ancestors, id)
+                    .trim_start_matches('\\')
+                    .to_ascii_lowercase(),
+            ),
+            other => names.push(text(ctx, other).to_ascii_lowercase()),
+        }
+    }
+    let has = |list: &[&str]| names.iter().any(|n| list.contains(&n.as_str()));
+    !has(&["callable", "closure", "mixed", "object"]) && has(&["array", "iterable"])
 }
 
 /// Not in Rector: the value a file under a `config/` directory returns, outside any function or class. Laravel's

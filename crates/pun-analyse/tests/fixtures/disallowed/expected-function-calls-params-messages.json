@@ -1,0 +1,47 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 5,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden, nothing.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 6,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden, foo.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 7,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\config() is forbidden, foo & bar.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 8,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() is forbidden, nothing.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 9,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() is forbidden, foo.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCallsParamsMessages.php",
+   "line": 10,
+   "identifier": "disallowed.function",
+   "message": "Calling Foo\\Bar\\Waldo\\bar() is forbidden, foo & bar.",
+   "tip": null
+  }
+ ]
+}

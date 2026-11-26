@@ -1,0 +1,75 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 82,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 83,
+   "identifier": "function.notFound",
+   "message": "Function mocky not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed-allow/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 12,
+   "identifier": "disallowed.function",
+   "message": "Calling shell_exec() is forbidden. [shell_exec() matches shell_*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 17,
+   "identifier": "function.notFound",
+   "message": "Function printfunk not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 46,
+   "identifier": "backtick.deprecated",
+   "message": "Backtick operator is deprecated in PHP 8.5. Use shell_exec() function call instead.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 46,
+   "identifier": "disallowed.backtick",
+   "message": "Using the backtick operator (`...`) is forbidden because shell_exec() is forbidden. [shell_exec() matches shell_*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/functionCalls.php",
+   "line": 98,
+   "identifier": "function.notFound",
+   "message": "Function shell_by not found.",
+   "tip": "Learn more at https://phpstan.org/user-guide/discovering-symbols"
+  }
+ ]
+}

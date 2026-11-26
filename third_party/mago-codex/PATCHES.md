@@ -1341,3 +1341,62 @@ only for the shape's own properties, so a template `T of object{id: string}` (or
 Eloquent model with `@property string $id`, or a class with `public string $id` beside other properties. The check of
 the class's other properties is removed. A public static property no longer counts as the shape's property, as it is
 not an instance property. `pun-analyse/tests/fixtures/larastan-types/Type/PunObjectShapesTest.json` covers it.
+
+## `collection-of` of a template model
+
+`ttype/expander.rs` `collection_of_unresolvable()`: Larastan's `CollectionOfType::getResult()` resolves
+`collection-of<TModel>` while `TModel` is still a template. It picks the collection class from the template's bound
+and keeps the template as the collection's model, giving `Collection<int, TRow of Model>`. mago-analyzer's
+`resolve_union()` calls it (mago-analyzer's PATCHES.md, "`collection-of` returns that hold a template";
+shipfastlabs/pun#38, item 5).
+## Type aliases of a used trait
+
+`ttype/atomic/alias/mod.rs` `TAlias::resolve()`: a trait method analysed in the context of its using class builds its
+inline `@var` types with the using class's name, so `@var list<Node>` named `Catalog`'s alias `Node`, which only the
+trait declares, and resolved to `mixed`. PHPStan resolves the trait's docblocks in the trait's own name scope. An alias
+the class neither declares nor imports is now looked up on the traits it uses (and theirs); a class's own docblocks
+never build such an alias, as its type context does not hold the trait's aliases (shipfastlabs/pun#49).
+`crates/pun-analyse/tests/trait_type_aliases.rs` covers it.
+## `static` of a class with fewer templates
+
+`ttype/expander.rs` `should_use_static_type_params()`: a `static` return carries the arguments filled in for the class
+that declares the method, and they were counted against the receiver class's templates. When the receiver's class
+names fewer (`HasMany<TRelated, TDeclaring>` extending `Relation<TRelated, TDeclaring, TResult>`), the receiver's own
+arguments were dropped, so `$customer->invoices()->clone()` was a bare `HasMany` and the related model's scopes were
+undefined. PHPStan's GenericStaticType keeps the receiver's. They are now counted against the declaring class's
+templates (shipfastlabs/pun#52). `crates/pun-analyse/tests/static_of_fewer_templates.rs` covers it.
+## Trait method copies, parents first
+
+`populator/docblock.rs` `inherit_trait_method_docblocks()`: the classes whose trait method gets its own copy were
+handled in name order, so `AppInvoice` (extending `VendorInvoice`, each using a trait that overrides
+`Model::fireModelEvent()` without types) built its copy before `VendorInvoice` had one and inherited nothing, and its
+`$event` and `$halt` were reported `missingType.parameter`. PHPStan's PhpDocInheritanceResolver walks up to the original
+declaration. The copies are now built parents first (shipfastlabs/pun#60).
+`crates/pun-analyse/tests/trait_override_chains.rs` covers it.
+## Mixed exclusions joined with accessory intersections
+
+`ttype/atomic/mixed/subtraction.rs` `union()`: joining `mixed~X` with a generic array or string that carries an
+accessory (`non-empty-array`, `list`, `hasOffsetValue()`, `non-empty-string`, `numeric-string`, `literal-string`,
+a casing or decimal-integer accessory, `numeric`) now gives plain mixed. PHPStan represents such a value as an
+`IntersectionType` whose conjuncts are not subtractable, and
+[`TypeCombinator::intersectWithSubtractedType()`](https://github.com/phpstan/phpstan-src/blob/95d9e8b0578ebf75439a3744a845ef25417028fa/src/Type/TypeCombinator.php#L1017-L1046)
+returns the mixed without its subtracted type for it. Plain arrays, strings, and constant shapes keep the exclusion.
+This is why `if (is_array($r) && isset($r[0]) && $r[0] instanceof X) { return; }` loses `mixed~Resp` on `$r`:
+the falsey branches join `mixed~Resp` with `non-empty-array&hasOffsetValue(0, mixed~null)` (laravel/ai
+`FakeRerankingGateway::marshalResponse()`). `pun-analyse/tests/fixtures/mixed-subtraction/array-guards.php`
+(namespace `MixedAccessoryJoins`) covers it, with PHPStan 2.3.5 and 2.3.7's identical output in `array-guards.json`.
+## Objects inside a subtracted object's class
+
+`ttype/mod.rs` `intersect_atomic_types()`: intersecting `File~Remote` with a class inside `File` (`Document`) kept
+no result, so `instanceof Document` after `instanceof Remote` narrowed to never. As in TypeCombinator::intersect()'s
+subtractable pass ([`TypeCombinator.php:2170–2200`](https://github.com/phpstan/phpstan-src/blob/95d9e8b0578ebf75439a3744a845ef25417028fa/src/Type/TypeCombinator.php#L2170-L2200), through
+`unionWithSubtractedType()`), the narrower object now keeps the exclusion, restricted to its own class
+(`Document~Remote`), and an object inside the single excluded class is never. Both operands are plain objects;
+object intersections keep their existing conjunction path, as PHPStan flattens them into conjuncts first.
+`ttype/comparator/atomic_comparator.rs` `can_be_identical()`: a subtracted object and another named object overlap
+unless the other lies inside the subtraction (for plain objects), following
+[`ObjectType::isSuperTypeOf()`](https://github.com/phpstan/phpstan-src/blob/95d9e8b0578ebf75439a3744a845ef25417028fa/src/Type/ObjectType.php#L582-L630); the earlier containment check rejected
+`Document` against `File~Remote`, so `$file instanceof Document` was typed `false` and a `match (true)` arm on it
+was skipped as unreachable. mago-analyzer's PATCHES.md ("Instanceof narrowing of subtracted objects") routes the
+reconciler through this intersection. `pun-analyse/tests/fixtures/object-intersections/subtraction.php` (`child`,
+`childAndInterface`, `excluded`, `excludedUnion`, `excludedArm`, `pair`) covers it.

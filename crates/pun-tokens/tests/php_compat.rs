@@ -288,6 +288,27 @@ fn fnmatch_matches_php() {
 }
 
 #[test]
+fn fnmatch_flags_match_php() {
+    let cases = [
+        ("a\\*", "a\\b"),
+        ("a\\*", "a*"),
+        ("FOO*", "foobar"),
+        ("Foo\\*", "foo\\Bar"),
+    ];
+    let want = php_lines(
+        r#"foreach (json_decode(stream_get_contents(STDIN)) as [$p, $s]) foreach ([FNM_NOESCAPE, FNM_CASEFOLD, FNM_NOESCAPE | FNM_CASEFOLD] as $f) echo json_encode(fnmatch($p, $s, $f)), "\n";"#,
+        &serde_json::json!(cases.as_slice()),
+    );
+    let got: Vec<serde_json::Value> = (cases.iter())
+        .flat_map(|(p, s)| {
+            [(true, false), (false, true), (true, true)]
+                .map(|(n, c)| fnmatch_flags(p.as_bytes(), s.as_bytes(), n, c).into())
+        })
+        .collect();
+    assert_eq!(got, want);
+}
+
+#[test]
 fn glob_matches_php() {
     let root = std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join("glob");
     let _ = std::fs::remove_dir_all(&root);

@@ -1,10 +1,12 @@
 use crate::mapping;
 
-const SECTIONS: [&str; 4] = [
+const SECTIONS: [&str; 6] = [
     "phpstan",
     "larastan",
     "phpstan-strict-rules",
     "phpstan-deprecation-rules",
+    "type-coverage",
+    "phpstan-disallowed-calls",
 ];
 
 pub(crate) fn entry(identifier: &str) -> Option<&'static toml::Value> {

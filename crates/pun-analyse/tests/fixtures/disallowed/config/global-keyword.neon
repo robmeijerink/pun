@@ -1,0 +1,14 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/keywords.php"
+		- "../src/disallowed-allow/keywords.php"
+	disallowedKeywords:
+		-
+			"keyword": "global"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

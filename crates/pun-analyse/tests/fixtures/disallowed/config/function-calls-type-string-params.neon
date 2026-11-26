@@ -1,0 +1,156 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/functionCallsTypeStringParams.php"
+		- "../src/disallowed-allow/functionCallsTypeStringParams.php"
+	disallowedFunctionCalls:
+		-
+			"function": "\\Foo\\Bar\\Waldo\\config()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": 
+				-
+					"position": 1
+					"value": "is ignored when typeString is specified"
+					"typeString": "array{foo:'bar'}"
+			"allowParamsAnywhere": 
+				-
+					"position": 2
+					"value": "is ignored when typeString is specified"
+					"typeString": "array{waldo:'baz', pine:'apple', 'orly':array{0, -1}}"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\foo()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParamsInAllowed": 
+				-
+					"position": 1
+					"value": "is ignored when typeString is specified"
+					"typeString": "'foo'|'pizza'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\bar()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParams": 
+				-
+					"position": 1
+					"value": "is ignored when typeString is specified"
+					"typeString": "'bar'|'pub'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\baz()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptCaseInsensitiveParams": 
+				-
+					"position": 1
+					"value": "is ignored when typeString is specified"
+					"typeString": "'inSensitive'|'Just a Little'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\mocky()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"value": "is ignored when typeString is specified"
+					"typeString": "'moc'|'ky'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\arrayParam1()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"disallowParams": 
+				-
+					"position": 1
+					"name": "param"
+					"value": "is ignored when typeString is specified"
+					"typeString": "array{}"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\arrayParam2()"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"name": "param"
+					"value": "is ignored when typeString is specified"
+					"typeString": "non-empty-array"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\intParam1()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamFlagsInAllowed": 
+				-
+					"position": 1
+					"name": "param"
+					"value": 0
+					"typeString": "2"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\intParam2()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamFlagsAnywhere": 
+				-
+					"position": 1
+					"name": "param"
+					"value": 0
+					"typeString": "2|8"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\intParam3()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParamFlagsInAllowed": 
+				-
+					"position": 1
+					"name": "param"
+					"value": 0
+					"typeString": "2|8"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\intParam4()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParamFlags": 
+				-
+					"position": 1
+					"name": "param"
+					"value": 0
+					"typeString": "2|8"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\zeroParam()"
+			"allowParamsAnywhere": 
+				-
+					"position": 1
+					"typeString": "0"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\paramsAnywhereAlias()"
+			"allowExceptParamsAnywhere": 
+				-
+					"position": 1
+					"typeString": "'forbidden'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\paramsAnywhereDisallowAlias()"
+			"disallowParamsAnywhere": 
+				-
+					"position": 1
+					"typeString": "'forbidden'"
+		-
+			"function": "\\Foo\\Bar\\Waldo\\mixedParam1()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParamsInAllowed": 
+				-
+					"position": 1
+					"name": "param"
+					"value": "is ignored when typeString is specified"
+					"typeString": "DateTimeInterface"

@@ -358,10 +358,23 @@ pub(crate) fn resolve(
             joined.entry(error.file.clone()).or_default().push(error);
         }
     }
+    ignore_in_files(&mut errors, joined, sources, explain_ignores);
+    errors
+}
+
+/// Applies each file's `@phpstan-ignore` comments to the errors a collected-data rule joined after every file was
+/// checked (`joined`, by file), and drops the unmatched-ignore errors the per-file pass reported for the lines they
+/// match.
+pub(super) fn ignore_in_files(
+    errors: &mut Vec<Error>,
+    joined: BTreeMap<String, Vec<Error>>,
+    sources: &crate::codebase::Sources,
+    explain_ignores: bool,
+) {
     for (file, joined) in joined {
         let source = sources
             .get(Path::new(&file))
-            .expect("collector calls belong to analysed files");
+            .expect("collected errors belong to files that were read");
         let (mut lines, _) = lines_to_ignore(&source.contents);
         let original = lines.clone();
         let mut unmatched = lines.clone();
@@ -382,7 +395,8 @@ pub(crate) fn resolve(
                         e.identifier.as_deref() == Some("ignore.unmatchedIdentifier")
                             && e.message
                                 == format!(
-                                    "No error with identifier {ID} is reported on line {}.",
+                                    "No error with identifier {} is reported on line {}.",
+                                    ignored.identifier.as_deref().unwrap_or_default(),
                                     ignored.line.unwrap()
                                 )
                     }
@@ -392,5 +406,4 @@ pub(crate) fn resolve(
         }
         errors.extend(kept);
     }
-    errors
 }

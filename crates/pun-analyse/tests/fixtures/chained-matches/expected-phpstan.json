@@ -1,0 +1,17 @@
+{
+ "level": 6,
+ "errors": [
+  {
+   "line": 43,
+   "identifier": "match.alwaysFalse",
+   "message": "Match arm comparison between 'whole' and 'support' is always false.",
+   "tip": null
+  },
+  {
+   "line": 56,
+   "identifier": "match.alwaysFalse",
+   "message": "Match arm comparison between 'support'|'whole' and 'nope' is always false.",
+   "tip": null
+  }
+ ]
+}

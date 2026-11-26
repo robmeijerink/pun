@@ -1,5 +1,5 @@
 //! rector-phpunit's own fixtures for the ported `phpunit` rules, copied verbatim from rectorphp/rector-phpunit at
-//! 22c6dae (rules-tests/...) into tests/rector/<Rector class>/Fixture (and its Source/). Oracle/ holds extra inputs
+//! d0b6caa (rules-tests/...) into tests/rector/<Rector class>/Fixture (and its Source/). Oracle/ holds extra inputs
 //! with what Rector 2.8.4 and that rector-phpunit (`.oracle/rector-ecosystem`, the rule alone, `phpVersion(80400)`)
 //! wrote for them; Pun/ holds the documented cases where Pun differs. A fixture is `input -----\n expected`, or only
 //! the input when the rule must not change it.
@@ -7,7 +7,7 @@
 //! rector-phpunit runs its fixtures with phpunit/phpunit 13.2 installed, so every fixture here sees the PHPUnit
 //! classes of tests/phpunit-stubs (PHPUnit 13.2.6's files with empty method bodies, scripts/export-phpunit-stub.php)
 //! beside its Source/ classes, and the Symfony and Behat classes of rector-phpunit's own stubs/ (tests/rector-phpunit-stubs,
-//! verbatim at 22c6dae).
+//! verbatim at d0b6caa).
 //!
 //! Pun/noargs: a call that lacks the arguments a rule reads (`$this->assertSame()`, `is_a($a)`) makes Rector fail on the
 //! file; Pun leaves the call alone.

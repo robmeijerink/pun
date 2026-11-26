@@ -9,7 +9,7 @@ use crate::rules::support::class_members::{ClassInfo, class_info, is_private, ty
 use crate::rules::support::names::resolve_class_name;
 use crate::rules::support::rewrites::{list_removal, merge, remove_params};
 use crate::rules::types::facts::{Facts, facts};
-use crate::syntax::{node_span, unparenthesize};
+use crate::syntax::{is_this, node_span, unparenthesize};
 use crate::{Context, OptionsError, Report, Rule};
 
 #[derive(Default)]
@@ -227,13 +227,34 @@ fn caller_edits(
                     (c.class, &c.method, Caller::Call(&c.argument_list), true)
                 }
                 Node::MethodPartialApplication(c) => (c.object, &c.method, Caller::Callable, false),
-                Node::StaticMethodPartialApplication(c)
-                    if matches!(c.class, Expression::Self_(_) | Expression::Static(_)) =>
-                {
-                    return true;
-                }
                 Node::StaticMethodPartialApplication(c) => {
                     (c.class, &c.method, Caller::Callable, true)
+                }
+                // Rector 2.9.2's `isUsedAsArrayCallable()`: the code receiving `[$this, 'method']` decides how many
+                // arguments it passes
+                Node::Array(Array { elements, .. })
+                | Node::LegacyArray(LegacyArray { elements, .. }) => {
+                    if let [ArrayElement::Value(first), ArrayElement::Value(second)] =
+                        elements.as_slice()
+                    {
+                        let own = match unparenthesize(first.value) {
+                            Expression::MagicConstant(MagicConstant::Class(_)) => true,
+                            Expression::Access(Access::ClassConstant(fetch)) if matches!(&fetch.constant, ClassLikeConstantSelector::Identifier(c) if c.value.eq_ignore_ascii_case(b"class")) => {
+                                is_class(facts, ancestors, class, fetch.class, true)
+                            }
+                            e => is_this(e),
+                        };
+                        let named = match unparenthesize(second.value) {
+                            Expression::Literal(Literal::String(s)) => {
+                                s.value.is_some_and(|v| v.eq_ignore_ascii_case(name))
+                            }
+                            _ => true,
+                        };
+                        if own && named {
+                            callers.push(Caller::Callable);
+                        }
+                    }
+                    return true;
                 }
                 _ => return true,
             };

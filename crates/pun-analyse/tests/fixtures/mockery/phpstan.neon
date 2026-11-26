@@ -1,0 +1,10 @@
+includes:
+    - ../../../../../.oracle/phpstan/vendor/phpstan/phpstan-mockery/extension.neon
+parameters:
+    level: 9
+    paths:
+        - src
+    scanFiles:
+        - phpunit.php
+    scanDirectories:
+        - vendor

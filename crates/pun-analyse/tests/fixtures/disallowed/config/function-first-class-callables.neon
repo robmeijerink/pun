@@ -1,0 +1,15 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/firstClassCallable.php"
+		- "../src/disallowed-allow/firstClassCallable.php"
+	disallowedFunctionCalls:
+		-
+			"function": "print_r()"
+			"message": "nope"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

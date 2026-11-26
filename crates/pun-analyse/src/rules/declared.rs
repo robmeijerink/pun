@@ -143,7 +143,7 @@ pub(super) fn class_templates(c: &Checker, k: &ClassLikeMetadata) -> Vec<Templat
     templates(doc, &scope, &format!("class {}", original_name(k)))
 }
 
-fn trait_templates(
+pub(super) fn trait_templates(
     c: &Checker,
     t: &ClassLikeMetadata,
     context: &ClassLikeMetadata,
@@ -928,9 +928,16 @@ fn inherit(
         {
             return None;
         }
-        let parent_doc = method_doc(c, declaring.0, &lower, depth + 1)?;
+        // a method a trait gives `parent` is reflected with `parent` as its declaring class, whose own parents the
+        // PHPDoc inheritance walks on to (PhpDocInheritanceResolver)
+        let owner = if declaring.0.kind.is_trait() {
+            parent
+        } else {
+            declaring.0
+        };
+        let parent_doc = method_doc(c, owner, &lower, depth + 1)?;
         let parent_doc = {
-            let map = |t: Type| ancestor_types(class, declaring.0, &t);
+            let map = |t: Type| ancestor_types(class, owner, &t);
             Resolved {
                 params: parent_doc
                     .params
@@ -1292,6 +1299,21 @@ pub(super) fn reflected_phpdoc_signature(
 ) -> (HashMap<String, Type>, Option<Type>) {
     let resolved = reflected_doc(c, f, Some(declaring), name);
     (resolved.params, resolved.ret)
+}
+
+/// The PHPDoc of trait method `f` itself, resolved in `context` with the trait's templates as the class's `@use` gives
+/// them: `context` may override `f`, so `reflected_phpdoc_signature()` would find the override's PHPDoc instead.
+pub(super) fn trait_phpdoc_signature(
+    c: &Checker,
+    f: &FunctionLikeMetadata,
+    t: &ClassLikeMetadata,
+    context: &ClassLikeMetadata,
+) -> Option<(HashMap<String, Type>, Option<Type>)> {
+    let resolved = f
+        .has_docblock
+        .then(|| resolved_own(c, f, t, context))
+        .flatten()?;
+    Some((resolved.params, resolved.ret))
 }
 
 pub(super) fn function_phpdoc(c: &Checker, f: &Function) -> PhpDocTypes {

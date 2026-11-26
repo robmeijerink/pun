@@ -4,7 +4,10 @@ use mago_syntax::cst::{Argument, Expression, Literal, Node, NodeKind};
 
 use crate::problem::{Edit, Safety};
 use crate::rules::support::arguments::value;
-use crate::rules::support::names::function_call_matches_any;
+use crate::rules::support::names::{
+    function_call_matches_any, imported_function, scope_statements,
+};
+use crate::rules::types::facts::facts;
 use crate::syntax::node_span;
 use crate::{Context, Report, Rule};
 
@@ -63,7 +66,7 @@ impl Rule for PreferFirstClassCallableArgument {
         &self,
         node: Node<'ast, 'arena>,
         ancestors: &[Node<'ast, 'arena>],
-        _ctx: &Context<'_>,
+        ctx: &Context<'_>,
         out: &mut Vec<Report>,
     ) {
         let Node::FunctionCall(call) = node else {
@@ -97,11 +100,13 @@ impl Rule for PreferFirstClassCallableArgument {
             if !is_name(callable) {
                 continue;
             }
-            let code = if fully_qualified || callable.contains('\\') {
-                format!("\\{callable}(...)")
-            } else {
-                format!("{callable}(...)")
-            };
+            let code =
+                if fully_qualified || callable.contains('\\') || shadowed(ctx, ancestors, callable)
+                {
+                    format!("\\{callable}(...)")
+                } else {
+                    format!("{callable}(...)")
+                };
             edits.push(Edit::new(node_span(value(arg)), code));
         }
         if edits.is_empty() {
@@ -130,4 +135,17 @@ fn is_name(callable: &str) -> bool {
             && bytes.all(|b| b == b'_' || b.is_ascii_alphanumeric() || b >= 0x80)
     };
     path.split('\\').all(identifier) && method.is_none_or(identifier)
+}
+
+/// Rector 2.9.2's `isShadowedFunction()`: a string callable always names the global function, while a bare name
+/// resolves to a function of the namespace, or a `use function` import, first.
+fn shadowed(ctx: &Context<'_>, ancestors: &[Node<'_, '_>], name: &str) -> bool {
+    if let Some(ns) = scope_statements(ancestors).0
+        && facts(ctx)
+            .codebase
+            .function_exists(format!("{ns}\\{name}").as_bytes())
+    {
+        return true;
+    }
+    imported_function(ancestors, name.as_bytes()).is_some()
 }

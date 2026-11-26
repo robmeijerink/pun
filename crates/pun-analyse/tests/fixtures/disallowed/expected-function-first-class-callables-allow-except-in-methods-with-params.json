@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/RoyaleExceptFirstClassCallable.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  }
+ ]
+}

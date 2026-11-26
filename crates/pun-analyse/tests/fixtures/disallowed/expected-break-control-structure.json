@@ -1,0 +1,82 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 32,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 42,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 52,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 62,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 72,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 82,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 92,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 99,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 101,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 107,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 109,
+   "identifier": "disallowed.break",
+   "message": "Using the break control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

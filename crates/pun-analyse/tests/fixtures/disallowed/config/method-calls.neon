@@ -1,0 +1,102 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/methodCalls.php"
+		- "../src/disallowed-allow/methodCalls.php"
+		- "../src/Bar.php"
+	disallowedMethodCalls:
+		-
+			"method": "Waldo\\Quux\\Blade::run*()"
+			"message": "I've seen tests you people wouldn't believe"
+			"exclude": "Waldo\\Quux\\Blade::runway()"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowParamsInAllowed": 
+				"1": 42
+				"2": true
+				"3": "909"
+		-
+			"method": "Waldo\\Quux\\Blade::movie()"
+			"message": "was good"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Waldo\\Quux\\Blade::sequel()"
+			"message": "too"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Waldo\\Quux\\Blade::Trinity()"
+			"message": "holy trinity"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Inheritance\\Base::x*()"
+			"message": "Base::x*() methods are dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Interfaces\\BaseInterface::x*()"
+			"message": "BaseInterface::x*() methods are dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Traits\\TestTrait::*"
+			"message": "all TestTrait methods are dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "Traits\\AnotherTestClass::zzTop()"
+			"message": "method AnotherTestClass::zzTop() is dangerous"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "PhpOption\\None::getIterator()"
+			"message": "no PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"method": "PhpOption\\Some::getIterator()"
+			"message": "no PhpOption"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"function": "DateTime::format()"
+			"message": "why too kay"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowExceptParams": 
+				"1": "y"
+			"errorTip": "2038 is approaching fast"
+		-
+			"method": "Waldo\\Quux\\Blade::andSorcery()"
+			"message": "use magic"
+			"allowExceptIn": 
+				- "src/disallowed/*.php"
+			"errorTip": 
+				- "Dexempo"
+				- "Multo"
+		-
+			"method": "DateTimeZone::getLocation()"
+			"allowInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"
+		-
+			"method": "DateTimeImmutable::format()"
+			"allowExceptInInstanceOf": 
+				- "\\Waldo\\Foo\\Bar"
+				- "Stringable"

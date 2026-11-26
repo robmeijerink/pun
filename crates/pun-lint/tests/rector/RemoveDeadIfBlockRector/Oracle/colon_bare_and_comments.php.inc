@@ -48,10 +48,8 @@ function f($a, $b, $c) {
     if ($a) {
         echo 1;
     }
-    if ($a): echo 1; elseif ($c): echo 3; endif;
-    if ($a) {
-        echo 1;
-    } else echo 2;
+    if ($a): echo 1; elseif ($b): elseif ($c): echo 3; endif;
+    if ($a) echo 1; elseif ($b) {} else echo 2;
     if ($a) {
         echo 1;
     }
@@ -60,7 +58,8 @@ function f($a, $b, $c) {
     }
     if (!$a && $b = f()) {
     }
-    if (!$a && $b) {
+    if ($a) {
+    } elseif ($b) {
         echo 1;
     } elseif ($c) {
         echo 2;

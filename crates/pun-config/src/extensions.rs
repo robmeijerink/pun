@@ -53,7 +53,39 @@ pub static CARBON: ExtensionMeta = ExtensionMeta {
     packages: &["nesbot/carbon"],
 };
 
-pub static ALL: [&ExtensionMeta; 4] = [&LARAVEL, &PEST, &PHPUNIT, &CARBON];
+pub static MOCKERY: ExtensionMeta = ExtensionMeta {
+    id: "mockery",
+    name: "Mockery",
+    description: "phpstan-mockery's mock types in analyse",
+    groups: &[],
+    packages: &["mockery/mockery", "phpstan/phpstan-mockery"],
+};
+
+pub static DISALLOWED_CALLS: ExtensionMeta = ExtensionMeta {
+    id: "disallowed-calls",
+    name: "Disallowed calls",
+    description: "The calls and uses your config forbids, in analyse",
+    groups: &["disallowed"],
+    packages: &["spaze/phpstan-disallowed-calls"],
+};
+
+pub static TYPE_COVERAGE: ExtensionMeta = ExtensionMeta {
+    id: "type-coverage",
+    name: "Type coverage",
+    description: "Minimum shares of declared types, in analyse",
+    groups: &["type-coverage"],
+    packages: &["tomasvotruba/type-coverage"],
+};
+
+pub static ALL: [&ExtensionMeta; 7] = [
+    &LARAVEL,
+    &PEST,
+    &PHPUNIT,
+    &CARBON,
+    &MOCKERY,
+    &DISALLOWED_CALLS,
+    &TYPE_COVERAGE,
+];
 
 /// The extension that owns `group`, and the version in the group's name when it is a version group.
 pub fn owner(group: &str) -> Option<(&'static ExtensionMeta, Option<&str>)> {

@@ -23,7 +23,7 @@ function negatedAndsOracle($a, $b, $c, $d)
 function negatedAndsOracle($a, $b, $c, $d)
 {
     $r = $a != $b || $c == $d;
-    $r = $a == $b || $c < $d;
+    $r = $a == $b || !($c >= $d);
     $r = !$a || $b;
     $r = !($a + 1) || !($b . $c);
     $r = !$a || !$b = $c;

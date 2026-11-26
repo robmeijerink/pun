@@ -10,6 +10,7 @@ impl Type {
     }
 
     pub(super) fn describe_bytes(&self, level: Level) -> Vec<u8> {
+        let _scope = UnionDescriptions::enter();
         self.describe_with_subtraction(level, None)
     }
 
@@ -399,7 +400,44 @@ impl Type {
     }
 }
 
+/// PHPStan's UnionType keeps its sorted members and each verbosity level's description. Pun's types are plain
+/// values, so a union's description is kept for the length of the outermost `describe_bytes()` instead. Without it,
+/// sorting, joining and generalizing describe each member again, which is exponential in the nesting depth (#43).
+struct UnionDescriptions;
+
+thread_local! {
+    static DEPTH: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static UNIONS: std::cell::RefCell<std::collections::HashMap<String, Vec<u8>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+impl UnionDescriptions {
+    fn enter() -> Self {
+        DEPTH.set(DEPTH.get() + 1);
+        UnionDescriptions
+    }
+}
+
+impl Drop for UnionDescriptions {
+    fn drop(&mut self) {
+        DEPTH.set(DEPTH.get() - 1);
+        if DEPTH.get() == 0 {
+            UNIONS.with_borrow_mut(std::collections::HashMap::clear);
+        }
+    }
+}
+
 fn describe_union(types: &[Type], level: Level) -> Vec<u8> {
+    let key = format!("{level:?}{types:?}");
+    if let Some(described) = UNIONS.with_borrow(|unions| unions.get(&key).cloned()) {
+        return described;
+    }
+    let described = describe_union_uncached(types, level);
+    UNIONS.with_borrow_mut(|unions| unions.insert(key, described.clone()));
+    described
+}
+
+fn describe_union_uncached(types: &[Type], level: Level) -> Vec<u8> {
     let join = |types: &[Type]| -> Vec<u8> {
         let mut names = Vec::new();
         for (i, t) in types.iter().enumerate() {

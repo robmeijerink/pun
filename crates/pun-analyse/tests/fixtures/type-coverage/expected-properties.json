@@ -1,0 +1,61 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "Pun/Edges.php",
+   "line": 27,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 57,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 59,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 111,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 189,
+   "identifier": "ignore.unmatchedIdentifier",
+   "message": "No error with identifier typeCoverage.returnTypeCoverage is reported on line 189.",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 193,
+   "identifier": "ignore.unmatchedLine",
+   "message": "No error to ignore is reported on line 193.",
+   "tip": null
+  },
+  {
+   "file": "Pun/Edges.php",
+   "line": 207,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  },
+  {
+   "file": "Pun/TraitUsers.php",
+   "line": 19,
+   "identifier": "typeCoverage.propertyTypeCoverage",
+   "message": "Out of 9 possible property types, only 3 - 33.3 % actually have it. Add more property types to get over 100 %",
+   "tip": null
+  }
+ ]
+}

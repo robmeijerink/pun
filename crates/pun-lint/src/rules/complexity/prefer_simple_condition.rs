@@ -3,7 +3,7 @@ use mago_syntax::cst::{BinaryOperator, Expression, Node, NodeKind};
 
 use crate::rules::support::conditions::{is_binary_op, match_first_and_second};
 use crate::rules::support::expressions::{
-    Prec, binary, in_parent, infix, inverse, is_constant, moved,
+    Prec, binary, in_parent, infix, is_constant, moved, safe_inverse,
 };
 use crate::rules::support::options::part_on;
 use crate::syntax::{node_span, unparenthesize};
@@ -108,7 +108,7 @@ fn inversed(
     op: &BinaryOperator<'_>,
     rhs: &Expression<'_>,
 ) -> Option<(String, Prec)> {
-    let inverse = inverse(op)?;
+    let inverse = safe_inverse(ctx, op, lhs, rhs)?;
     let (p, l, r) = binary(op);
     Some((infix(ctx, lhs, inverse, rhs, (l, r)), Prec::Infix(p, l, r)))
 }

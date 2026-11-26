@@ -1,6 +1,8 @@
-//! Rector 2.8.4's `IsCountableRector`, and `IsArrayAndDualCheckToAble`, which `IsIterableRector` shares.
+//! Rector 2.9.2's `IsCountableRector`, and `IsArrayAndDualCheckToAble`, which `IsIterableRector` shares.
 
-use mago_syntax::cst::{Binary, BinaryOperator, Expression, Node, NodeKind};
+use mago_syntax::cst::{
+    Access, Binary, BinaryOperator, ClassLikeMemberSelector, Expression, Node, NodeKind,
+};
 
 use crate::problem::{Edit, Safety};
 use crate::rules::support::arguments::unpacked;
@@ -73,7 +75,8 @@ pub(crate) fn dual_check(
         return None;
     }
     let first = crate::rules::support::arguments::value(first);
-    if !equal(ctx, instanceof.lhs, first) {
+    // Rector 2.9.2: the original evaluates the expression twice, so only a side-effect-free one is merged.
+    if !equal(ctx, instanceof.lhs, first) || !side_effect_free(first) {
         return None;
     }
     let span = node_span(binary);
@@ -83,4 +86,29 @@ pub(crate) fn dual_check(
         Safety::Safe,
         vec![Edit::new(span, format!("{function}({})", text(ctx, first)))],
     ))
+}
+
+/// `IsArrayAndDualCheckToAble::isSideEffectFreeExpr()`.
+fn side_effect_free(expr: &Expression<'_>) -> bool {
+    match unparenthesize(expr) {
+        Expression::Variable(_) => true,
+        Expression::Access(Access::Property(p)) => {
+            matches!(p.property, ClassLikeMemberSelector::Identifier(_))
+                && side_effect_free(p.object)
+        }
+        Expression::Access(Access::StaticProperty(p)) => {
+            matches!(
+                p.class,
+                Expression::Identifier(_)
+                    | Expression::Self_(_)
+                    | Expression::Static(_)
+                    | Expression::Parent(_)
+            )
+        }
+        Expression::ArrayAccess(a) => {
+            (matches!(unparenthesize(a.index), Expression::Literal(_)) || side_effect_free(a.index))
+                && side_effect_free(a.array)
+        }
+        _ => false,
+    }
 }

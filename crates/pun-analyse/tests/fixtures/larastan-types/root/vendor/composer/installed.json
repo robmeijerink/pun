@@ -9413,6 +9413,25 @@
                 }
             ],
             "install-path": "../voku/portable-ascii"
+        },
+        {
+            "name": "pun/vendor-mixins",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "type": "library",
+            "install-path": "../pun/vendor-mixins",
+            "autoload": {
+                "psr-4": {
+                    "PunVendorMixins\\": "src/"
+                }
+            },
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PunVendorMixins\\MixinsServiceProvider"
+                    ]
+                }
+            }
         }
     ],
     "dev": true,

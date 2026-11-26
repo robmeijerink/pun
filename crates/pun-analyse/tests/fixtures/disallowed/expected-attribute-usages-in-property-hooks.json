@@ -1,0 +1,103 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 10,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 22,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowSha1 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 29,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 36,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowMd5 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 48,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowedAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 49,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 54,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute PropertyHooks\\DisallowedAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 54,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DisallowedAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 59,
+   "identifier": "disallowed.attribute",
+   "message": "Attribute PropertyHooks\\AllowedExceptAttribute is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 59,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowedExceptAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 60,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DenyAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 62,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowedExceptAttribute does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 73,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\AllowCrc32 does not exist.",
+   "tip": null
+  },
+  {
+   "file": "src/PropertyHooks.php",
+   "line": 74,
+   "identifier": "attribute.notFound",
+   "message": "Attribute class PropertyHooks\\DenyStrlen does not exist.",
+   "tip": null
+  }
+ ]
+}

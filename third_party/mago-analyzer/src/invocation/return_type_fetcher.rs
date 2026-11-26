@@ -186,13 +186,28 @@ where
         invocation.target.get_return_type().cloned()
     };
 
+    // CalledOnTypeUnresolvedMethodPrototypeReflection: a method returning `$this` returns its `@phpstan-this-out`
+    // type, as `LengthAwarePaginator::through()` does
+    let this_out = invocation
+        .target
+        .get_function_like_metadata()
+        .and_then(|metadata| metadata.method_metadata.as_ref())
+        .and_then(|method| method.this_out_type.as_ref());
+    let target_return_type = match (target_return_type, this_out) {
+        (Some(return_type), Some(this_out)) if return_type.types.len() == 1 && return_type.types[0].is_this() => {
+            Some(this_out.type_union.clone())
+        }
+        (return_type, _) => return_type,
+    };
+
     let mut resulting_type = if let Some(return_type) = target_return_type {
         let return_type = if in_body && context.settings.template_arguments.is_on() {
             template_argument_sites(context, invocation, template_result, return_type)
         } else {
             return_type
         };
-        let generalized = generalize_template_arguments(context, &return_type, template_result);
+        let sites = in_body && context.settings.template_arguments.is_on();
+        let generalized = generalize_template_arguments(context, &return_type, template_result, sites);
         let template_result = generalized.as_ref().unwrap_or(template_result);
         let resolved = resolve_invocation_type(context, invocation, template_result, parameters, return_type);
         // a value read out of an object whose arguments are open is derived, see unwrap_bare()
@@ -409,16 +424,19 @@ fn template_argument_sites<A: Arena>(
 }
 
 /// PHPStan's ResolvedFunctionVariantWithOriginal::resolveResolvableTemplateTypes(): a function or method template
-/// whose return type references it in a position that is not covariant (an invariant class template's argument, as
-/// in `static<TValue, TCombineValue>`) resolves to TemplateTypeHelper::generalizeInferredTemplateType() of its
-/// inferred type: a constant value generalized unless the template's bound is scalar, any scalar for an `array-key`
-/// bound. `Collection::combine([1])` is `Collection<TValue, int>`; `wrap(1)` returning `list<T>` stays `list<1>`.
+/// that the return type references inside a generic object (`Box<U>`, `static<TKey, TMapValue>`) resolves to
+/// TemplateTypeHelper::generalizeInferredTemplateType() of its inferred type: a constant value generalized unless the
+/// template's bound is scalar, any scalar for an `array-key` bound. `Collection::combine([1])` is
+/// `Collection<TValue, int>` and `Box<covariant T>::map(fn () => 5)` is `Box<int>`; `wrap(1)` returning `list<T>`
+/// stays `list<1>`. With template argument `sites` (a call in a body under the template argument toggle) only a
+/// reference in a position that is not covariant is generalized.
 /// ponytail: PHPStan 2.3's template argument frame can decide such an argument from the calling body; without a
 /// decision it is generalized, which is all this follows.
 fn generalize_template_arguments<A: Arena>(
     context: &Context<'_, '_, A>,
     return_type: &TUnion,
     template_result: &TemplateResult,
+    sites: bool,
 ) -> Option<TemplateResult> {
     use mago_codex::misc::GenericParent;
     use mago_codex::ttype::template::variance::Variance;
@@ -427,6 +445,7 @@ fn generalize_template_arguments<A: Arena>(
         codebase: &mago_codex::metadata::CodebaseMetadata,
         t: &TUnion,
         covariant: bool,
+        sites: bool,
         out: &mut Vec<(mago_word::Word, GenericParent)>,
     ) {
         for atomic in t.types.iter() {
@@ -440,18 +459,20 @@ fn generalize_template_arguments<A: Arena>(
                     let variances = codebase.get_class_like(n.name.as_bytes()).map(|k| k.template_variance.clone());
                     for (i, parameter) in n.type_parameters.iter().flat_map(|p| p.iter()).enumerate() {
                         let variance = variances.as_ref().and_then(|v| v.get(i)).copied().unwrap_or(Variance::Invariant);
-                        walk(codebase, parameter, covariant && matches!(variance, Variance::Covariant), out);
+                        // outside template argument sites, any position in a generic object
+                        let covariant = sites && covariant && matches!(variance, Variance::Covariant);
+                        walk(codebase, parameter, covariant, sites, out);
                     }
                 }
                 TAtomic::Array(array) => {
                     let (key, value) = mago_codex::ttype::get_array_parameters(array, codebase);
-                    walk(codebase, &key, covariant, out);
-                    walk(codebase, &value, covariant, out);
+                    walk(codebase, &key, covariant, sites, out);
+                    walk(codebase, &value, covariant, sites, out);
                 }
                 // a conditional return type's branches are in the return's position
                 TAtomic::Conditional(conditional) => {
-                    walk(codebase, &conditional.then, covariant, out);
-                    walk(codebase, &conditional.otherwise, covariant, out);
+                    walk(codebase, &conditional.then, covariant, sites, out);
+                    walk(codebase, &conditional.otherwise, covariant, sites, out);
                 }
                 _ => {}
             }
@@ -516,7 +537,7 @@ fn generalize_template_arguments<A: Arena>(
         return None;
     }
     let mut found = Vec::new();
-    walk(context.codebase, return_type, true, &mut found);
+    walk(context.codebase, return_type, true, sites, &mut found);
     if found.is_empty() {
         return None;
     }

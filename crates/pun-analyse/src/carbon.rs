@@ -42,7 +42,7 @@ impl Carbon {
 
 /// The lowercased class names `class` extends or implements, itself included, read before the codebase is
 /// populated.
-fn ancestors(codebase: &CodebaseMetadata, class: Word, out: &mut Vec<Word>) {
+pub(crate) fn ancestors(codebase: &CodebaseMetadata, class: Word, out: &mut Vec<Word>) {
     if out.contains(&class) || out.len() > 256 {
         return;
     }

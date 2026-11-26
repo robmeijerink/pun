@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 10,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/firstClassCallable.php",
+   "line": 13,
+   "identifier": "disallowed.method",
+   "message": "Calling Waldo\\Quux\\Blade::runner() is forbidden, I've seen tests you people wouldn't believe. [Waldo\\Quux\\Blade::runner() matches Waldo\\Quux\\Blade::run*()]",
+   "tip": null
+  }
+ ]
+}

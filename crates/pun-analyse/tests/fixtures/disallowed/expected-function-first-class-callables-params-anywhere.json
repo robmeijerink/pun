@@ -1,0 +1,12 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/FirstClassCallableParamsAnywhere.php",
+   "line": 4,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  }
+ ]
+}

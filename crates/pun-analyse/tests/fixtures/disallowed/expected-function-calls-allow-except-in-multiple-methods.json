@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/RoyaleMultiple.php",
+   "line": 11,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/RoyaleMultiple.php",
+   "line": 17,
+   "identifier": "disallowed.function",
+   "message": "Calling crc32() is forbidden.",
+   "tip": null
+  }
+ ]
+}

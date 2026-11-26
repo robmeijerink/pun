@@ -129,6 +129,15 @@ fn refactor(
         return None;
     }
     let cond = unparenthesize(switch.expression);
+    // Rector 2.9.2's `isStringCondWithIntArm()`: an `(int)` cast would turn the loose `"777abc" == 777` (false)
+    // into `777 === 777` (true).
+    if expr_type(facts, ancestors, cond, true).is_string().yes()
+        && (cond_and_exprs.iter().filter_map(|c| c.conds.as_ref()))
+            .flatten()
+            .any(|arm| expr_type(facts, ancestors, arm, true).is_integer().yes())
+    {
+        return None;
+    }
     let span = node_span(switch);
     let base = indentation(source, span.start);
     let cond_code = match cast_match_cond(facts, ancestors, cond, &cond_and_exprs) {
@@ -463,27 +472,24 @@ fn resolve_assign_var<'a>(cond_and_exprs: &[CondAndExpr<'a>]) -> Option<&'a Expr
         .map(|a| unparenthesize(a.lhs))
 }
 
-/// `castMatchCond()`: the cast the match subject needs when its native type is `string` and every arm condition is an
-/// `int`, or the other way round.
+/// `castMatchCond()`: `(string)` when the match subject's native type is `int` and every arm condition is a
+/// `string`.
 fn cast_match_cond(
     facts: &Facts,
     ancestors: &[Node<'_, '_>],
     cond: &Expression<'_>,
     cond_and_exprs: &[CondAndExpr<'_>],
 ) -> Option<&'static str> {
-    let t = expr_type(facts, ancestors, cond, true);
-    let is_native_cond_string = t.is_string().yes();
-    let is_native_cond_int = t.is_integer().yes();
-    if !is_native_cond_string && !is_native_cond_int {
+    if !expr_type(facts, ancestors, cond, true).is_integer().yes() {
         return None;
     }
     let mut new_match_cond = None;
     for conds in cond_and_exprs.iter().filter_map(|c| c.conds.as_ref()) {
         for arm_cond in conds {
-            let arm_cond_type = expr_type(facts, ancestors, arm_cond, true);
-            if arm_cond_type.is_integer().yes() && is_native_cond_string {
-                new_match_cond = Some("(int)");
-            } else if arm_cond_type.is_string().yes() && is_native_cond_int {
+            if expr_type(facts, ancestors, arm_cond, true)
+                .is_string()
+                .yes()
+            {
                 new_match_cond = Some("(string)");
             } else {
                 new_match_cond = None;

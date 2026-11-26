@@ -1,0 +1,31 @@
+parameters:
+	level: 0
+	scanDirectories:
+		- ../src
+	filesRootDir: %currentWorkingDirectory%/tests/fixtures/disallowed
+	paths:
+		- "../src/disallowed/propertyUsages.php"
+		- "../src/disallowed-allow/propertyUsages.php"
+	disallowedProperties:
+		-
+			"property": "\\ClassWithProperties::$publicStaticProperty"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+			"allowInMethods": 
+				- "\\ClassWithProperties::okHere()"
+		-
+			"property": "\\ClassWithProperties::$privateStaticProperty"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "\\Traits\\YetAnotherTrait::$publicStaticTra*Property"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"
+		-
+			"property": "\\Traits\\YetAnotherTrait::$publicStaticTraitProperty"
+			"allowIn": 
+				- "src/disallowed-allow/*.php"
+				- "src/*-allow/*.*"

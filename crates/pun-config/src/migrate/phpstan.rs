@@ -33,7 +33,7 @@ pub struct Phpstan {
     pub changed: Vec<(String, Value)>,
 }
 
-const BUILT_IN: [(&str, Option<&str>); 7] = [
+const BUILT_IN: [(&str, Option<&str>); 10] = [
     ("larastan/larastan", Some("larastan")),
     ("phpstan/phpstan-strict-rules", Some("phpstan-strict-rules")),
     (
@@ -44,10 +44,18 @@ const BUILT_IN: [(&str, Option<&str>); 7] = [
     ("phpstan/phpstan-phpunit", None),
     ("phpstan/extension-installer", None),
     ("nesbot/carbon", None),
+    ("phpstan/phpstan-mockery", None),
+    (
+        "spaze/phpstan-disallowed-calls",
+        Some("phpstan-disallowed-calls"),
+    ),
+    ("tomasvotruba/type-coverage", Some("type-coverage")),
 ];
 
-const HANDLED: [&str; 19] = [
+const HANDLED: [&str; 21] = [
     "level",
+    "allowInRootDir",
+    "filesRootDir",
     "stubFiles",
     "paths",
     "excludePaths",
@@ -224,8 +232,17 @@ pub fn from_phpstan(root: &Path, config: &Path) -> Result<Phpstan> {
                     "independent argument-check overrides have no pun.toml option yet"
                 }
                 "checkThisOnly" => "independent receiver eligibility has no pun.toml option yet",
+                // `false`: phpstan-mockery's TypeNodeResolverExtension, which `[extensions] mockery` always runs
+                "mockery.convertUnionToIntersectionType" => {
+                    "Pun's mockery extension always reads `MockInterface|Foo` as `MockInterface&Foo`"
+                }
+                // tomasvotruba/type-coverage's Configuration warns about these on STDERR
+                "type_coverage.declare" | "type_coverage.print_suggestions" => {
+                    "deprecated in tomasvotruba/type-coverage, with no effect"
+                }
                 _ if gates.contains(&name) => continue,
                 _ if entry.is_some() && !level => {
+                    let value = disallowed_paths(root, p, value);
                     out.changed.push((name, value));
                     continue;
                 }
@@ -236,6 +253,12 @@ pub fn from_phpstan(root: &Path, config: &Path) -> Result<Phpstan> {
                 .push((format!("parameter {name}"), why.into()));
         }
     }
+    // type-coverage's alias (`return`) wins over its `_type` key (`return_type`) when it is not null
+    let aliased: Vec<String> = (out.changed.iter())
+        .filter(|(n, v)| n.starts_with("type_coverage.") && *v != Value::Null)
+        .map(|(n, _)| format!("{n}_type"))
+        .collect();
+    out.changed.retain(|(n, _)| !aliased.contains(n));
     // the project's own files: an extension's (in vendor or the phar) come back with the extension
     let own = |names: &[&str]| -> Vec<String> {
         (names.iter())
@@ -252,10 +275,34 @@ pub fn from_phpstan(root: &Path, config: &Path) -> Result<Phpstan> {
         .cloned()
         .unwrap_or_default();
     let report_unmatched = p.get_str("reportUnmatchedIgnoredErrors") != Some(&Value::Bool(false));
+    let custom = custom_identifiers(p);
     for e in ignore.values() {
-        ignore_entry(root, e, report_unmatched, &mut out);
+        ignore_entry(root, e, report_unmatched, &custom, &mut out);
     }
     Ok(out)
+}
+
+/// The `errorIdentifier` of each phpstan-disallowed-calls entry, with the rule whose list (option) declares it.
+fn custom_identifiers(p: &Array) -> Vec<(String, String)> {
+    let table = mapping::section(&["phpstan-parameters"]).table();
+    let mut out = vec![];
+    for (name, e) in table {
+        let Some(rule) = (e.get("rules").and_then(toml::Value::as_array))
+            .and_then(|r| r.first())
+            .and_then(toml::Value::as_str)
+            .filter(|r| r.starts_with("analyse/disallowed/"))
+        else {
+            continue;
+        };
+        let entries = (p.get_str(name).and_then(Value::as_array)).map(Array::values);
+        for entry in entries.into_iter().flatten() {
+            let id = (entry.as_array()).and_then(|a| a.get_str("errorIdentifier")?.as_str());
+            if let Some(id) = id {
+                out.push((id.to_string(), rule[8..].to_string()));
+            }
+        }
+    }
+    out
 }
 
 fn includes(root: &Path, config: &Path) -> Vec<String> {
@@ -432,6 +479,43 @@ fn gate_parameters() -> BTreeSet<String> {
     out
 }
 
+/// phpstan-disallowed-calls' path keys (`FilePath::fnMatch`), which resolve against `filesRootDir` (else the
+/// working directory, the project root): pun.toml's resolve against the project root.
+const DISALLOWED_PATHS: [&str; 4] = ["allowIn", "allowExceptIn", "disallowIn", "definedIn"];
+
+/// A `disallowed*` list with its entries' paths made relative to the project root.
+fn disallowed_paths(root: &Path, p: &Array, value: Value) -> Value {
+    let base = (p.get_str("filesRootDir").and_then(Value::as_str))
+        .map(|r| pun_phpstan::php::absolutize_path(&root.display().to_string(), r));
+    // the schema makes each list a list
+    let (Some(base), Value::Array(mut list)) = (base, value.clone()) else {
+        return value;
+    };
+    let path = |v: &Value| match v.as_str() {
+        Some(s) if !s.starts_with('*') => {
+            let joined = format!(
+                "{}/{}",
+                base.trim_end_matches('/'),
+                s.trim_start_matches('/')
+            );
+            Value::str(relative(root, &pun_phpstan::php::normalize_path(&joined)))
+        }
+        _ => v.clone(),
+    };
+    for entry in list.values_mut() {
+        let Value::Array(e) = entry else { continue };
+        for key in DISALLOWED_PATHS {
+            let new = match e.get_str(key) {
+                Some(Value::Array(a)) => Value::Array(Array::list(a.values().map(path))),
+                Some(v) => path(v),
+                None => continue,
+            };
+            e.set(pun_phpstan::Key::from(key), new);
+        }
+    }
+    Value::Array(list)
+}
+
 fn differences(name: &str, a: Option<&Value>, b: Option<&Value>, out: &mut Vec<(String, Value)>) {
     let table = |v: Option<&Value>| {
         v.and_then(Value::as_array)
@@ -456,7 +540,13 @@ fn differences(name: &str, a: Option<&Value>, b: Option<&Value>, out: &mut Vec<(
 
 /// One `ignoreErrors` entry as `[[analyse.ignore]]` tables. `report_unmatched` is `reportUnmatchedIgnoredErrors`,
 /// which the entry's own `reportUnmatched` overrides; pun.toml has no global, so a `false` goes on each entry.
-fn ignore_entry(root: &Path, e: &Value, report_unmatched: bool, out: &mut Phpstan) {
+fn ignore_entry(
+    root: &Path,
+    e: &Value,
+    report_unmatched: bool,
+    custom: &[(String, String)],
+    out: &mut Phpstan,
+) {
     let empty = Array::new();
     let a = e.as_array().unwrap_or(&empty);
     let mut messages: Vec<(&str, String)> = vec![];
@@ -496,7 +586,12 @@ fn ignore_entry(root: &Path, e: &Value, report_unmatched: bool, out: &mut Phpsta
     let q = |s: &str| toml::Value::String(s.to_string()).to_string();
     for id in &identifiers {
         let mut rule = None;
-        if let Some(id) = id {
+        if let Some((_, r)) = id
+            .as_ref()
+            .and_then(|id| custom.iter().find(|(c, _)| c == id))
+        {
+            rule = Some((r.clone(), id.clone()));
+        } else if let Some(id) = id {
             let entry = crate::identifiers::entry(id);
             let pun = entry
                 .and_then(|e| e.get("pun"))
@@ -673,7 +768,30 @@ pub fn with_pun_preset(analyse: &str, level: u8) -> String {
     out
 }
 
+/// `[extensions]`'s body (`id = "on"` lines) with each extension whose package phpstan.neon loads turned on. The
+/// rule packages it doesn't load are off even when composer.lock locks them, so Pun reports no errors PHPStan never
+/// did (PLAN.md §2).
+fn loaded_extensions(body: &str, phpstan: &Phpstan) -> String {
+    let rule_packages = [
+        &crate::extensions::DISALLOWED_CALLS,
+        &crate::extensions::TYPE_COVERAGE,
+    ];
+    let mut out = String::new();
+    for e in crate::extensions::ALL {
+        let locked = body.lines().any(|l| l == format!("{} = \"on\"", e.id));
+        let loaded = (e.packages.iter()).any(|p| phpstan.extensions.contains(*p));
+        let value = match (loaded, locked) {
+            (false, true) if rule_packages.contains(&e) => "off",
+            (true, _) | (false, true) => "on",
+            (false, false) => continue,
+        };
+        writeln!(out, "{} = \"{value}\"", e.id).unwrap();
+    }
+    out
+}
+
 pub fn compose(root: &Path, parts: &mut Parts, phpstan: &Phpstan) -> Result<Analysed> {
+    parts.extensions = loaded_extensions(&parts.extensions, phpstan);
     let preset = AnalysePreset::phpstan_of(phpstan.level, phpstan.max);
     if let Some(v) = &phpstan.php_version {
         parts.php = format!("version = \"{v}\"\n");
@@ -846,7 +964,27 @@ fn options(root: &Path, parts: &mut Parts, phpstan: &Phpstan, done: &mut Analyse
 fn toml_value(v: &Value) -> toml::Value {
     match v {
         Value::Bool(b) => toml::Value::Boolean(*b),
-        Value::Array(a) => toml::Value::Array(a.values().map(toml_value).collect()),
+        Value::Int(i) => toml::Value::Integer(*i),
+        Value::Float(f) => toml::Value::Float(*f),
+        Value::Array(a) if a.is_list() => toml::Value::Array(a.values().map(toml_value).collect()),
+        // a phpstan-disallowed-calls entry: its keys kebab-case, as pun.toml writes options
+        Value::Array(a) => toml::Value::Table(
+            (a.iter())
+                .map(|(k, v)| (kebab(&k.as_string()), toml_value(v)))
+                .collect(),
+        ),
         v => toml::Value::String(v.as_str().unwrap_or_default().to_string()),
     }
+}
+
+/// `allowIn` as `allow-in`.
+fn kebab(key: &str) -> String {
+    let mut out = String::new();
+    for c in key.chars() {
+        if c.is_ascii_uppercase() {
+            out.push('-');
+        }
+        out.push(c.to_ascii_lowercase());
+    }
+    out
 }

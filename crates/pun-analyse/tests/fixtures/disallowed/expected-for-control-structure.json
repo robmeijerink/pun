@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 56,
+   "identifier": "disallowed.for",
+   "message": "Using the for control structure is forbidden.",
+   "tip": null
+  },
+  {
+   "file": "src/disallowed/controlStructures.php",
+   "line": 66,
+   "identifier": "disallowed.for",
+   "message": "Using the for control structure is forbidden.",
+   "tip": null
+  }
+ ]
+}

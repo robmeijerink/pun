@@ -6,7 +6,7 @@ use mago_codex::ttype::atomic::scalar::TScalar;
 use mago_codex::ttype::atomic::scalar::string::TStringCasing;
 use mago_codex::ttype::union::TUnion;
 use mago_syntax::cst::{
-    Access, BinaryOperator, ClassLikeMemberSelector, Expression, Literal, Node, NodeKind,
+    Access, BinaryOperator, ClassLikeMemberSelector, Expression, Hint, Literal, Node, NodeKind,
     UnaryPrefixOperator, Variable,
 };
 
@@ -79,7 +79,7 @@ impl Rule for NoUselessCast {
             kind = Kind::Other;
         }
         let same = kind == wanted || (kind == Kind::ConstantArray && wanted == Kind::Array);
-        if !same || should_skip(&facts, ancestors, expr, native) {
+        if !same || should_skip(&facts, ancestors, expr, native, wanted) {
             return;
         }
         let span = node_span(expr);
@@ -148,6 +148,7 @@ fn should_skip(
     ancestors: &[Node<'_, '_>],
     expr: &Expression<'_>,
     native: &TUnion,
+    wanted: Kind,
 ) -> bool {
     match expr {
         Expression::ArrayAccess(_) => true,
@@ -200,8 +201,10 @@ fn should_skip(
                 true
             }
         }
-        Expression::Variable(Variable::Direct(_)) => {
+        Expression::Variable(Variable::Direct(v)) => {
             native.possibly_undefined()
+                || declared_otherwise(ancestors, v.name, wanted)
+                || (wanted == Kind::String && is_foreach_key(ancestors, v.name))
                 || facts
                     .full_type(node_span(expr))
                     .is_some_and(|full| !within(full, native))
@@ -209,6 +212,70 @@ fn should_skip(
         }
         _ => false,
     }
+}
+
+/// Whether `name` is a parameter of the closure or arrow function around it, declared without a type or with one other
+/// than `wanted`. The analyzer narrows such a parameter to the type the callable it is passed to expects (`uksort()`'s
+/// keys), where Rector reads the declared type (`int|string`, or `mixed`).
+fn declared_otherwise(ancestors: &[Node<'_, '_>], name: &[u8], wanted: Kind) -> bool {
+    let parameters = match ancestors.iter().rev().find(|a| {
+        matches!(
+            a,
+            Node::Function(_) | Node::Method(_) | Node::Closure(_) | Node::ArrowFunction(_)
+        )
+    }) {
+        Some(Node::Closure(c)) => &c.parameter_list.parameters,
+        Some(Node::ArrowFunction(f)) => &f.parameter_list.parameters,
+        _ => return false,
+    };
+    parameters.iter().any(|p| {
+        p.variable.name == name
+            && p.hint.as_ref().is_none_or(|hint| {
+                let declared = match hint {
+                    Hint::String(_) => Kind::String,
+                    Hint::Integer(_) => Kind::Int,
+                    Hint::Float(_) => Kind::Float,
+                    Hint::Bool(_) => Kind::Bool,
+                    Hint::Array(_) => Kind::Array,
+                    _ => Kind::Other,
+                };
+                declared != wanted
+            })
+    })
+}
+
+/// Whether `name` is a `foreach` key in the function around it. A key PHP stores from a numeric string (`'20'`) is an
+/// `int`, though the analyzer, like PHPStan and Rector, types the keys of `$a[$string] = ...` as `string`: removing the
+/// cast would pass an `int` where a string is needed.
+fn is_foreach_key(ancestors: &[Node<'_, '_>], name: &[u8]) -> bool {
+    let Some(root) = ancestors.iter().rev().find(|a| {
+        matches!(
+            a,
+            Node::Function(_) | Node::Method(_) | Node::Closure(_) | Node::ArrowFunction(_)
+        )
+    }) else {
+        return false;
+    };
+    let mut found = false;
+    walk(*root, &mut |node, path| {
+        if found
+            || (!path.is_empty()
+                && matches!(
+                    node,
+                    Node::Function(_) | Node::Closure(_) | Node::ArrowFunction(_) | Node::Class(_)
+                ))
+        {
+            return false;
+        }
+        if let Node::ForeachKeyValueTarget(t) = node
+            && let Expression::Variable(Variable::Direct(k)) = unparenthesize(t.key)
+            && k.name == name
+        {
+            found = true;
+        }
+        !found
+    });
+    found
 }
 
 pub(crate) fn names_variable(ancestors: &[Node<'_, '_>], at: usize) -> bool {

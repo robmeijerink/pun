@@ -634,12 +634,17 @@ fn phpstan_analyse(
     for (name, why) in p.unsupported.iter().chain(&done.unsupported) {
         report.unsupported(name, why, format!("{from} unsupported {name}: {why}"));
     }
+    // The PHPStan checks that became lint rules report through `pun lint`, which reads its own baseline.
+    let run = if done.lint > 0 {
+        "`pun analyse --generate-baseline` and `pun lint --generate-baseline` for Pun baselines"
+    } else {
+        "`pun analyse --generate-baseline` for a Pun baseline"
+    };
     for b in &p.baselines {
-        let text = "was not copied. Run `pun analyse --generate-baseline` for a Pun baseline.";
-        report.notes.push((b.clone(), text.into()));
-        (report.findings.1).push(format!(
-            "{b} not-copied run `pun analyse --generate-baseline` for a Pun baseline"
-        ));
+        report
+            .notes
+            .push((b.clone(), format!("was not copied. Run {run}.")));
+        (report.findings.1).push(format!("{b} not-copied run {run}"));
     }
     let mut text = format!("[analyse] preset {}", done.preset);
     if done.on + done.off > 0 {

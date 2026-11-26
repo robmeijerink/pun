@@ -1,0 +1,19 @@
+{
+ "general": [],
+ "errors": [
+  {
+   "file": "src/pun-parse-error/ParseError.php",
+   "line": 6,
+   "identifier": "phpstan.parse",
+   "message": "Syntax error, unexpected ';', expecting T_STRING or T_VARIABLE or '{' or '$' on line 6",
+   "tip": null
+  },
+  {
+   "file": "src/pun-parse-error/ParseError.php",
+   "line": 7,
+   "identifier": "phpstan.parse",
+   "message": "Syntax error, unexpected ';' on line 7",
+   "tip": null
+  }
+ ]
+}

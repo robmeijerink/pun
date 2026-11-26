@@ -83,9 +83,18 @@ pub struct Project {
     pub relative_path: RelativePath,
     pub larastan: Option<crate::Larastan>,
     pub carbon: Option<crate::Carbon>,
+    pub mockery: Option<crate::Mockery>,
+    /// tomasvotruba/type-coverage's `type_coverage` parameters, `None` when no type-coverage rule runs (also when
+    /// only some of the configured paths are analysed: ScopeConfigurationResolver::areFullPathsAnalysed).
+    pub type_coverage: Option<crate::TypeCoverage>,
     pub type_aliases: Vec<(String, String)>,
     pub stubs: Vec<PathBuf>,
     pub reported: Option<Reported>,
+    /// The identifiers an enabled extension's config entries give its errors (disallowed-calls' `errorIdentifier`):
+    /// kept although no rule claims them, as an extension's errors without an identifier are.
+    pub extension_identifiers: std::collections::HashSet<String>,
+    /// phpstan-disallowed-calls' parameters (`analyse/disallowed/*`).
+    pub disallowed: crate::Disallowed,
     pub method_rules: MethodRules,
 }
 
@@ -586,6 +595,8 @@ impl Project {
             relative_path: RelativePath::of(&paths),
             larastan: crate::Larastan::from_params(root, params),
             carbon: crate::Carbon::from_params(root, params),
+            mockery: crate::Mockery::from_params(params),
+            type_coverage: crate::TypeCoverage::from_params(params),
             type_aliases: params
                 .get_str("typeAliases")
                 .and_then(Value::as_array)
@@ -600,18 +611,25 @@ impl Project {
                 .map(PathBuf::from)
                 .collect(),
             reported: None,
+            extension_identifiers: std::collections::HashSet::new(),
+            disallowed: crate::Disallowed::from_params(params, &root.to_string_lossy()),
             method_rules: MethodRules::default(),
         };
+        project.extension_identifiers = project.disallowed.identifiers();
         let stubs: Vec<_> = (project.extensions())
             .flat_map(|e| e.stub_files(root))
             .collect();
         project.stubs.extend(stubs);
+        if project.mockery.is_some() {
+            project.scanned.push(crate::Mockery::scan_files(root));
+        }
         project
     }
 
     pub(crate) fn extensions(&self) -> impl Iterator<Item = &dyn AnalyseExtension> + Clone {
         (self.larastan.iter().map(|l| l as &dyn AnalyseExtension))
             .chain(self.carbon.iter().map(|c| c as &dyn AnalyseExtension))
+            .chain(self.mockery.iter().map(|m| m as &dyn AnalyseExtension))
     }
 
     pub fn new(analysed: Vec<PathBuf>, scanned: Vec<PathBuf>) -> Project {
@@ -691,9 +709,13 @@ impl Project {
             too_wide: TooWide::default(),
             larastan: None,
             carbon: None,
+            mockery: None,
+            type_coverage: None,
             type_aliases: Vec::new(),
             stubs: Vec::new(),
             reported: None,
+            extension_identifiers: std::collections::HashSet::new(),
+            disallowed: crate::Disallowed::default(),
             method_rules: MethodRules::default(),
         }
     }
@@ -772,7 +794,12 @@ fn composer_files(root: &Path, extensions: &[String]) -> (Vec<PathBuf>, Vec<Auto
             ),
             Source::Psr0(d) => (Vec::new(), by_class(&d, b"", true, extensions)),
             Source::Classmap(p) if p.is_dir() => (php_files(&p, extensions), Vec::new()),
-            Source::Classmap(p) | Source::File(p) => (vec![p], Vec::new()),
+            Source::File(p) => {
+                let mut files = vec![p];
+                required_files(0, &mut files);
+                (files, Vec::new())
+            }
+            Source::Classmap(p) => (vec![p], Vec::new()),
         })
         .collect();
     let mut out = Vec::new();
@@ -788,6 +815,88 @@ fn composer_files(root: &Path, extensions: &[String]) -> (Vec<PathBuf>, Vec<Auto
         }
     }
     (out, autoloaded)
+}
+
+/// Composer's `files` autoloads run when PHPStan boots, so a file one of them `require`s or `include`s defines its
+/// functions too. Follows the paths PHP resolves without running anything: `__DIR__ . '/functions.php'`, and
+/// `__DIR__ . "/{$file}"` for each `.php` string literal in the file, as pest-plugin-laravel's Autoload.php requires a
+/// literal list of files in a loop. `files[at]` is the file read; each file it loads is appended and followed in turn.
+fn required_files(at: usize, files: &mut Vec<PathBuf>) {
+    use pun_tokens::kind::Kind::{
+        T_COMMENT, T_CONSTANT_ENCAPSED_STRING, T_CURLY_OPEN, T_DIR, T_DOC_COMMENT,
+        T_ENCAPSED_AND_WHITESPACE, T_INCLUDE, T_INCLUDE_ONCE, T_REQUIRE, T_REQUIRE_ONCE,
+        T_VARIABLE, T_WHITESPACE,
+    };
+    let path = files[at].clone();
+    let (Ok(code), Some(dir)) = (std::fs::read(&path), path.parent()) else {
+        return;
+    };
+    let tokens: Vec<_> = (pun_tokens::tokenize(&code).into_iter())
+        .filter(|t| !matches!(t.kind, Some(T_WHITESPACE | T_COMMENT | T_DOC_COMMENT)))
+        .collect();
+    let literal = |t: &pun_tokens::RawToken| -> Option<String> {
+        let text = std::str::from_utf8(t.text).ok()?;
+        let inner = text.strip_prefix('\'').and_then(|t| t.strip_suffix('\''));
+        let inner = inner.or_else(|| text.strip_prefix('"').and_then(|t| t.strip_suffix('"')));
+        (t.kind == Some(T_CONSTANT_ENCAPSED_STRING))
+            .then_some(inner?)
+            .filter(|s| !s.contains(['\\', '$']))
+            .map(str::to_owned)
+    };
+    let names: Vec<String> = (tokens.iter().filter_map(literal))
+        .filter(|s| s.ends_with(".php"))
+        .collect();
+    let mut found = Vec::new();
+    for (i, token) in tokens.iter().enumerate() {
+        if !matches!(
+            token.kind,
+            Some(T_REQUIRE | T_REQUIRE_ONCE | T_INCLUDE | T_INCLUDE_ONCE)
+        ) {
+            continue;
+        }
+        let mut rest = tokens[i + 1..]
+            .iter()
+            .skip_while(|t| t.kind.is_none() && t.text == b"(");
+        if rest.next().is_none_or(|t| t.kind != Some(T_DIR))
+            || rest.next().is_none_or(|t| t.text != b".")
+        {
+            continue;
+        }
+        let Some(next) = rest.next() else { continue };
+        if let Some(tail) = literal(next) {
+            found.push(format!("{}{tail}", dir.display()));
+            continue;
+        }
+        if next.text != b"\"" {
+            continue;
+        }
+        // `"<before>{$file}<after>"` or `"<before>$file<after>"`
+        let (mut before, mut after, mut variables) = (String::new(), String::new(), 0);
+        for t in rest.by_ref().take_while(|t| t.text != b"\"") {
+            match t.kind {
+                Some(T_ENCAPSED_AND_WHITESPACE) if variables == 0 => {
+                    before.push_str(&String::from_utf8_lossy(t.text));
+                }
+                Some(T_ENCAPSED_AND_WHITESPACE) => after.push_str(&String::from_utf8_lossy(t.text)),
+                Some(T_VARIABLE) => variables += 1,
+                Some(T_CURLY_OPEN) | None if matches!(t.text, b"{" | b"}") => {}
+                _ => variables = 2,
+            }
+        }
+        if variables == 1 {
+            found.extend(
+                names
+                    .iter()
+                    .map(|name| format!("{}{before}{name}{after}", dir.display())),
+            );
+        }
+    }
+    for file in found.into_iter().map(PathBuf::from) {
+        if file.is_file() && !files.contains(&file) {
+            files.push(file);
+            required_files(files.len() - 1, files);
+        }
+    }
 }
 
 fn by_class(dir: &Path, prefix: &[u8], psr0: bool, extensions: &[String]) -> Vec<Autoloaded> {

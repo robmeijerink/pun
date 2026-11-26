@@ -1,0 +1,1728 @@
+{
+ "cases": [
+  {
+   "name": "get-default",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout"
+   ],
+   "exit": 0,
+   "stdout": "300\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-project",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "vendor-dir"
+   ],
+   "exit": 0,
+   "stdout": "lib/vendor\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-absolute",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "vendor-dir",
+    "--absolute"
+   ],
+   "exit": 0,
+   "stdout": "{dir}/lib/vendor\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-bin-dir",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "bin-dir"
+   ],
+   "exit": 0,
+   "stdout": "lib/vendor/bin\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-global",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "process-timeout"
+   ],
+   "exit": 0,
+   "stdout": "900\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   }
+  },
+  {
+   "name": "get-global-option",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "--global",
+    "process-timeout"
+   ],
+   "exit": 0,
+   "stdout": "900\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   }
+  },
+  {
+   "name": "get-boolean",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "sort-packages"
+   ],
+   "exit": 0,
+   "stdout": "true\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-array",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "github-protocols"
+   ],
+   "exit": 0,
+   "stdout": "[\"https\"]\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   }
+  },
+  {
+   "name": "get-object",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "allow-plugins"
+   ],
+   "exit": 0,
+   "stdout": "{\"acme/plugin\":true}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-nested",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "allow-plugins.acme/plugin"
+   ],
+   "exit": 0,
+   "stdout": "true\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-source",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "vendor-dir",
+    "--source"
+   ],
+   "exit": 0,
+   "stdout": "lib/vendor (./composer.json)\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-extra",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "extra"
+   ],
+   "exit": 0,
+   "stdout": "{\"laravel\":{\"dont-discover\":[]}}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-extra-key",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "extra.laravel"
+   ],
+   "exit": 0,
+   "stdout": "{\"dont-discover\":[]}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-property",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "name"
+   ],
+   "exit": 0,
+   "stdout": "acme/app\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-repositories",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repositories"
+   ],
+   "exit": 0,
+   "stdout": "{\"0\":{\"type\":\"vcs\",\"url\":\"https://example.org/one.git\"},\"packagist.org\":{\"type\":\"composer\",\"url\":\"https://repo.packagist.org\"}}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "get-undefined",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "nope"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "nope is not defined"
+   ]
+  },
+  {
+   "name": "get-undefined-extra",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "extra.nope"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "extra.nope is not defined."
+   ]
+  },
+  {
+   "name": "get-env",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout"
+   ],
+   "exit": 0,
+   "stdout": "42\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "env": {
+    "COMPOSER_PROCESS_TIMEOUT": "42"
+   }
+  },
+  {
+   "name": "list",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--list"
+   ],
+   "exit": 0,
+   "stdout": "[repositories.packagist.org.type] composer\n[repositories.packagist.org.url] https://repo.packagist.org\n[process-timeout] 300\n[use-include-path] false\n[allow-plugins.acme/plugin] true\n[use-parent-dir] prompt\n[preferred-install] dist\n[audit.abandoned] fail\n[policy] true\n[notify-on-install] true\n[github-protocols] [https, ssh]\n[gitlab-protocol] \n[vendor-dir] lib/vendor ({dir}/lib/vendor)\n[bin-dir] {$vendor-dir}/bin ({dir}/lib/vendor/bin)\n[cache-dir] {user}/.cache\n[data-dir] {home}\n[cache-files-dir] {$cache-dir}/files ({user}/.cache/files)\n[cache-repo-dir] {$cache-dir}/repo ({user}/.cache/repo)\n[cache-vcs-dir] {$cache-dir}/vcs ({user}/.cache/vcs)\n[cache-ttl] 15552000\n[cache-files-ttl] 15552000\n[cache-files-maxsize] 300MiB (314572800)\n[cache-read-only] false\n[bin-compat] auto\n[discard-changes] false\n[autoloader-suffix] \n[sort-packages] true\n[optimize-autoloader] false\n[strict-psr-autoloader] false\n[classmap-authoritative] false\n[apcu-autoloader] false\n[prepend-autoloader] true\n[update-with-minimal-changes] false\n[github-domains] [github.com]\n[bitbucket-expose-hostname] true\n[disable-tls] false\n[secure-http] true\n[cafile] \n[capath] \n[github-expose-hostname] true\n[gitlab-domains] [gitlab.com]\n[store-auths] prompt\n[archive-format] tar\n[archive-dir] .\n[htaccess-protect] true\n[use-github-api] true\n[lock] true\n[platform-check] php-only\n[bump-after-update] false\n[allow-missing-requirements] false\n[forgejo-domains] [codeberg.org]\n[source-fallback] false\n[home] {home}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "list-source",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "-l",
+    "--source"
+   ],
+   "exit": 0,
+   "stdout": "[repositories.packagist.org.type] composer (default)\n[repositories.packagist.org.url] https://repo.packagist.org (default)\n[process-timeout] 900 ({home}/config.json)\n[use-include-path] false (default)\n[allow-plugins.acme/plugin] true (./composer.json)\n[use-parent-dir] prompt (default)\n[preferred-install] dist (default)\n[audit.abandoned] fail (default)\n[policy] true (default)\n[notify-on-install] true (default)\n[github-protocols] [https] ({home}/config.json)\n[gitlab-protocol]  (default)\n[vendor-dir] lib/vendor ({dir}/lib/vendor) (./composer.json)\n[bin-dir] {$vendor-dir}/bin ({dir}/lib/vendor/bin) (default)\n[cache-dir] {user}/.cache (COMPOSER_CACHE_DIR)\n[data-dir] {home} (default)\n[cache-files-dir] {$cache-dir}/files ({user}/.cache/files) (default)\n[cache-repo-dir] {$cache-dir}/repo ({user}/.cache/repo) (default)\n[cache-vcs-dir] {$cache-dir}/vcs ({user}/.cache/vcs) (default)\n[cache-ttl] 15552000 (default)\n[cache-files-ttl] 15552000 (default)\n[cache-files-maxsize] 300MiB (314572800) (default)\n[cache-read-only] false (default)\n[bin-compat] auto (default)\n[discard-changes] false (default)\n[autoloader-suffix]  (default)\n[sort-packages] true (./composer.json)\n[optimize-autoloader] false (default)\n[strict-psr-autoloader] false (default)\n[classmap-authoritative] false (default)\n[apcu-autoloader] false (default)\n[prepend-autoloader] true (default)\n[update-with-minimal-changes] false (default)\n[github-domains] [github.com] (default)\n[bitbucket-expose-hostname] true (default)\n[disable-tls] false (default)\n[secure-http] true (default)\n[cafile]  (default)\n[capath]  (default)\n[github-expose-hostname] true (default)\n[gitlab-domains] [gitlab.com] (default)\n[store-auths] prompt (default)\n[archive-format] tar (default)\n[archive-dir] . (default)\n[htaccess-protect] true (default)\n[use-github-api] true (default)\n[lock] true (default)\n[platform-check] php-only (default)\n[bump-after-update] false (default)\n[allow-missing-requirements] false (default)\n[forgejo-domains] [codeberg.org] (default)\n[source-fallback] false (default)\n[home] {home} (default)\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   }
+  },
+  {
+   "name": "list-global",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "--list",
+    "--global"
+   ],
+   "exit": 0,
+   "stdout": "[repositories.packagist.org.type] composer\n[repositories.packagist.org.url] https://repo.packagist.org\n[process-timeout] 900\n[use-include-path] false\n[use-parent-dir] prompt\n[preferred-install] dist\n[audit.abandoned] fail\n[policy] true\n[notify-on-install] true\n[github-protocols] [https]\n[gitlab-protocol] \n[vendor-dir] vendor ({home}/vendor)\n[bin-dir] {$vendor-dir}/bin ({home}/vendor/bin)\n[cache-dir] {user}/.cache\n[data-dir] {home}\n[cache-files-dir] {$cache-dir}/files ({user}/.cache/files)\n[cache-repo-dir] {$cache-dir}/repo ({user}/.cache/repo)\n[cache-vcs-dir] {$cache-dir}/vcs ({user}/.cache/vcs)\n[cache-ttl] 15552000\n[cache-files-ttl] 15552000\n[cache-files-maxsize] 300MiB (314572800)\n[cache-read-only] false\n[bin-compat] auto\n[discard-changes] false\n[autoloader-suffix] \n[sort-packages] false\n[optimize-autoloader] false\n[strict-psr-autoloader] false\n[classmap-authoritative] false\n[apcu-autoloader] false\n[prepend-autoloader] true\n[update-with-minimal-changes] false\n[github-domains] [github.com]\n[bitbucket-expose-hostname] true\n[disable-tls] false\n[secure-http] true\n[cafile] \n[capath] \n[github-expose-hostname] true\n[gitlab-domains] [gitlab.com]\n[store-auths] prompt\n[archive-format] tar\n[archive-dir] .\n[htaccess-protect] true\n[use-github-api] true\n[lock] true\n[platform-check] php-only\n[bump-after-update] false\n[allow-missing-requirements] false\n[forgejo-domains] [codeberg.org]\n[source-fallback] false\n[home] {home}\n",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   }
+  },
+  {
+   "name": "set-integer",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"process-timeout\": 600\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-boolean",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "secure-http",
+    "false"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"secure-http\": false\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-boolean-true",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "optimize-autoloader",
+    "true"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"optimize-autoloader\": true\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-string",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "bin-dir",
+    "tools"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"bin-dir\": \"tools\"\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-array",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "github-protocols",
+    "https",
+    "ssh"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"github-protocols\": [\"https\", \"ssh\"]\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-allow-plugins",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--no-plugins",
+    "allow-plugins.acme/other",
+    "true"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true,\n            \"acme/other\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-allow-plugins-false",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "allow-plugins.acme/plugin",
+    "false"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": false\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-preferred-install",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "preferred-install.acme/*",
+    "source"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"preferred-install\": {\n            \"acme/*\": \"source\"\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-platform",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "platform.php",
+    "8.2.0"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"platform\": {\n            \"php\": \"8.2.0\"\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-platform-false",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "platform.ext-foo",
+    "false"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        },\n        \"platform\": {\n            \"ext-foo\": false\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-sort-packages-two-spaces",
+   "files": {
+    "composer.json": "{\n  \"name\": \"acme/app\",\n  \"description\": \"The application\",\n  \"require\": {\n    \"php\": \">=8.1\"\n  },\n  \"config\": {\n    \"sort-packages\": true,\n    \"vendor-dir\": \"lib/vendor\",\n    \"allow-plugins\": {\n      \"acme/plugin\": true\n    }\n  },\n  \"extra\": {\n    \"laravel\": {\n      \"dont-discover\": []\n    }\n  }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n  \"name\": \"acme/app\",\n  \"description\": \"The application\",\n  \"require\": {\n    \"php\": \">=8.1\"\n  },\n  \"config\": {\n    \"sort-packages\": true,\n    \"vendor-dir\": \"lib/vendor\",\n    \"allow-plugins\": {\n      \"acme/plugin\": true\n    },\n    \"process-timeout\": 600\n  },\n  \"extra\": {\n    \"laravel\": {\n      \"dont-discover\": []\n    }\n  }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-tabs",
+   "files": {
+    "composer.json": "{\n\t\"name\": \"acme/app\",\n\t\"description\": \"The application\",\n\t\"require\": {\n\t\t\"php\": \">=8.1\"\n\t},\n\t\"config\": {\n\t\t\"sort-packages\": true,\n\t\t\"vendor-dir\": \"lib/vendor\",\n\t\t\"allow-plugins\": {\n\t\t\t\"acme/plugin\": true\n\t\t}\n\t},\n\t\"extra\": {\n\t\t\"laravel\": {\n\t\t\t\"dont-discover\": []\n\t\t}\n\t}\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n\t\"name\": \"acme/app\",\n\t\"description\": \"The application\",\n\t\"require\": {\n\t\t\"php\": \">=8.1\"\n\t},\n\t\"config\": {\n\t\t\"sort-packages\": true,\n\t\t\"vendor-dir\": \"lib/vendor\",\n\t\t\"allow-plugins\": {\n\t\t\t\"acme/plugin\": true\n\t\t},\n\t\t\"process-timeout\": 600\n\t},\n\t\"extra\": {\n\t\t\"laravel\": {\n\t\t\t\"dont-discover\": []\n\t\t}\n\t}\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-no-newline",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\"\n}"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"config\": {\n        \"process-timeout\": 600\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-bare",
+   "files": {
+    "composer.json": "{}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"config\": {\n        \"process-timeout\": 600\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-global",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--global",
+    "process-timeout",
+    "1200"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 1200}\n}\n"
+   }
+  },
+  {
+   "name": "set-global-existing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ]\n    }\n}\n"
+   },
+   "args": [
+    "config",
+    "-g",
+    "secure-http",
+    "false"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {\n        \"process-timeout\": 900,\n        \"github-protocols\": [\n            \"https\"\n        ],\n        \"secure-http\": false\n    }\n}\n"
+   }
+  },
+  {
+   "name": "set-file",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",
+    "other.json": "{\n    \"name\": \"acme/other\"\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--file",
+    "other.json",
+    "process-timeout",
+    "7"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",
+    "other.json": "{\n    \"name\": \"acme/other\",\n    \"config\": {\n        \"process-timeout\": 7\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-composer-env",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",
+    "custom.json": "{\n    \"name\": \"acme/custom\"\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "8"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",
+    "custom.json": "{\n    \"name\": \"acme/custom\",\n    \"config\": {\n        \"process-timeout\": 8\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "env": {
+    "COMPOSER": "custom.json"
+   }
+  },
+  {
+   "name": "set-name",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "name",
+    "acme/renamed"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/renamed\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-description",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "description",
+    "A new description"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"A new description\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-minimum-stability",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "minimum-stability",
+    "dev"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"minimum-stability\": \"dev\"\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-prefer-stable",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "prefer-stable",
+    "true"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"prefer-stable\": true\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-keywords",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "keywords",
+    "one",
+    "two"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"keywords\": [\"one\", \"two\"]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-license",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "license",
+    "MIT"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"license\": [\"MIT\"]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-type",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "type",
+    "project"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"type\": \"project\"\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "unset-description",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "description"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-property-global",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--global",
+    "name",
+    "acme/x"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {}\n}\n"
+   },
+   "message": [
+    "The name property can not be set in the global config.json file. Use `composer global config` to apply changes to the global composer.json"
+   ]
+  },
+  {
+   "name": "set-extra",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "extra.foo.bar",
+    "baz"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        },\n        \"foo\": {\n            \"bar\": \"baz\"\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-extra-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--json",
+    "extra.list",
+    "[1, \"two\", {\"three\": 3}]"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        },\n        \"list\": [1, \"two\", {\n                \"three\": 3\n            }]\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-extra-merge",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--json",
+    "--merge",
+    "extra.laravel",
+    "{\"providers\": [\"App\\\\Provider\"]}"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"providers\": [\"App\\\\Provider\"],\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-extra-merge-array",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"extra\": {\n        \"list\": [\n            1\n        ]\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--json",
+    "--merge",
+    "extra.list",
+    "[2]"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"extra\": {\n        \"list\": [1, 2]\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-extra-merge-mixed",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"extra\": {\n        \"list\": [\n            1\n        ]\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--json",
+    "--merge",
+    "extra.list",
+    "{\"a\": 2}"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"extra\": {\n        \"list\": {\n            \"a\": 2,\n            \"0\": 1\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-extra-invalid-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--json",
+    "extra.list",
+    "[1,"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "The input does not contain valid JSON",
+    "Parse error on line 1:",
+    "[1,",
+    "--^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[' - It appears you have an extra trailing comma"
+   ]
+  },
+  {
+   "name": "unset-extra",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "extra.laravel"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repositories.foo",
+    "vcs",
+    "https://example.org/foo.git"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"repositories\": [{\n        \"name\": \"foo\",\n        \"type\": \"vcs\",\n        \"url\": \"https://example.org/foo.git\"\n    }]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository-append",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--append",
+    "repositories.foo",
+    "vcs",
+    "https://example.org/foo.git"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        },\n        {\n            \"name\": \"foo\",\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/foo.git\"\n        }\n    ]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository-prepend",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repositories.foo",
+    "composer",
+    "https://repo.example.org"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"name\": \"foo\",\n            \"type\": \"composer\",\n            \"url\": \"https://repo.example.org\"\n        },\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository-json",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repo.foo",
+    "{\"type\": \"path\", \"url\": \"../foo\"}"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"repositories\": [{\n        \"name\": \"foo\",\n        \"type\": \"path\",\n        \"url\": \"../foo\"\n    }]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository-packagist-off",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repositories.packagist.org",
+    "false"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    },\n    \"repositories\": [{\n        \"packagist.org\": false\n    }]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-repository-one-value",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "repositories.foo",
+    "vcs"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "The input does not contain valid JSON",
+    "Parse error on line 1:",
+    "v...",
+    "^",
+    "Expected one of: 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '['"
+   ]
+  },
+  {
+   "name": "unset-repository",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "repositories.0"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"repositories\": [\n        {\n            \"type\": \"vcs\",\n            \"url\": \"https://example.org/one.git\"\n        }\n    ]\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-github-oauth",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "github-oauth.github.com",
+    "ghp_token"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "auth.json": "{\n    \"github-oauth\": {\n        \"github.com\": \"ghp_token\"\n    }\n}\n",
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-github-oauth-global",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "-g",
+    "github-oauth.github.com",
+    "ghp_token"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all",
+    "auth.json": "{\n    \"bitbucket-oauth\": {},\n    \"github-oauth\": {\n        \"github.com\": \"ghp_token\"},\n    \"gitlab-oauth\": {},\n    \"gitlab-token\": {},\n    \"http-basic\": {},\n    \"bearer\": {},\n    \"forgejo-token\": {}\n}\n",
+    "config.json": "{\n    \"config\": {}\n}\n"
+   }
+  },
+  {
+   "name": "set-http-basic",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "http-basic.repo.example.org",
+    "user",
+    "secret"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "auth.json": "{\n    \"http-basic\": {\n        \"repo.example.org\": {\n            \"username\": \"user\",\n            \"password\": \"secret\"\n        }\n    }\n}\n",
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "set-http-basic-one",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "http-basic.repo.example.org",
+    "user"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "Expected two arguments (username, password), got 1"
+   ]
+  },
+  {
+   "name": "set-bearer",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "bearer.repo.example.org",
+    "token"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "auth.json": "{\n    \"bearer\": {\n        \"repo.example.org\": \"token\"\n    }\n}\n",
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "unset-github-oauth",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n",
+    "auth.json": "{\n    \"github-oauth\": {\n        \"github.com\": \"ghp_token\"\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "github-oauth.github.com"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "auth.json": "{\n    \"github-oauth\": {\n    }\n}\n",
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "unset",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "vendor-dir"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "unset-missing",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "process-timeout"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "unset-with-value",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "--unset",
+    "process-timeout",
+    "5"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "You can not combine a setting value with --unset"
+   ]
+  },
+  {
+   "name": "set-invalid-integer",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "abc"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "\"abc\" is an invalid value"
+   ]
+  },
+  {
+   "name": "set-invalid-choice",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "preferred-install",
+    "sometimes"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "\"sometimes\" is an invalid value"
+   ]
+  },
+  {
+   "name": "set-too-many",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "1",
+    "2"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "You can only pass one value. Example: php composer.phar config process-timeout 300"
+   ]
+  },
+  {
+   "name": "set-unknown",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config",
+    "nope",
+    "value"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "Setting nope does not exist or is not supported by this command"
+   ]
+  },
+  {
+   "name": "no-key",
+   "files": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_files": {},
+   "args": [
+    "config"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": "",
+   "after": {
+    "composer.json": "{\n    \"name\": \"acme/app\",\n    \"description\": \"The application\",\n    \"require\": {\n        \"php\": \">=8.1\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"vendor-dir\": \"lib/vendor\",\n        \"allow-plugins\": {\n            \"acme/plugin\": true\n        }\n    },\n    \"extra\": {\n        \"laravel\": {\n            \"dont-discover\": []\n        }\n    }\n}\n"
+   },
+   "home_after": {
+    ".htaccess": "Deny from all"
+   }
+  },
+  {
+   "name": "no-composer-json",
+   "files": {},
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout",
+    "600"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {},
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "File \"./composer.json\" cannot be found in the current directory"
+   ]
+  },
+  {
+   "name": "no-composer-json-get",
+   "files": {},
+   "home_files": {},
+   "args": [
+    "config",
+    "process-timeout"
+   ],
+   "exit": 1,
+   "stdout": "",
+   "stderr": "",
+   "after": {},
+   "home_after": {
+    ".htaccess": "Deny from all"
+   },
+   "message": [
+    "File \"./composer.json\" cannot be found in the current directory"
+   ]
+  }
+ ]
+}

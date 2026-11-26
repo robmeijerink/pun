@@ -369,7 +369,8 @@ mod tests {
         assert_eq!(
             content_hash(manifest.as_object().unwrap()),
             "1f6b30e94de0732cc8351f3d4a2ecc8c"
-        ); // `isset()`: a null config.platform or config.policy is left out, an empty or false one is not
+        );
+        // `isset()`: a null config.platform or config.policy is left out, an empty or false one is not
         // (`Locker::getContentHash` of Composer 2.11.2).
         let hash = |v: Value| content_hash(v.as_object().unwrap());
         assert_eq!(

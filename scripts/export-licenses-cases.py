@@ -32,11 +32,12 @@ def package(name, version='1.0.0', **fields):
 
 def installed(*packages, dev=(), vendor='vendor', missing=()):
     """vendor/composer/installed.json and each package's directory (Composer drops a package whose directory isn't
-    there), but those named in `missing`."""
+    there), at its pretty name as Composer's install path has it: `vendor/Acme/Upper`, which a case-sensitive file
+    system tells from `vendor/acme/upper`), but those named in `missing`."""
     files = {f'{vendor}/composer/installed.json': j({'packages': list(packages), 'dev': True, 'dev-package-names': list(dev)})}
     for p in packages:
         if p.get('type') != 'metapackage' and p['name'] not in missing:
-            files[f'{vendor}/{p["name"].lower()}/.keep'] = ''
+            files[f'{vendor}/{p["name"]}/.keep'] = ''
     return files
 
 

@@ -13,7 +13,7 @@
     "vendor/acme/dev-dist/.keep": "",
     "vendor/acme/dev-svn/.keep": "",
     "vendor/acme/aliased/.keep": "",
-    "vendor/acme/upper/.keep": "",
+    "vendor/Acme/Upper/.keep": "",
     "vendor/acme/wide/.keep": "",
     "vendor/acme/empty-license/.keep": ""
    },
@@ -37,7 +37,7 @@
     "vendor/acme/dev-dist/.keep": "",
     "vendor/acme/dev-svn/.keep": "",
     "vendor/acme/aliased/.keep": "",
-    "vendor/acme/upper/.keep": "",
+    "vendor/Acme/Upper/.keep": "",
     "vendor/acme/wide/.keep": "",
     "vendor/acme/empty-license/.keep": ""
    },
@@ -62,7 +62,7 @@
     "vendor/acme/dev-dist/.keep": "",
     "vendor/acme/dev-svn/.keep": "",
     "vendor/acme/aliased/.keep": "",
-    "vendor/acme/upper/.keep": "",
+    "vendor/Acme/Upper/.keep": "",
     "vendor/acme/wide/.keep": "",
     "vendor/acme/empty-license/.keep": ""
    },
@@ -122,7 +122,7 @@
     "vendor/acme/dev-dist/.keep": "",
     "vendor/acme/dev-svn/.keep": "",
     "vendor/acme/aliased/.keep": "",
-    "vendor/acme/upper/.keep": "",
+    "vendor/Acme/Upper/.keep": "",
     "vendor/acme/wide/.keep": "",
     "vendor/acme/empty-license/.keep": ""
    },

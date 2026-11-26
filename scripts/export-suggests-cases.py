@@ -36,10 +36,11 @@ def package(name, version='1.0.0', **fields):
 
 def installed(*packages, dev=()):
     """vendor/composer/installed.json and each package's directory (Composer drops a package whose directory isn't
-    there)."""
+    there), at its pretty name as Composer's install path has it: `vendor/Acme/Upper`, which a case-sensitive file
+    system tells from `vendor/acme/upper`)."""
     files = {'vendor/composer/installed.json': j({'packages': list(packages), 'dev': True, 'dev-package-names': list(dev)})}
     for p in packages:
-        files[f'vendor/{p["name"].lower()}/.keep'] = ''
+        files[f'vendor/{p["name"]}/.keep'] = ''
     return files
 
 

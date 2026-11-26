@@ -3,7 +3,7 @@ title: pun composer
 description: Run other Composer commands.
 ---
 
-Run Composer commands that have no `pun` command of their own. Only `dump-autoload` exists today.
+Run Composer commands that have no `pun` command of their own: `dump-autoload` and `config`.
 
 ## Usage
 
@@ -14,6 +14,10 @@ pun composer <command> [options]
 ```bash
 pun composer dump-autoload
 pun composer dump-autoload -o --no-dev
+pun composer config process-timeout 600
+pun composer config --no-plugins allow-plugins.pestphp/pest-plugin true
+pun composer config --global github-oauth.github.com <token>
+pun composer config --list --source
 ```
 
 ## Options
@@ -34,7 +38,25 @@ For `dump-autoload` (alias `dumpautoload`):
 | `--ignore-platform-reqs` | Write no `platform_check.php`. |
 | `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
 
+For `config`:
+
+| Option | Description |
+| --- | --- |
+| `<setting-key> [setting-value]...` | Without a value, show the setting; with one or more, write it. |
+| `-g`, `--global` | Use the global `config.json` (and `auth.json`) in `COMPOSER_HOME`. |
+| `-f`, `--file=<file>` | Use another `composer.json` or `config.json`. |
+| `-l`, `--list` | List every setting, with the raw value first where it differs. |
+| `--source` | Show where each value comes from. |
+| `--absolute` | Show `*-dir` settings as absolute paths. |
+| `--unset` | Remove the setting. |
+| `-j`, `--json` | Read the value as JSON (`extra.*`, `policy.*.ignore`, `audit.ignore`, repositories). |
+| `-m`, `--merge` | Merge the JSON value with the current one. |
+| `--append` | Add a repository last, not first. |
+| `--no-plugins` | Taken, as in Composer. This command runs no plugins. |
+
 ## What happens
+
+`dump-autoload`:
 
 - Writes the autoloader again from `vendor/composer/installed.json`.
 - The files match `composer dump-autoload` byte for byte.
@@ -42,14 +64,22 @@ For `dump-autoload` (alias `dumpautoload`):
 - Without `--dev` or `--no-dev`, follows the last install.
 - Pun never calls the Composer CLI.
 
+`config`:
+
+- Reads a setting as Composer does: from composer.json, the global `config.json` and `auth.json`, `COMPOSER_AUTH` and the `COMPOSER_*` variables, then Composer's defaults; `--list` shows them all.
+- Writes config settings (each with Composer's check of its value), root properties (`name`, `description`, `minimum-stability`, `keywords`, `license`, …), `extra.*`, `suggest.*`, `scripts.*`, repositories, policies and credentials (`github-oauth`, `gitlab-token`, `http-basic`, `bearer`, …, into `auth.json`, readable by its owner only).
+- Edits the file as Composer's `JsonManipulator` does, keeping its indentation and layout, byte for byte; where it can't, it rewrites the file as Composer does.
+
 ## Limitations
 
-- Only `dump-autoload` exists. Any other command exits 2.
+- Only `dump-autoload` and `config` exist. Any other command exits 2.
+- `config` doesn't open an editor (`--editor`) and exits 2.
+- `config` doesn't check the file it wrote against Composer's schema, as Composer does (which puts the old file back when it doesn't hold); for a value that isn't JSON, it gives only the first line of Composer's message.
 
 ## Exit codes
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Written. |
+| 0 | Written, or the setting shown or written. |
 | 1 | Written, but a package is missing from `vendor/`. |
 | 2 | Unknown command, or another error. |

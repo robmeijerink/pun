@@ -201,9 +201,159 @@ pub(crate) fn run(a: ComposerArgs) -> Result<Exit> {
     }
 }
 
+/// Composer 2.11.2's commands, by each name and alias (`Application::all()`), with their descriptions. A script with one
+/// of these names is skipped (`A script named show would override a Composer command and has been skipped`), and
+/// `run-script --list` shows the command's description beside it.
+const COMPOSER_COMMANDS: [(&str, &str); 53] = [
+    (
+        "_complete",
+        "Internal command to provide shell completion suggestions",
+    ),
+    ("about", "Shows a short information about Composer"),
+    ("archive", "Creates an archive of this composer package"),
+    (
+        "audit",
+        "Checks for security vulnerability advisories for installed packages",
+    ),
+    (
+        "browse",
+        "Opens the package's repository URL or homepage in your browser",
+    ),
+    (
+        "bump",
+        "Increases the lower limit of your composer.json requirements to the currently installed versions",
+    ),
+    ("cc", "Clears composer's internal package cache"),
+    (
+        "check-platform-reqs",
+        "Check that platform requirements are satisfied",
+    ),
+    ("clear-cache", "Clears composer's internal package cache"),
+    ("clearcache", "Clears composer's internal package cache"),
+    ("completion", "Dump the shell completion script"),
+    ("config", "Sets config options"),
+    (
+        "create-project",
+        "Creates new project from a package into given directory",
+    ),
+    (
+        "depends",
+        "Shows which packages cause the given package to be installed",
+    ),
+    ("diagnose", "Diagnoses the system to identify common errors"),
+    ("dump-autoload", "Dumps the autoloader"),
+    ("dumpautoload", "Dumps the autoloader"),
+    ("exec", "Executes a vendored binary/script"),
+    (
+        "fund",
+        "Discover how to help fund the maintenance of your dependencies",
+    ),
+    (
+        "global",
+        "Allows running commands in the global composer dir ($COMPOSER_HOME)",
+    ),
+    ("help", "Display help for a command"),
+    (
+        "home",
+        "Opens the package's repository URL or homepage in your browser",
+    ),
+    (
+        "i",
+        "Installs the project dependencies from the composer.lock file if present, or falls back on the composer.json",
+    ),
+    ("info", "Shows information about packages"),
+    (
+        "init",
+        "Creates a basic composer.json file in current directory",
+    ),
+    (
+        "install",
+        "Installs the project dependencies from the composer.lock file if present, or falls back on the composer.json",
+    ),
+    (
+        "licenses",
+        "Shows information about licenses of dependencies",
+    ),
+    ("list", "List commands"),
+    (
+        "outdated",
+        "Shows a list of installed packages that have updates available, including their latest version",
+    ),
+    (
+        "policy",
+        "Manages custom dependency policies and their sources",
+    ),
+    (
+        "prohibits",
+        "Shows which packages prevent the given package from being installed",
+    ),
+    (
+        "r",
+        "Adds required packages to your composer.json and installs them",
+    ),
+    (
+        "reinstall",
+        "Uninstalls and reinstalls the given package names",
+    ),
+    (
+        "remove",
+        "Removes a package from the require or require-dev",
+    ),
+    ("repo", "Manages repositories"),
+    ("repository", "Manages repositories"),
+    (
+        "require",
+        "Adds required packages to your composer.json and installs them",
+    ),
+    ("rm", "Removes a package from the require or require-dev"),
+    ("run", "Runs the scripts defined in composer.json"),
+    ("run-script", "Runs the scripts defined in composer.json"),
+    ("search", "Searches for packages"),
+    ("self-update", "Updates composer.phar to the latest version"),
+    ("selfupdate", "Updates composer.phar to the latest version"),
+    ("show", "Shows information about packages"),
+    ("status", "Shows a list of locally modified packages"),
+    ("suggests", "Shows package suggestions"),
+    (
+        "u",
+        "Updates your dependencies to the latest version according to composer.json, and updates the composer.lock file",
+    ),
+    (
+        "uninstall",
+        "Removes a package from the require or require-dev",
+    ),
+    (
+        "update",
+        "Updates your dependencies to the latest version according to composer.json, and updates the composer.lock file",
+    ),
+    (
+        "upgrade",
+        "Updates your dependencies to the latest version according to composer.json, and updates the composer.lock file",
+    ),
+    ("validate", "Validates a composer.json and composer.lock"),
+    (
+        "why",
+        "Shows which packages cause the given package to be installed",
+    ),
+    (
+        "why-not",
+        "Shows which packages prevent the given package from being installed",
+    ),
+];
+
+/// The Composer command `name` names, by its name or an alias, as `Application::find` gives it for a script.
+fn composer_command(name: &str) -> Option<&'static str> {
+    (COMPOSER_COMMANDS.iter())
+        .find(|(command, _)| *command == name)
+        .map(|(_, description)| *description)
+}
+
 /// The script `name` runs as a command, by its own name or one of its `scripts-aliases`; Composer makes no command of
-/// a script named after an event.
+/// a script named after an event, and a Composer command or alias of that name wins over the script and its aliases.
 fn command_script(project: &Project, name: &str) -> Option<String> {
+    if composer_command(name).is_some() {
+        return None;
+    }
     let scripts = project.manifest.get("scripts")?.as_object()?;
     let aliases = project.manifest.get("scripts-aliases");
     scripts
@@ -333,6 +483,8 @@ fn script_rows(project: &Project) -> Vec<(String, String)> {
         .map(|name| {
             let description = if SCRIPT_EVENTS.contains(&name.as_str()) {
                 String::new()
+            } else if let Some(command) = composer_command(name) {
+                command.to_string()
             } else if let Some(d) = (descriptions.and_then(|d| d.get(name))).and_then(Value::as_str)
             {
                 d.to_string()

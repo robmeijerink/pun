@@ -402,6 +402,41 @@ fn run_script_takes_global_options_and_asks() {
     std::fs::remove_dir_all(&elsewhere).unwrap();
 }
 
+/// Composer 2.11.2 skips a script named after one of its commands or aliases (`info` is `show`'s) as a command of its
+/// own, and a command wins over a script's alias (`status`); `run-script` still runs it, and `--list` shows the
+/// command's description beside it.
+#[test]
+fn scripts_named_after_composer_commands() {
+    let dir = scratch("composer", "command-scripts");
+    std::fs::write(
+        dir.join("composer.json"),
+        r#"{"name":"a/b","version":"1.0.0","scripts":{"info":"echo INFO","st":"echo ST","foo":"echo FOO"},"scripts-aliases":{"foo":["status","bar"]}}"#,
+    )
+    .unwrap();
+    assert_eq!(
+        composer(&dir, &["run", "--list"]),
+        ok(
+            "  info Shows information about packages                \n  st   Runs the st script as defined in composer.json  \n  foo  Runs the foo script as defined in composer.json \n",
+            "scripts:\n"
+        )
+    );
+    assert_eq!(
+        composer(&dir, &["run", "info"]),
+        ok("INFO\n", "> echo INFO\n")
+    );
+    assert_eq!(composer(&dir, &["st"]), ok("ST\n", ""));
+    assert_eq!(composer(&dir, &["bar"]), ok("FOO\n", ""));
+    for name in ["info", "status"] {
+        let (code, out, err) = composer(&dir, &[name]);
+        assert_eq!((code, out.as_str()), (Some(2), ""), "{name}: {err}");
+        assert!(
+            err.contains(&format!("`pun composer {name}` is not built yet")),
+            "{name}: {err}"
+        );
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 /// Composer's run errors (exit 1 there, 2 in Pun); a script named after an event is no command of its own; and no
 /// list at all, not even `scripts:`, for a project without scripts.
 #[test]

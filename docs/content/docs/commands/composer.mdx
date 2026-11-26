@@ -68,7 +68,7 @@ For every command, before or after its name:
 | `-d`, `--working-dir=<dir>` | Run in `<dir>`. |
 | `-n`, `--no-interaction` | Ask nothing: `run-script` without a script name exits 2, `exec` without a binary lists the binaries. |
 
-A script also runs as `pun composer <script>`, or by a name from `scripts-aliases`, as in Composer. That form takes `--dev`, `--no-dev`, `--no-plugins`, `-d` and `-n`, and, like Composer, stops reading at the first option it doesn't know: that option and every word after it are dropped, unless they follow `--`. Scripts named after a Composer event, such as `post-autoload-dump`, run only through `run-script`.
+A script also runs as `pun composer <script>`, or by a name from `scripts-aliases`, as in Composer. That form takes `--dev`, `--no-dev`, `--no-plugins`, `-d` and `-n`, and, like Composer, stops reading at the first option it doesn't know: that option and every word after it are dropped, unless they follow `--`. Scripts named after a Composer event, such as `post-autoload-dump`, or after a Composer command or its alias, such as `show` or `i`, run only through `run-script`. A Composer command's name also wins over a script's alias.
 
 ## What happens
 
